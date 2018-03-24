@@ -43,6 +43,6 @@
     "entityTableName": "product",
     "jpaMetamodelFiltering": true,
     "pagination": "pagination",
-    "microserviceName": "jhipsterSampleApplication",
+    "microserviceName": "product",
     "searchEngine": false
 }
