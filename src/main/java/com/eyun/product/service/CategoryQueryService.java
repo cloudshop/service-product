@@ -108,6 +108,9 @@ public class CategoryQueryService extends QueryService<Category> {
             if (criteria.getCategoryGrade() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCategoryGrade(), Category_.categoryGrade));
             }
+            if (criteria.getImage() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getImage(), Category_.image));
+            }
         }
         return specification;
     }

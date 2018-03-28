@@ -55,6 +55,9 @@ public class Category implements Serializable {
     @Column(name = "category_grade")
     private Integer categoryGrade;
 
+    @Column(name = "image")
+    private String image;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -193,6 +196,19 @@ public class Category implements Serializable {
     public void setCategoryGrade(Integer categoryGrade) {
         this.categoryGrade = categoryGrade;
     }
+
+    public String getImage() {
+        return image;
+    }
+
+    public Category image(String image) {
+        this.image = image;
+        return this;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -229,6 +245,7 @@ public class Category implements Serializable {
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted='" + isDeleted() + "'" +
             ", categoryGrade=" + getCategoryGrade() +
+            ", image='" + getImage() + "'" +
             "}";
     }
 }

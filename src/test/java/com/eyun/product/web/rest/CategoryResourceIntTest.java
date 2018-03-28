@@ -77,6 +77,9 @@ public class CategoryResourceIntTest {
     private static final Integer DEFAULT_CATEGORY_GRADE = 1;
     private static final Integer UPDATED_CATEGORY_GRADE = 2;
 
+    private static final String DEFAULT_IMAGE = "AAAAAAAAAA";
+    private static final String UPDATED_IMAGE = "BBBBBBBBBB";
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -133,7 +136,8 @@ public class CategoryResourceIntTest {
             .createdTime(DEFAULT_CREATED_TIME)
             .updatedTime(DEFAULT_UPDATED_TIME)
             .deleted(DEFAULT_DELETED)
-            .categoryGrade(DEFAULT_CATEGORY_GRADE);
+            .categoryGrade(DEFAULT_CATEGORY_GRADE)
+            .image(DEFAULT_IMAGE);
         return category;
     }
 
@@ -168,6 +172,7 @@ public class CategoryResourceIntTest {
         assertThat(testCategory.getUpdatedTime()).isEqualTo(DEFAULT_UPDATED_TIME);
         assertThat(testCategory.isDeleted()).isEqualTo(DEFAULT_DELETED);
         assertThat(testCategory.getCategoryGrade()).isEqualTo(DEFAULT_CATEGORY_GRADE);
+        assertThat(testCategory.getImage()).isEqualTo(DEFAULT_IMAGE);
     }
 
     @Test
@@ -229,7 +234,8 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
-            .andExpect(jsonPath("$.[*].categoryGrade").value(hasItem(DEFAULT_CATEGORY_GRADE)));
+            .andExpect(jsonPath("$.[*].categoryGrade").value(hasItem(DEFAULT_CATEGORY_GRADE)))
+            .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.toString())));
     }
 
     @Test
@@ -252,7 +258,8 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
             .andExpect(jsonPath("$.updatedTime").value(DEFAULT_UPDATED_TIME.toString()))
             .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()))
-            .andExpect(jsonPath("$.categoryGrade").value(DEFAULT_CATEGORY_GRADE));
+            .andExpect(jsonPath("$.categoryGrade").value(DEFAULT_CATEGORY_GRADE))
+            .andExpect(jsonPath("$.image").value(DEFAULT_IMAGE.toString()));
     }
 
     @Test
@@ -752,6 +759,45 @@ public class CategoryResourceIntTest {
         defaultCategoryShouldBeFound("categoryGrade.lessThan=" + UPDATED_CATEGORY_GRADE);
     }
 
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByImageIsEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where image equals to DEFAULT_IMAGE
+        defaultCategoryShouldBeFound("image.equals=" + DEFAULT_IMAGE);
+
+        // Get all the categoryList where image equals to UPDATED_IMAGE
+        defaultCategoryShouldNotBeFound("image.equals=" + UPDATED_IMAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByImageIsInShouldWork() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where image in DEFAULT_IMAGE or UPDATED_IMAGE
+        defaultCategoryShouldBeFound("image.in=" + DEFAULT_IMAGE + "," + UPDATED_IMAGE);
+
+        // Get all the categoryList where image equals to UPDATED_IMAGE
+        defaultCategoryShouldNotBeFound("image.in=" + UPDATED_IMAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByImageIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where image is not null
+        defaultCategoryShouldBeFound("image.specified=true");
+
+        // Get all the categoryList where image is null
+        defaultCategoryShouldNotBeFound("image.specified=false");
+    }
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -769,7 +815,8 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
-            .andExpect(jsonPath("$.[*].categoryGrade").value(hasItem(DEFAULT_CATEGORY_GRADE)));
+            .andExpect(jsonPath("$.[*].categoryGrade").value(hasItem(DEFAULT_CATEGORY_GRADE)))
+            .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.toString())));
     }
 
     /**
@@ -813,7 +860,8 @@ public class CategoryResourceIntTest {
             .createdTime(UPDATED_CREATED_TIME)
             .updatedTime(UPDATED_UPDATED_TIME)
             .deleted(UPDATED_DELETED)
-            .categoryGrade(UPDATED_CATEGORY_GRADE);
+            .categoryGrade(UPDATED_CATEGORY_GRADE)
+            .image(UPDATED_IMAGE);
         CategoryDTO categoryDTO = categoryMapper.toDto(updatedCategory);
 
         restCategoryMockMvc.perform(put("/api/categories")
@@ -835,6 +883,7 @@ public class CategoryResourceIntTest {
         assertThat(testCategory.getUpdatedTime()).isEqualTo(UPDATED_UPDATED_TIME);
         assertThat(testCategory.isDeleted()).isEqualTo(UPDATED_DELETED);
         assertThat(testCategory.getCategoryGrade()).isEqualTo(UPDATED_CATEGORY_GRADE);
+        assertThat(testCategory.getImage()).isEqualTo(UPDATED_IMAGE);
     }
 
     @Test

@@ -34,6 +34,8 @@ public class CategoryDTO implements Serializable {
 
     private Integer categoryGrade;
 
+    private String image;
+
     public Long getId() {
         return id;
     }
@@ -122,6 +124,14 @@ public class CategoryDTO implements Serializable {
         this.categoryGrade = categoryGrade;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -157,6 +167,7 @@ public class CategoryDTO implements Serializable {
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted='" + isDeleted() + "'" +
             ", categoryGrade=" + getCategoryGrade() +
+            ", image='" + getImage() + "'" +
             "}";
     }
 }

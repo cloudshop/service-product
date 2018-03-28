@@ -44,6 +44,10 @@
         {
             "fieldName": "categoryGrade",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "image",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180323040436",

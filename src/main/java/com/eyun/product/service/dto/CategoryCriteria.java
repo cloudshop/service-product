@@ -48,6 +48,8 @@ public class CategoryCriteria implements Serializable {
 
     private IntegerFilter categoryGrade;
 
+    private StringFilter image;
+
     public CategoryCriteria() {
     }
 
@@ -139,6 +141,14 @@ public class CategoryCriteria implements Serializable {
         this.categoryGrade = categoryGrade;
     }
 
+    public StringFilter getImage() {
+        return image;
+    }
+
+    public void setImage(StringFilter image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "CategoryCriteria{" +
@@ -153,6 +163,7 @@ public class CategoryCriteria implements Serializable {
                 (updatedTime != null ? "updatedTime=" + updatedTime + ", " : "") +
                 (deleted != null ? "deleted=" + deleted + ", " : "") +
                 (categoryGrade != null ? "categoryGrade=" + categoryGrade + ", " : "") +
+                (image != null ? "image=" + image + ", " : "") +
             "}";
     }
 
