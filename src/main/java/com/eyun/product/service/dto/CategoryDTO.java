@@ -30,7 +30,9 @@ public class CategoryDTO implements Serializable {
 
     private Instant updatedTime;
 
-    private Instant deleted;
+    private Boolean deleted;
+
+    private Integer categoryGrade;
 
     public Long getId() {
         return id;
@@ -104,12 +106,20 @@ public class CategoryDTO implements Serializable {
         this.updatedTime = updatedTime;
     }
 
-    public Instant getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Instant deleted) {
+    public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getCategoryGrade() {
+        return categoryGrade;
+    }
+
+    public void setCategoryGrade(Integer categoryGrade) {
+        this.categoryGrade = categoryGrade;
     }
 
     @Override
@@ -145,7 +155,8 @@ public class CategoryDTO implements Serializable {
             ", targetType=" + getTargetType() +
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
-            ", deleted='" + getDeleted() + "'" +
+            ", deleted='" + isDeleted() + "'" +
+            ", categoryGrade=" + getCategoryGrade() +
             "}";
     }
 }

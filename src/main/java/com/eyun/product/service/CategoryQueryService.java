@@ -103,7 +103,10 @@ public class CategoryQueryService extends QueryService<Category> {
                 specification = specification.and(buildRangeSpecification(criteria.getUpdatedTime(), Category_.updatedTime));
             }
             if (criteria.getDeleted() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getDeleted(), Category_.deleted));
+                specification = specification.and(buildSpecification(criteria.getDeleted(), Category_.deleted));
+            }
+            if (criteria.getCategoryGrade() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCategoryGrade(), Category_.categoryGrade));
             }
         }
         return specification;

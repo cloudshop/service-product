@@ -71,8 +71,11 @@ public class CategoryResourceIntTest {
     private static final Instant DEFAULT_UPDATED_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_UPDATED_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Instant DEFAULT_DELETED = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_DELETED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final Boolean DEFAULT_DELETED = false;
+    private static final Boolean UPDATED_DELETED = true;
+
+    private static final Integer DEFAULT_CATEGORY_GRADE = 1;
+    private static final Integer UPDATED_CATEGORY_GRADE = 2;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -129,7 +132,8 @@ public class CategoryResourceIntTest {
             .targetType(DEFAULT_TARGET_TYPE)
             .createdTime(DEFAULT_CREATED_TIME)
             .updatedTime(DEFAULT_UPDATED_TIME)
-            .deleted(DEFAULT_DELETED);
+            .deleted(DEFAULT_DELETED)
+            .categoryGrade(DEFAULT_CATEGORY_GRADE);
         return category;
     }
 
@@ -162,7 +166,8 @@ public class CategoryResourceIntTest {
         assertThat(testCategory.getTargetType()).isEqualTo(DEFAULT_TARGET_TYPE);
         assertThat(testCategory.getCreatedTime()).isEqualTo(DEFAULT_CREATED_TIME);
         assertThat(testCategory.getUpdatedTime()).isEqualTo(DEFAULT_UPDATED_TIME);
-        assertThat(testCategory.getDeleted()).isEqualTo(DEFAULT_DELETED);
+        assertThat(testCategory.isDeleted()).isEqualTo(DEFAULT_DELETED);
+        assertThat(testCategory.getCategoryGrade()).isEqualTo(DEFAULT_CATEGORY_GRADE);
     }
 
     @Test
@@ -223,7 +228,8 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.[*].targetType").value(hasItem(DEFAULT_TARGET_TYPE)))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.toString())));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
+            .andExpect(jsonPath("$.[*].categoryGrade").value(hasItem(DEFAULT_CATEGORY_GRADE)));
     }
 
     @Test
@@ -245,7 +251,8 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.targetType").value(DEFAULT_TARGET_TYPE))
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
             .andExpect(jsonPath("$.updatedTime").value(DEFAULT_UPDATED_TIME.toString()))
-            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.toString()));
+            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()))
+            .andExpect(jsonPath("$.categoryGrade").value(DEFAULT_CATEGORY_GRADE));
     }
 
     @Test
@@ -679,6 +686,72 @@ public class CategoryResourceIntTest {
         // Get all the categoryList where deleted is null
         defaultCategoryShouldNotBeFound("deleted.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByCategoryGradeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where categoryGrade equals to DEFAULT_CATEGORY_GRADE
+        defaultCategoryShouldBeFound("categoryGrade.equals=" + DEFAULT_CATEGORY_GRADE);
+
+        // Get all the categoryList where categoryGrade equals to UPDATED_CATEGORY_GRADE
+        defaultCategoryShouldNotBeFound("categoryGrade.equals=" + UPDATED_CATEGORY_GRADE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByCategoryGradeIsInShouldWork() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where categoryGrade in DEFAULT_CATEGORY_GRADE or UPDATED_CATEGORY_GRADE
+        defaultCategoryShouldBeFound("categoryGrade.in=" + DEFAULT_CATEGORY_GRADE + "," + UPDATED_CATEGORY_GRADE);
+
+        // Get all the categoryList where categoryGrade equals to UPDATED_CATEGORY_GRADE
+        defaultCategoryShouldNotBeFound("categoryGrade.in=" + UPDATED_CATEGORY_GRADE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByCategoryGradeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where categoryGrade is not null
+        defaultCategoryShouldBeFound("categoryGrade.specified=true");
+
+        // Get all the categoryList where categoryGrade is null
+        defaultCategoryShouldNotBeFound("categoryGrade.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByCategoryGradeIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where categoryGrade greater than or equals to DEFAULT_CATEGORY_GRADE
+        defaultCategoryShouldBeFound("categoryGrade.greaterOrEqualThan=" + DEFAULT_CATEGORY_GRADE);
+
+        // Get all the categoryList where categoryGrade greater than or equals to UPDATED_CATEGORY_GRADE
+        defaultCategoryShouldNotBeFound("categoryGrade.greaterOrEqualThan=" + UPDATED_CATEGORY_GRADE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByCategoryGradeIsLessThanSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where categoryGrade less than or equals to DEFAULT_CATEGORY_GRADE
+        defaultCategoryShouldNotBeFound("categoryGrade.lessThan=" + DEFAULT_CATEGORY_GRADE);
+
+        // Get all the categoryList where categoryGrade less than or equals to UPDATED_CATEGORY_GRADE
+        defaultCategoryShouldBeFound("categoryGrade.lessThan=" + UPDATED_CATEGORY_GRADE);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -695,7 +768,8 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.[*].targetType").value(hasItem(DEFAULT_TARGET_TYPE)))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.toString())));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
+            .andExpect(jsonPath("$.[*].categoryGrade").value(hasItem(DEFAULT_CATEGORY_GRADE)));
     }
 
     /**
@@ -738,7 +812,8 @@ public class CategoryResourceIntTest {
             .targetType(UPDATED_TARGET_TYPE)
             .createdTime(UPDATED_CREATED_TIME)
             .updatedTime(UPDATED_UPDATED_TIME)
-            .deleted(UPDATED_DELETED);
+            .deleted(UPDATED_DELETED)
+            .categoryGrade(UPDATED_CATEGORY_GRADE);
         CategoryDTO categoryDTO = categoryMapper.toDto(updatedCategory);
 
         restCategoryMockMvc.perform(put("/api/categories")
@@ -758,7 +833,8 @@ public class CategoryResourceIntTest {
         assertThat(testCategory.getTargetType()).isEqualTo(UPDATED_TARGET_TYPE);
         assertThat(testCategory.getCreatedTime()).isEqualTo(UPDATED_CREATED_TIME);
         assertThat(testCategory.getUpdatedTime()).isEqualTo(UPDATED_UPDATED_TIME);
-        assertThat(testCategory.getDeleted()).isEqualTo(UPDATED_DELETED);
+        assertThat(testCategory.isDeleted()).isEqualTo(UPDATED_DELETED);
+        assertThat(testCategory.getCategoryGrade()).isEqualTo(UPDATED_CATEGORY_GRADE);
     }
 
     @Test

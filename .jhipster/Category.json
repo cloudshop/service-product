@@ -39,7 +39,11 @@
         },
         {
             "fieldName": "deleted",
-            "fieldType": "Instant"
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "categoryGrade",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20180323040436",
@@ -48,6 +52,6 @@
     "entityTableName": "category",
     "jpaMetamodelFiltering": true,
     "pagination": "pagination",
-    "microserviceName": "jhipsterSampleApplication",
+    "microserviceName": "product",
     "searchEngine": false
 }

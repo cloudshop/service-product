@@ -50,7 +50,10 @@ public class Category implements Serializable {
     private Instant updatedTime;
 
     @Column(name = "deleted")
-    private Instant deleted;
+    private Boolean deleted;
+
+    @Column(name = "category_grade")
+    private Integer categoryGrade;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -165,17 +168,30 @@ public class Category implements Serializable {
         this.updatedTime = updatedTime;
     }
 
-    public Instant getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 
-    public Category deleted(Instant deleted) {
+    public Category deleted(Boolean deleted) {
         this.deleted = deleted;
         return this;
     }
 
-    public void setDeleted(Instant deleted) {
+    public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getCategoryGrade() {
+        return categoryGrade;
+    }
+
+    public Category categoryGrade(Integer categoryGrade) {
+        this.categoryGrade = categoryGrade;
+        return this;
+    }
+
+    public void setCategoryGrade(Integer categoryGrade) {
+        this.categoryGrade = categoryGrade;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -211,7 +227,8 @@ public class Category implements Serializable {
             ", targetType=" + getTargetType() +
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
-            ", deleted='" + getDeleted() + "'" +
+            ", deleted='" + isDeleted() + "'" +
+            ", categoryGrade=" + getCategoryGrade() +
             "}";
     }
 }

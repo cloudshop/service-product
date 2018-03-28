@@ -44,7 +44,9 @@ public class CategoryCriteria implements Serializable {
 
     private InstantFilter updatedTime;
 
-    private InstantFilter deleted;
+    private BooleanFilter deleted;
+
+    private IntegerFilter categoryGrade;
 
     public CategoryCriteria() {
     }
@@ -121,12 +123,20 @@ public class CategoryCriteria implements Serializable {
         this.updatedTime = updatedTime;
     }
 
-    public InstantFilter getDeleted() {
+    public BooleanFilter getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(InstantFilter deleted) {
+    public void setDeleted(BooleanFilter deleted) {
         this.deleted = deleted;
+    }
+
+    public IntegerFilter getCategoryGrade() {
+        return categoryGrade;
+    }
+
+    public void setCategoryGrade(IntegerFilter categoryGrade) {
+        this.categoryGrade = categoryGrade;
     }
 
     @Override
@@ -142,6 +152,7 @@ public class CategoryCriteria implements Serializable {
                 (createdTime != null ? "createdTime=" + createdTime + ", " : "") +
                 (updatedTime != null ? "updatedTime=" + updatedTime + ", " : "") +
                 (deleted != null ? "deleted=" + deleted + ", " : "") +
+                (categoryGrade != null ? "categoryGrade=" + categoryGrade + ", " : "") +
             "}";
     }
 

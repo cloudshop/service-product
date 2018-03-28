@@ -54,7 +54,11 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="deleted" type="timestamp">
+            <column name="deleted" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="category_grade" type="integer">
                 <constraints nullable="true" />
             </column>
 
@@ -62,7 +66,6 @@
         </createTable>
         <dropDefaultValue tableName="category" columnName="created_time" columnDataType="datetime"/>
         <dropDefaultValue tableName="category" columnName="updated_time" columnDataType="datetime"/>
-        <dropDefaultValue tableName="category" columnName="deleted" columnDataType="datetime"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
