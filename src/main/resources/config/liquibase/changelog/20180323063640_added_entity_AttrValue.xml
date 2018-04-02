@@ -38,10 +38,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="jhi_sort" type="integer">
-                <constraints nullable="true" />
-            </column>
-
             <column name="created_time" type="timestamp">
                 <constraints nullable="true" />
             </column>
@@ -51,6 +47,10 @@
             </column>
 
             <column name="deleted" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="rank" type="integer">
                 <constraints nullable="true" />
             </column>
 

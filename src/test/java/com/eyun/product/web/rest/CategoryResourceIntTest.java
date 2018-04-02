@@ -56,9 +56,6 @@ public class CategoryResourceIntTest {
     private static final Boolean DEFAULT_IS_PARENT = false;
     private static final Boolean UPDATED_IS_PARENT = true;
 
-    private static final Integer DEFAULT_SORT = 1;
-    private static final Integer UPDATED_SORT = 2;
-
     private static final String DEFAULT_TARGET = "AAAAAAAAAA";
     private static final String UPDATED_TARGET = "BBBBBBBBBB";
 
@@ -79,6 +76,9 @@ public class CategoryResourceIntTest {
 
     private static final String DEFAULT_IMAGE = "AAAAAAAAAA";
     private static final String UPDATED_IMAGE = "BBBBBBBBBB";
+
+    private static final Integer DEFAULT_RANK = 1;
+    private static final Integer UPDATED_RANK = 2;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -130,14 +130,14 @@ public class CategoryResourceIntTest {
             .name(DEFAULT_NAME)
             .parentId(DEFAULT_PARENT_ID)
             .isParent(DEFAULT_IS_PARENT)
-            .sort(DEFAULT_SORT)
             .target(DEFAULT_TARGET)
             .targetType(DEFAULT_TARGET_TYPE)
             .createdTime(DEFAULT_CREATED_TIME)
             .updatedTime(DEFAULT_UPDATED_TIME)
             .deleted(DEFAULT_DELETED)
             .categoryGrade(DEFAULT_CATEGORY_GRADE)
-            .image(DEFAULT_IMAGE);
+            .image(DEFAULT_IMAGE)
+            .rank(DEFAULT_RANK);
         return category;
     }
 
@@ -165,7 +165,6 @@ public class CategoryResourceIntTest {
         assertThat(testCategory.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCategory.getParentId()).isEqualTo(DEFAULT_PARENT_ID);
         assertThat(testCategory.isIsParent()).isEqualTo(DEFAULT_IS_PARENT);
-        assertThat(testCategory.getSort()).isEqualTo(DEFAULT_SORT);
         assertThat(testCategory.getTarget()).isEqualTo(DEFAULT_TARGET);
         assertThat(testCategory.getTargetType()).isEqualTo(DEFAULT_TARGET_TYPE);
         assertThat(testCategory.getCreatedTime()).isEqualTo(DEFAULT_CREATED_TIME);
@@ -173,6 +172,7 @@ public class CategoryResourceIntTest {
         assertThat(testCategory.isDeleted()).isEqualTo(DEFAULT_DELETED);
         assertThat(testCategory.getCategoryGrade()).isEqualTo(DEFAULT_CATEGORY_GRADE);
         assertThat(testCategory.getImage()).isEqualTo(DEFAULT_IMAGE);
+        assertThat(testCategory.getRank()).isEqualTo(DEFAULT_RANK);
     }
 
     @Test
@@ -228,14 +228,14 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].parentId").value(hasItem(DEFAULT_PARENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].isParent").value(hasItem(DEFAULT_IS_PARENT.booleanValue())))
-            .andExpect(jsonPath("$.[*].sort").value(hasItem(DEFAULT_SORT)))
             .andExpect(jsonPath("$.[*].target").value(hasItem(DEFAULT_TARGET.toString())))
             .andExpect(jsonPath("$.[*].targetType").value(hasItem(DEFAULT_TARGET_TYPE)))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
             .andExpect(jsonPath("$.[*].categoryGrade").value(hasItem(DEFAULT_CATEGORY_GRADE)))
-            .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.toString())));
+            .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.toString())))
+            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK)));
     }
 
     @Test
@@ -252,14 +252,14 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.parentId").value(DEFAULT_PARENT_ID.intValue()))
             .andExpect(jsonPath("$.isParent").value(DEFAULT_IS_PARENT.booleanValue()))
-            .andExpect(jsonPath("$.sort").value(DEFAULT_SORT))
             .andExpect(jsonPath("$.target").value(DEFAULT_TARGET.toString()))
             .andExpect(jsonPath("$.targetType").value(DEFAULT_TARGET_TYPE))
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
             .andExpect(jsonPath("$.updatedTime").value(DEFAULT_UPDATED_TIME.toString()))
             .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()))
             .andExpect(jsonPath("$.categoryGrade").value(DEFAULT_CATEGORY_GRADE))
-            .andExpect(jsonPath("$.image").value(DEFAULT_IMAGE.toString()));
+            .andExpect(jsonPath("$.image").value(DEFAULT_IMAGE.toString()))
+            .andExpect(jsonPath("$.rank").value(DEFAULT_RANK));
     }
 
     @Test
@@ -405,72 +405,6 @@ public class CategoryResourceIntTest {
         // Get all the categoryList where isParent is null
         defaultCategoryShouldNotBeFound("isParent.specified=false");
     }
-
-    @Test
-    @Transactional
-    public void getAllCategoriesBySortIsEqualToSomething() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
-
-        // Get all the categoryList where sort equals to DEFAULT_SORT
-        defaultCategoryShouldBeFound("sort.equals=" + DEFAULT_SORT);
-
-        // Get all the categoryList where sort equals to UPDATED_SORT
-        defaultCategoryShouldNotBeFound("sort.equals=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCategoriesBySortIsInShouldWork() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
-
-        // Get all the categoryList where sort in DEFAULT_SORT or UPDATED_SORT
-        defaultCategoryShouldBeFound("sort.in=" + DEFAULT_SORT + "," + UPDATED_SORT);
-
-        // Get all the categoryList where sort equals to UPDATED_SORT
-        defaultCategoryShouldNotBeFound("sort.in=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCategoriesBySortIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
-
-        // Get all the categoryList where sort is not null
-        defaultCategoryShouldBeFound("sort.specified=true");
-
-        // Get all the categoryList where sort is null
-        defaultCategoryShouldNotBeFound("sort.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllCategoriesBySortIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
-
-        // Get all the categoryList where sort greater than or equals to DEFAULT_SORT
-        defaultCategoryShouldBeFound("sort.greaterOrEqualThan=" + DEFAULT_SORT);
-
-        // Get all the categoryList where sort greater than or equals to UPDATED_SORT
-        defaultCategoryShouldNotBeFound("sort.greaterOrEqualThan=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCategoriesBySortIsLessThanSomething() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
-
-        // Get all the categoryList where sort less than or equals to DEFAULT_SORT
-        defaultCategoryShouldNotBeFound("sort.lessThan=" + DEFAULT_SORT);
-
-        // Get all the categoryList where sort less than or equals to UPDATED_SORT
-        defaultCategoryShouldBeFound("sort.lessThan=" + UPDATED_SORT);
-    }
-
 
     @Test
     @Transactional
@@ -798,6 +732,72 @@ public class CategoryResourceIntTest {
         // Get all the categoryList where image is null
         defaultCategoryShouldNotBeFound("image.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByRankIsEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where rank equals to DEFAULT_RANK
+        defaultCategoryShouldBeFound("rank.equals=" + DEFAULT_RANK);
+
+        // Get all the categoryList where rank equals to UPDATED_RANK
+        defaultCategoryShouldNotBeFound("rank.equals=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByRankIsInShouldWork() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where rank in DEFAULT_RANK or UPDATED_RANK
+        defaultCategoryShouldBeFound("rank.in=" + DEFAULT_RANK + "," + UPDATED_RANK);
+
+        // Get all the categoryList where rank equals to UPDATED_RANK
+        defaultCategoryShouldNotBeFound("rank.in=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByRankIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where rank is not null
+        defaultCategoryShouldBeFound("rank.specified=true");
+
+        // Get all the categoryList where rank is null
+        defaultCategoryShouldNotBeFound("rank.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByRankIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where rank greater than or equals to DEFAULT_RANK
+        defaultCategoryShouldBeFound("rank.greaterOrEqualThan=" + DEFAULT_RANK);
+
+        // Get all the categoryList where rank greater than or equals to UPDATED_RANK
+        defaultCategoryShouldNotBeFound("rank.greaterOrEqualThan=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCategoriesByRankIsLessThanSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where rank less than or equals to DEFAULT_RANK
+        defaultCategoryShouldNotBeFound("rank.lessThan=" + DEFAULT_RANK);
+
+        // Get all the categoryList where rank less than or equals to UPDATED_RANK
+        defaultCategoryShouldBeFound("rank.lessThan=" + UPDATED_RANK);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -809,14 +809,14 @@ public class CategoryResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].parentId").value(hasItem(DEFAULT_PARENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].isParent").value(hasItem(DEFAULT_IS_PARENT.booleanValue())))
-            .andExpect(jsonPath("$.[*].sort").value(hasItem(DEFAULT_SORT)))
             .andExpect(jsonPath("$.[*].target").value(hasItem(DEFAULT_TARGET.toString())))
             .andExpect(jsonPath("$.[*].targetType").value(hasItem(DEFAULT_TARGET_TYPE)))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
             .andExpect(jsonPath("$.[*].categoryGrade").value(hasItem(DEFAULT_CATEGORY_GRADE)))
-            .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.toString())));
+            .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.toString())))
+            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK)));
     }
 
     /**
@@ -854,14 +854,14 @@ public class CategoryResourceIntTest {
             .name(UPDATED_NAME)
             .parentId(UPDATED_PARENT_ID)
             .isParent(UPDATED_IS_PARENT)
-            .sort(UPDATED_SORT)
             .target(UPDATED_TARGET)
             .targetType(UPDATED_TARGET_TYPE)
             .createdTime(UPDATED_CREATED_TIME)
             .updatedTime(UPDATED_UPDATED_TIME)
             .deleted(UPDATED_DELETED)
             .categoryGrade(UPDATED_CATEGORY_GRADE)
-            .image(UPDATED_IMAGE);
+            .image(UPDATED_IMAGE)
+            .rank(UPDATED_RANK);
         CategoryDTO categoryDTO = categoryMapper.toDto(updatedCategory);
 
         restCategoryMockMvc.perform(put("/api/categories")
@@ -876,7 +876,6 @@ public class CategoryResourceIntTest {
         assertThat(testCategory.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCategory.getParentId()).isEqualTo(UPDATED_PARENT_ID);
         assertThat(testCategory.isIsParent()).isEqualTo(UPDATED_IS_PARENT);
-        assertThat(testCategory.getSort()).isEqualTo(UPDATED_SORT);
         assertThat(testCategory.getTarget()).isEqualTo(UPDATED_TARGET);
         assertThat(testCategory.getTargetType()).isEqualTo(UPDATED_TARGET_TYPE);
         assertThat(testCategory.getCreatedTime()).isEqualTo(UPDATED_CREATED_TIME);
@@ -884,6 +883,7 @@ public class CategoryResourceIntTest {
         assertThat(testCategory.isDeleted()).isEqualTo(UPDATED_DELETED);
         assertThat(testCategory.getCategoryGrade()).isEqualTo(UPDATED_CATEGORY_GRADE);
         assertThat(testCategory.getImage()).isEqualTo(UPDATED_IMAGE);
+        assertThat(testCategory.getRank()).isEqualTo(UPDATED_RANK);
     }
 
     @Test

@@ -18,10 +18,6 @@
             "fieldType": "Boolean"
         },
         {
-            "fieldName": "sort",
-            "fieldType": "Integer"
-        },
-        {
             "fieldName": "target",
             "fieldType": "String"
         },
@@ -48,6 +44,10 @@
         {
             "fieldName": "image",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "rank",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20180323040436",

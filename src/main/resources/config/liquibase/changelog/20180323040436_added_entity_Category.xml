@@ -34,10 +34,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="jhi_sort" type="integer">
-                <constraints nullable="true" />
-            </column>
-
             <column name="target" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -63,6 +59,10 @@
             </column>
 
             <column name="image" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="rank" type="integer">
                 <constraints nullable="true" />
             </column>
 

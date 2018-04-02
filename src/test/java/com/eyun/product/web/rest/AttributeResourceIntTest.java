@@ -56,9 +56,6 @@ public class AttributeResourceIntTest {
     private static final Integer DEFAULT_STATUS = 1;
     private static final Integer UPDATED_STATUS = 2;
 
-    private static final Integer DEFAULT_SORT = 1;
-    private static final Integer UPDATED_SORT = 2;
-
     private static final Instant DEFAULT_CREATED_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_CREATED_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -67,6 +64,9 @@ public class AttributeResourceIntTest {
 
     private static final Integer DEFAULT_DELETED = 1;
     private static final Integer UPDATED_DELETED = 2;
+
+    private static final Integer DEFAULT_RANK = 1;
+    private static final Integer UPDATED_RANK = 2;
 
     @Autowired
     private AttributeRepository attributeRepository;
@@ -118,10 +118,10 @@ public class AttributeResourceIntTest {
             .name(DEFAULT_NAME)
             .productId(DEFAULT_PRODUCT_ID)
             .status(DEFAULT_STATUS)
-            .sort(DEFAULT_SORT)
             .createdTime(DEFAULT_CREATED_TIME)
             .updatedTime(DEFAULT_UPDATED_TIME)
-            .deleted(DEFAULT_DELETED);
+            .deleted(DEFAULT_DELETED)
+            .rank(DEFAULT_RANK);
         return attribute;
     }
 
@@ -149,10 +149,10 @@ public class AttributeResourceIntTest {
         assertThat(testAttribute.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testAttribute.getProductId()).isEqualTo(DEFAULT_PRODUCT_ID);
         assertThat(testAttribute.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testAttribute.getSort()).isEqualTo(DEFAULT_SORT);
         assertThat(testAttribute.getCreatedTime()).isEqualTo(DEFAULT_CREATED_TIME);
         assertThat(testAttribute.getUpdatedTime()).isEqualTo(DEFAULT_UPDATED_TIME);
         assertThat(testAttribute.getDeleted()).isEqualTo(DEFAULT_DELETED);
+        assertThat(testAttribute.getRank()).isEqualTo(DEFAULT_RANK);
     }
 
     @Test
@@ -246,10 +246,10 @@ public class AttributeResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].productId").value(hasItem(DEFAULT_PRODUCT_ID.intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
-            .andExpect(jsonPath("$.[*].sort").value(hasItem(DEFAULT_SORT)))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED)));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED)))
+            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK)));
     }
 
     @Test
@@ -266,10 +266,10 @@ public class AttributeResourceIntTest {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.productId").value(DEFAULT_PRODUCT_ID.intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS))
-            .andExpect(jsonPath("$.sort").value(DEFAULT_SORT))
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
             .andExpect(jsonPath("$.updatedTime").value(DEFAULT_UPDATED_TIME.toString()))
-            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED));
+            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED))
+            .andExpect(jsonPath("$.rank").value(DEFAULT_RANK));
     }
 
     @Test
@@ -445,72 +445,6 @@ public class AttributeResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllAttributesBySortIsEqualToSomething() throws Exception {
-        // Initialize the database
-        attributeRepository.saveAndFlush(attribute);
-
-        // Get all the attributeList where sort equals to DEFAULT_SORT
-        defaultAttributeShouldBeFound("sort.equals=" + DEFAULT_SORT);
-
-        // Get all the attributeList where sort equals to UPDATED_SORT
-        defaultAttributeShouldNotBeFound("sort.equals=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllAttributesBySortIsInShouldWork() throws Exception {
-        // Initialize the database
-        attributeRepository.saveAndFlush(attribute);
-
-        // Get all the attributeList where sort in DEFAULT_SORT or UPDATED_SORT
-        defaultAttributeShouldBeFound("sort.in=" + DEFAULT_SORT + "," + UPDATED_SORT);
-
-        // Get all the attributeList where sort equals to UPDATED_SORT
-        defaultAttributeShouldNotBeFound("sort.in=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllAttributesBySortIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        attributeRepository.saveAndFlush(attribute);
-
-        // Get all the attributeList where sort is not null
-        defaultAttributeShouldBeFound("sort.specified=true");
-
-        // Get all the attributeList where sort is null
-        defaultAttributeShouldNotBeFound("sort.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllAttributesBySortIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        attributeRepository.saveAndFlush(attribute);
-
-        // Get all the attributeList where sort greater than or equals to DEFAULT_SORT
-        defaultAttributeShouldBeFound("sort.greaterOrEqualThan=" + DEFAULT_SORT);
-
-        // Get all the attributeList where sort greater than or equals to UPDATED_SORT
-        defaultAttributeShouldNotBeFound("sort.greaterOrEqualThan=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllAttributesBySortIsLessThanSomething() throws Exception {
-        // Initialize the database
-        attributeRepository.saveAndFlush(attribute);
-
-        // Get all the attributeList where sort less than or equals to DEFAULT_SORT
-        defaultAttributeShouldNotBeFound("sort.lessThan=" + DEFAULT_SORT);
-
-        // Get all the attributeList where sort less than or equals to UPDATED_SORT
-        defaultAttributeShouldBeFound("sort.lessThan=" + UPDATED_SORT);
-    }
-
-
-    @Test
-    @Transactional
     public void getAllAttributesByCreatedTimeIsEqualToSomething() throws Exception {
         // Initialize the database
         attributeRepository.saveAndFlush(attribute);
@@ -652,6 +586,72 @@ public class AttributeResourceIntTest {
         defaultAttributeShouldBeFound("deleted.lessThan=" + UPDATED_DELETED);
     }
 
+
+    @Test
+    @Transactional
+    public void getAllAttributesByRankIsEqualToSomething() throws Exception {
+        // Initialize the database
+        attributeRepository.saveAndFlush(attribute);
+
+        // Get all the attributeList where rank equals to DEFAULT_RANK
+        defaultAttributeShouldBeFound("rank.equals=" + DEFAULT_RANK);
+
+        // Get all the attributeList where rank equals to UPDATED_RANK
+        defaultAttributeShouldNotBeFound("rank.equals=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAttributesByRankIsInShouldWork() throws Exception {
+        // Initialize the database
+        attributeRepository.saveAndFlush(attribute);
+
+        // Get all the attributeList where rank in DEFAULT_RANK or UPDATED_RANK
+        defaultAttributeShouldBeFound("rank.in=" + DEFAULT_RANK + "," + UPDATED_RANK);
+
+        // Get all the attributeList where rank equals to UPDATED_RANK
+        defaultAttributeShouldNotBeFound("rank.in=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAttributesByRankIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        attributeRepository.saveAndFlush(attribute);
+
+        // Get all the attributeList where rank is not null
+        defaultAttributeShouldBeFound("rank.specified=true");
+
+        // Get all the attributeList where rank is null
+        defaultAttributeShouldNotBeFound("rank.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAttributesByRankIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        attributeRepository.saveAndFlush(attribute);
+
+        // Get all the attributeList where rank greater than or equals to DEFAULT_RANK
+        defaultAttributeShouldBeFound("rank.greaterOrEqualThan=" + DEFAULT_RANK);
+
+        // Get all the attributeList where rank greater than or equals to UPDATED_RANK
+        defaultAttributeShouldNotBeFound("rank.greaterOrEqualThan=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAttributesByRankIsLessThanSomething() throws Exception {
+        // Initialize the database
+        attributeRepository.saveAndFlush(attribute);
+
+        // Get all the attributeList where rank less than or equals to DEFAULT_RANK
+        defaultAttributeShouldNotBeFound("rank.lessThan=" + DEFAULT_RANK);
+
+        // Get all the attributeList where rank less than or equals to UPDATED_RANK
+        defaultAttributeShouldBeFound("rank.lessThan=" + UPDATED_RANK);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -663,10 +663,10 @@ public class AttributeResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].productId").value(hasItem(DEFAULT_PRODUCT_ID.intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
-            .andExpect(jsonPath("$.[*].sort").value(hasItem(DEFAULT_SORT)))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED)));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED)))
+            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK)));
     }
 
     /**
@@ -704,10 +704,10 @@ public class AttributeResourceIntTest {
             .name(UPDATED_NAME)
             .productId(UPDATED_PRODUCT_ID)
             .status(UPDATED_STATUS)
-            .sort(UPDATED_SORT)
             .createdTime(UPDATED_CREATED_TIME)
             .updatedTime(UPDATED_UPDATED_TIME)
-            .deleted(UPDATED_DELETED);
+            .deleted(UPDATED_DELETED)
+            .rank(UPDATED_RANK);
         AttributeDTO attributeDTO = attributeMapper.toDto(updatedAttribute);
 
         restAttributeMockMvc.perform(put("/api/attributes")
@@ -722,10 +722,10 @@ public class AttributeResourceIntTest {
         assertThat(testAttribute.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testAttribute.getProductId()).isEqualTo(UPDATED_PRODUCT_ID);
         assertThat(testAttribute.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testAttribute.getSort()).isEqualTo(UPDATED_SORT);
         assertThat(testAttribute.getCreatedTime()).isEqualTo(UPDATED_CREATED_TIME);
         assertThat(testAttribute.getUpdatedTime()).isEqualTo(UPDATED_UPDATED_TIME);
         assertThat(testAttribute.getDeleted()).isEqualTo(UPDATED_DELETED);
+        assertThat(testAttribute.getRank()).isEqualTo(UPDATED_RANK);
     }
 
     @Test

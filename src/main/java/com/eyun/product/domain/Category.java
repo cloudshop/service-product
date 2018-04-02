@@ -34,9 +34,6 @@ public class Category implements Serializable {
     @Column(name = "is_parent")
     private Boolean isParent;
 
-    @Column(name = "jhi_sort")
-    private Integer sort;
-
     @Column(name = "target")
     private String target;
 
@@ -57,6 +54,9 @@ public class Category implements Serializable {
 
     @Column(name = "image")
     private String image;
+
+    @Column(name = "rank")
+    private Integer rank;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -104,19 +104,6 @@ public class Category implements Serializable {
 
     public void setIsParent(Boolean isParent) {
         this.isParent = isParent;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public Category sort(Integer sort) {
-        this.sort = sort;
-        return this;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
     }
 
     public String getTarget() {
@@ -209,6 +196,19 @@ public class Category implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public Category rank(Integer rank) {
+        this.rank = rank;
+        return this;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -238,7 +238,6 @@ public class Category implements Serializable {
             ", name='" + getName() + "'" +
             ", parentId=" + getParentId() +
             ", isParent='" + isIsParent() + "'" +
-            ", sort=" + getSort() +
             ", target='" + getTarget() + "'" +
             ", targetType=" + getTargetType() +
             ", createdTime='" + getCreatedTime() + "'" +
@@ -246,6 +245,7 @@ public class Category implements Serializable {
             ", deleted='" + isDeleted() + "'" +
             ", categoryGrade=" + getCategoryGrade() +
             ", image='" + getImage() + "'" +
+            ", rank=" + getRank() +
             "}";
     }
 }

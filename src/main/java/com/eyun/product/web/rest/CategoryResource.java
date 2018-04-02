@@ -8,27 +8,20 @@ import com.eyun.product.web.rest.util.PaginationUtil;
 import com.eyun.product.service.dto.CategoryDTO;
 import com.eyun.product.service.dto.CategoryCriteria;
 import com.eyun.product.service.CategoryQueryService;
-
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.IntegerFilter;
-import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -50,39 +43,6 @@ public class CategoryResource {
     public CategoryResource(CategoryService categoryService, CategoryQueryService categoryQueryService) {
         this.categoryService = categoryService;
         this.categoryQueryService = categoryQueryService;
-    }
-    
-    @GetMapping("/categoryTree/subnode/{pid}")
-    public @ResponseBody List<CategoryDTO> getCategoryTreeSubnodeByParentId(@PathVariable Long pid) {
-    	CategoryCriteria criteria = new CategoryCriteria();
-    	BooleanFilter deleted = new BooleanFilter();
-    	deleted.setEquals(false);
-		criteria.setDeleted(deleted);
-		LongFilter parentId = new LongFilter();
-		parentId.setEquals(pid);
-		criteria.setParentId(parentId);
-		List<CategoryDTO> list = categoryQueryService.findByCriteria(criteria);
-    	return list;
-    }
-    
-    /**
-     * @author 逍遥子
-     * @email 756898059@qq.com
-     * @date 2018年3月28日
-     * @version 1.0
-     * @return
-     */
-    @GetMapping("/categoryTree/root")
-    public @ResponseBody List<CategoryDTO> getCategoryTree() {
-    	CategoryCriteria criteria = new CategoryCriteria();
-    	IntegerFilter integer = new IntegerFilter();
-    	integer.setEquals(1);
-    	criteria.setCategoryGrade(integer);
-    	BooleanFilter booleanFilter = new BooleanFilter();
-    	booleanFilter.setEquals(false);
-    	criteria.setDeleted(booleanFilter);
-		List<CategoryDTO> list = categoryQueryService.findByCriteria(criteria);
-		return list;
     }
 
     /**

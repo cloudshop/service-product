@@ -22,13 +22,13 @@ public class AttrValueDTO implements Serializable {
 
     private Integer status;
 
-    private Integer sort;
-
     private Instant createdTime;
 
     private Instant updatedTime;
 
     private Boolean deleted;
+
+    private Integer rank;
 
     public Long getId() {
         return id;
@@ -70,14 +70,6 @@ public class AttrValueDTO implements Serializable {
         this.status = status;
     }
 
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
     public Instant getCreatedTime() {
         return createdTime;
     }
@@ -100,6 +92,14 @@ public class AttrValueDTO implements Serializable {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 
     @Override
@@ -131,10 +131,10 @@ public class AttrValueDTO implements Serializable {
             ", value='" + getValue() + "'" +
             ", image='" + getImage() + "'" +
             ", status=" + getStatus() +
-            ", sort=" + getSort() +
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted='" + isDeleted() + "'" +
+            ", rank=" + getRank() +
             "}";
     }
 }

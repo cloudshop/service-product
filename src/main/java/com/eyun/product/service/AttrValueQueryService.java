@@ -90,9 +90,6 @@ public class AttrValueQueryService extends QueryService<AttrValue> {
             if (criteria.getStatus() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getStatus(), AttrValue_.status));
             }
-            if (criteria.getSort() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getSort(), AttrValue_.sort));
-            }
             if (criteria.getCreatedTime() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCreatedTime(), AttrValue_.createdTime));
             }
@@ -101,6 +98,9 @@ public class AttrValueQueryService extends QueryService<AttrValue> {
             }
             if (criteria.getDeleted() != null) {
                 specification = specification.and(buildSpecification(criteria.getDeleted(), AttrValue_.deleted));
+            }
+            if (criteria.getRank() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRank(), AttrValue_.rank));
             }
         }
         return specification;

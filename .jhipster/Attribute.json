@@ -24,10 +24,6 @@
             ]
         },
         {
-            "fieldName": "sort",
-            "fieldType": "Integer"
-        },
-        {
             "fieldName": "createdTime",
             "fieldType": "Instant"
         },
@@ -38,6 +34,10 @@
         {
             "fieldName": "deleted",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "rank",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20180323061247",
@@ -46,6 +46,6 @@
     "entityTableName": "attribute",
     "jpaMetamodelFiltering": true,
     "pagination": "pagination",
-    "microserviceName": "jhipsterSampleApplication",
+    "microserviceName": "product",
     "searchEngine": false
 }

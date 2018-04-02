@@ -59,9 +59,6 @@ public class AttrValueResourceIntTest {
     private static final Integer DEFAULT_STATUS = 1;
     private static final Integer UPDATED_STATUS = 2;
 
-    private static final Integer DEFAULT_SORT = 1;
-    private static final Integer UPDATED_SORT = 2;
-
     private static final Instant DEFAULT_CREATED_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_CREATED_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -70,6 +67,9 @@ public class AttrValueResourceIntTest {
 
     private static final Boolean DEFAULT_DELETED = false;
     private static final Boolean UPDATED_DELETED = true;
+
+    private static final Integer DEFAULT_RANK = 1;
+    private static final Integer UPDATED_RANK = 2;
 
     @Autowired
     private AttrValueRepository attrValueRepository;
@@ -122,10 +122,10 @@ public class AttrValueResourceIntTest {
             .value(DEFAULT_VALUE)
             .image(DEFAULT_IMAGE)
             .status(DEFAULT_STATUS)
-            .sort(DEFAULT_SORT)
             .createdTime(DEFAULT_CREATED_TIME)
             .updatedTime(DEFAULT_UPDATED_TIME)
-            .deleted(DEFAULT_DELETED);
+            .deleted(DEFAULT_DELETED)
+            .rank(DEFAULT_RANK);
         return attrValue;
     }
 
@@ -154,10 +154,10 @@ public class AttrValueResourceIntTest {
         assertThat(testAttrValue.getValue()).isEqualTo(DEFAULT_VALUE);
         assertThat(testAttrValue.getImage()).isEqualTo(DEFAULT_IMAGE);
         assertThat(testAttrValue.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testAttrValue.getSort()).isEqualTo(DEFAULT_SORT);
         assertThat(testAttrValue.getCreatedTime()).isEqualTo(DEFAULT_CREATED_TIME);
         assertThat(testAttrValue.getUpdatedTime()).isEqualTo(DEFAULT_UPDATED_TIME);
         assertThat(testAttrValue.isDeleted()).isEqualTo(DEFAULT_DELETED);
+        assertThat(testAttrValue.getRank()).isEqualTo(DEFAULT_RANK);
     }
 
     @Test
@@ -214,10 +214,10 @@ public class AttrValueResourceIntTest {
             .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.toString())))
             .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
-            .andExpect(jsonPath("$.[*].sort").value(hasItem(DEFAULT_SORT)))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
+            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK)));
     }
 
     @Test
@@ -235,10 +235,10 @@ public class AttrValueResourceIntTest {
             .andExpect(jsonPath("$.value").value(DEFAULT_VALUE.toString()))
             .andExpect(jsonPath("$.image").value(DEFAULT_IMAGE.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS))
-            .andExpect(jsonPath("$.sort").value(DEFAULT_SORT))
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
             .andExpect(jsonPath("$.updatedTime").value(DEFAULT_UPDATED_TIME.toString()))
-            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()));
+            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()))
+            .andExpect(jsonPath("$.rank").value(DEFAULT_RANK));
     }
 
     @Test
@@ -453,72 +453,6 @@ public class AttrValueResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllAttrValuesBySortIsEqualToSomething() throws Exception {
-        // Initialize the database
-        attrValueRepository.saveAndFlush(attrValue);
-
-        // Get all the attrValueList where sort equals to DEFAULT_SORT
-        defaultAttrValueShouldBeFound("sort.equals=" + DEFAULT_SORT);
-
-        // Get all the attrValueList where sort equals to UPDATED_SORT
-        defaultAttrValueShouldNotBeFound("sort.equals=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllAttrValuesBySortIsInShouldWork() throws Exception {
-        // Initialize the database
-        attrValueRepository.saveAndFlush(attrValue);
-
-        // Get all the attrValueList where sort in DEFAULT_SORT or UPDATED_SORT
-        defaultAttrValueShouldBeFound("sort.in=" + DEFAULT_SORT + "," + UPDATED_SORT);
-
-        // Get all the attrValueList where sort equals to UPDATED_SORT
-        defaultAttrValueShouldNotBeFound("sort.in=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllAttrValuesBySortIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        attrValueRepository.saveAndFlush(attrValue);
-
-        // Get all the attrValueList where sort is not null
-        defaultAttrValueShouldBeFound("sort.specified=true");
-
-        // Get all the attrValueList where sort is null
-        defaultAttrValueShouldNotBeFound("sort.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllAttrValuesBySortIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        attrValueRepository.saveAndFlush(attrValue);
-
-        // Get all the attrValueList where sort greater than or equals to DEFAULT_SORT
-        defaultAttrValueShouldBeFound("sort.greaterOrEqualThan=" + DEFAULT_SORT);
-
-        // Get all the attrValueList where sort greater than or equals to UPDATED_SORT
-        defaultAttrValueShouldNotBeFound("sort.greaterOrEqualThan=" + UPDATED_SORT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllAttrValuesBySortIsLessThanSomething() throws Exception {
-        // Initialize the database
-        attrValueRepository.saveAndFlush(attrValue);
-
-        // Get all the attrValueList where sort less than or equals to DEFAULT_SORT
-        defaultAttrValueShouldNotBeFound("sort.lessThan=" + DEFAULT_SORT);
-
-        // Get all the attrValueList where sort less than or equals to UPDATED_SORT
-        defaultAttrValueShouldBeFound("sort.lessThan=" + UPDATED_SORT);
-    }
-
-
-    @Test
-    @Transactional
     public void getAllAttrValuesByCreatedTimeIsEqualToSomething() throws Exception {
         // Initialize the database
         attrValueRepository.saveAndFlush(attrValue);
@@ -633,6 +567,72 @@ public class AttrValueResourceIntTest {
         // Get all the attrValueList where deleted is null
         defaultAttrValueShouldNotBeFound("deleted.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllAttrValuesByRankIsEqualToSomething() throws Exception {
+        // Initialize the database
+        attrValueRepository.saveAndFlush(attrValue);
+
+        // Get all the attrValueList where rank equals to DEFAULT_RANK
+        defaultAttrValueShouldBeFound("rank.equals=" + DEFAULT_RANK);
+
+        // Get all the attrValueList where rank equals to UPDATED_RANK
+        defaultAttrValueShouldNotBeFound("rank.equals=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAttrValuesByRankIsInShouldWork() throws Exception {
+        // Initialize the database
+        attrValueRepository.saveAndFlush(attrValue);
+
+        // Get all the attrValueList where rank in DEFAULT_RANK or UPDATED_RANK
+        defaultAttrValueShouldBeFound("rank.in=" + DEFAULT_RANK + "," + UPDATED_RANK);
+
+        // Get all the attrValueList where rank equals to UPDATED_RANK
+        defaultAttrValueShouldNotBeFound("rank.in=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAttrValuesByRankIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        attrValueRepository.saveAndFlush(attrValue);
+
+        // Get all the attrValueList where rank is not null
+        defaultAttrValueShouldBeFound("rank.specified=true");
+
+        // Get all the attrValueList where rank is null
+        defaultAttrValueShouldNotBeFound("rank.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAttrValuesByRankIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        attrValueRepository.saveAndFlush(attrValue);
+
+        // Get all the attrValueList where rank greater than or equals to DEFAULT_RANK
+        defaultAttrValueShouldBeFound("rank.greaterOrEqualThan=" + DEFAULT_RANK);
+
+        // Get all the attrValueList where rank greater than or equals to UPDATED_RANK
+        defaultAttrValueShouldNotBeFound("rank.greaterOrEqualThan=" + UPDATED_RANK);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAttrValuesByRankIsLessThanSomething() throws Exception {
+        // Initialize the database
+        attrValueRepository.saveAndFlush(attrValue);
+
+        // Get all the attrValueList where rank less than or equals to DEFAULT_RANK
+        defaultAttrValueShouldNotBeFound("rank.lessThan=" + DEFAULT_RANK);
+
+        // Get all the attrValueList where rank less than or equals to UPDATED_RANK
+        defaultAttrValueShouldBeFound("rank.lessThan=" + UPDATED_RANK);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -645,10 +645,10 @@ public class AttrValueResourceIntTest {
             .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.toString())))
             .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
-            .andExpect(jsonPath("$.[*].sort").value(hasItem(DEFAULT_SORT)))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
+            .andExpect(jsonPath("$.[*].rank").value(hasItem(DEFAULT_RANK)));
     }
 
     /**
@@ -687,10 +687,10 @@ public class AttrValueResourceIntTest {
             .value(UPDATED_VALUE)
             .image(UPDATED_IMAGE)
             .status(UPDATED_STATUS)
-            .sort(UPDATED_SORT)
             .createdTime(UPDATED_CREATED_TIME)
             .updatedTime(UPDATED_UPDATED_TIME)
-            .deleted(UPDATED_DELETED);
+            .deleted(UPDATED_DELETED)
+            .rank(UPDATED_RANK);
         AttrValueDTO attrValueDTO = attrValueMapper.toDto(updatedAttrValue);
 
         restAttrValueMockMvc.perform(put("/api/attr-values")
@@ -706,10 +706,10 @@ public class AttrValueResourceIntTest {
         assertThat(testAttrValue.getValue()).isEqualTo(UPDATED_VALUE);
         assertThat(testAttrValue.getImage()).isEqualTo(UPDATED_IMAGE);
         assertThat(testAttrValue.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testAttrValue.getSort()).isEqualTo(UPDATED_SORT);
         assertThat(testAttrValue.getCreatedTime()).isEqualTo(UPDATED_CREATED_TIME);
         assertThat(testAttrValue.getUpdatedTime()).isEqualTo(UPDATED_UPDATED_TIME);
         assertThat(testAttrValue.isDeleted()).isEqualTo(UPDATED_DELETED);
+        assertThat(testAttrValue.getRank()).isEqualTo(UPDATED_RANK);
     }
 
     @Test

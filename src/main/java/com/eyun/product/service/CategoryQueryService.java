@@ -87,9 +87,6 @@ public class CategoryQueryService extends QueryService<Category> {
             if (criteria.getIsParent() != null) {
                 specification = specification.and(buildSpecification(criteria.getIsParent(), Category_.isParent));
             }
-            if (criteria.getSort() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getSort(), Category_.sort));
-            }
             if (criteria.getTarget() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getTarget(), Category_.target));
             }
@@ -110,6 +107,9 @@ public class CategoryQueryService extends QueryService<Category> {
             }
             if (criteria.getImage() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getImage(), Category_.image));
+            }
+            if (criteria.getRank() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRank(), Category_.rank));
             }
         }
         return specification;

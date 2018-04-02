@@ -34,13 +34,13 @@ public class AttributeCriteria implements Serializable {
 
     private IntegerFilter status;
 
-    private IntegerFilter sort;
-
     private InstantFilter createdTime;
 
     private InstantFilter updatedTime;
 
     private IntegerFilter deleted;
+
+    private IntegerFilter rank;
 
     public AttributeCriteria() {
     }
@@ -77,14 +77,6 @@ public class AttributeCriteria implements Serializable {
         this.status = status;
     }
 
-    public IntegerFilter getSort() {
-        return sort;
-    }
-
-    public void setSort(IntegerFilter sort) {
-        this.sort = sort;
-    }
-
     public InstantFilter getCreatedTime() {
         return createdTime;
     }
@@ -109,6 +101,14 @@ public class AttributeCriteria implements Serializable {
         this.deleted = deleted;
     }
 
+    public IntegerFilter getRank() {
+        return rank;
+    }
+
+    public void setRank(IntegerFilter rank) {
+        this.rank = rank;
+    }
+
     @Override
     public String toString() {
         return "AttributeCriteria{" +
@@ -116,10 +116,10 @@ public class AttributeCriteria implements Serializable {
                 (name != null ? "name=" + name + ", " : "") +
                 (productId != null ? "productId=" + productId + ", " : "") +
                 (status != null ? "status=" + status + ", " : "") +
-                (sort != null ? "sort=" + sort + ", " : "") +
                 (createdTime != null ? "createdTime=" + createdTime + ", " : "") +
                 (updatedTime != null ? "updatedTime=" + updatedTime + ", " : "") +
                 (deleted != null ? "deleted=" + deleted + ", " : "") +
+                (rank != null ? "rank=" + rank + ", " : "") +
             "}";
     }
 

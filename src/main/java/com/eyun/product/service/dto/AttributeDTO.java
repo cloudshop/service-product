@@ -22,13 +22,13 @@ public class AttributeDTO implements Serializable {
     @NotNull
     private Integer status;
 
-    private Integer sort;
-
     private Instant createdTime;
 
     private Instant updatedTime;
 
     private Integer deleted;
+
+    private Integer rank;
 
     public Long getId() {
         return id;
@@ -62,14 +62,6 @@ public class AttributeDTO implements Serializable {
         this.status = status;
     }
 
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
     public Instant getCreatedTime() {
         return createdTime;
     }
@@ -92,6 +84,14 @@ public class AttributeDTO implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 
     @Override
@@ -122,10 +122,10 @@ public class AttributeDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", productId=" + getProductId() +
             ", status=" + getStatus() +
-            ", sort=" + getSort() +
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted=" + getDeleted() +
+            ", rank=" + getRank() +
             "}";
     }
 }

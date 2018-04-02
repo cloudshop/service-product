@@ -87,9 +87,6 @@ public class AttributeQueryService extends QueryService<Attribute> {
             if (criteria.getStatus() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getStatus(), Attribute_.status));
             }
-            if (criteria.getSort() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getSort(), Attribute_.sort));
-            }
             if (criteria.getCreatedTime() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCreatedTime(), Attribute_.createdTime));
             }
@@ -98,6 +95,9 @@ public class AttributeQueryService extends QueryService<Attribute> {
             }
             if (criteria.getDeleted() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDeleted(), Attribute_.deleted));
+            }
+            if (criteria.getRank() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRank(), Attribute_.rank));
             }
         }
         return specification;

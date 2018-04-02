@@ -37,9 +37,6 @@ public class AttrValue implements Serializable {
     @Column(name = "status")
     private Integer status;
 
-    @Column(name = "jhi_sort")
-    private Integer sort;
-
     @Column(name = "created_time")
     private Instant createdTime;
 
@@ -48,6 +45,9 @@ public class AttrValue implements Serializable {
 
     @Column(name = "deleted")
     private Boolean deleted;
+
+    @Column(name = "rank")
+    private Integer rank;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -110,19 +110,6 @@ public class AttrValue implements Serializable {
         this.status = status;
     }
 
-    public Integer getSort() {
-        return sort;
-    }
-
-    public AttrValue sort(Integer sort) {
-        this.sort = sort;
-        return this;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
     public Instant getCreatedTime() {
         return createdTime;
     }
@@ -161,6 +148,19 @@ public class AttrValue implements Serializable {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public AttrValue rank(Integer rank) {
+        this.rank = rank;
+        return this;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -191,10 +191,10 @@ public class AttrValue implements Serializable {
             ", value='" + getValue() + "'" +
             ", image='" + getImage() + "'" +
             ", status=" + getStatus() +
-            ", sort=" + getSort() +
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted='" + isDeleted() + "'" +
+            ", rank=" + getRank() +
             "}";
     }
 }

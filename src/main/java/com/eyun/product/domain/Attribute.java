@@ -36,9 +36,6 @@ public class Attribute implements Serializable {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "jhi_sort")
-    private Integer sort;
-
     @Column(name = "created_time")
     private Instant createdTime;
 
@@ -47,6 +44,9 @@ public class Attribute implements Serializable {
 
     @Column(name = "deleted")
     private Integer deleted;
+
+    @Column(name = "rank")
+    private Integer rank;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -96,19 +96,6 @@ public class Attribute implements Serializable {
         this.status = status;
     }
 
-    public Integer getSort() {
-        return sort;
-    }
-
-    public Attribute sort(Integer sort) {
-        this.sort = sort;
-        return this;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
     public Instant getCreatedTime() {
         return createdTime;
     }
@@ -147,6 +134,19 @@ public class Attribute implements Serializable {
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public Attribute rank(Integer rank) {
+        this.rank = rank;
+        return this;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -176,10 +176,10 @@ public class Attribute implements Serializable {
             ", name='" + getName() + "'" +
             ", productId=" + getProductId() +
             ", status=" + getStatus() +
-            ", sort=" + getSort() +
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted=" + getDeleted() +
+            ", rank=" + getRank() +
             "}";
     }
 }

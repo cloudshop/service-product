@@ -20,8 +20,6 @@ public class CategoryDTO implements Serializable {
 
     private Boolean isParent;
 
-    private Integer sort;
-
     private String target;
 
     private Integer targetType;
@@ -35,6 +33,8 @@ public class CategoryDTO implements Serializable {
     private Integer categoryGrade;
 
     private String image;
+
+    private Integer rank;
 
     public Long getId() {
         return id;
@@ -66,14 +66,6 @@ public class CategoryDTO implements Serializable {
 
     public void setIsParent(Boolean isParent) {
         this.isParent = isParent;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
     }
 
     public String getTarget() {
@@ -132,6 +124,14 @@ public class CategoryDTO implements Serializable {
         this.image = image;
     }
 
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -160,7 +160,6 @@ public class CategoryDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", parentId=" + getParentId() +
             ", isParent='" + isIsParent() + "'" +
-            ", sort=" + getSort() +
             ", target='" + getTarget() + "'" +
             ", targetType=" + getTargetType() +
             ", createdTime='" + getCreatedTime() + "'" +
@@ -168,6 +167,7 @@ public class CategoryDTO implements Serializable {
             ", deleted='" + isDeleted() + "'" +
             ", categoryGrade=" + getCategoryGrade() +
             ", image='" + getImage() + "'" +
+            ", rank=" + getRank() +
             "}";
     }
 }

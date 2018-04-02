@@ -34,8 +34,6 @@ public class CategoryCriteria implements Serializable {
 
     private BooleanFilter isParent;
 
-    private IntegerFilter sort;
-
     private StringFilter target;
 
     private IntegerFilter targetType;
@@ -49,6 +47,8 @@ public class CategoryCriteria implements Serializable {
     private IntegerFilter categoryGrade;
 
     private StringFilter image;
+
+    private IntegerFilter rank;
 
     public CategoryCriteria() {
     }
@@ -83,14 +83,6 @@ public class CategoryCriteria implements Serializable {
 
     public void setIsParent(BooleanFilter isParent) {
         this.isParent = isParent;
-    }
-
-    public IntegerFilter getSort() {
-        return sort;
-    }
-
-    public void setSort(IntegerFilter sort) {
-        this.sort = sort;
     }
 
     public StringFilter getTarget() {
@@ -149,6 +141,14 @@ public class CategoryCriteria implements Serializable {
         this.image = image;
     }
 
+    public IntegerFilter getRank() {
+        return rank;
+    }
+
+    public void setRank(IntegerFilter rank) {
+        this.rank = rank;
+    }
+
     @Override
     public String toString() {
         return "CategoryCriteria{" +
@@ -156,7 +156,6 @@ public class CategoryCriteria implements Serializable {
                 (name != null ? "name=" + name + ", " : "") +
                 (parentId != null ? "parentId=" + parentId + ", " : "") +
                 (isParent != null ? "isParent=" + isParent + ", " : "") +
-                (sort != null ? "sort=" + sort + ", " : "") +
                 (target != null ? "target=" + target + ", " : "") +
                 (targetType != null ? "targetType=" + targetType + ", " : "") +
                 (createdTime != null ? "createdTime=" + createdTime + ", " : "") +
@@ -164,6 +163,7 @@ public class CategoryCriteria implements Serializable {
                 (deleted != null ? "deleted=" + deleted + ", " : "") +
                 (categoryGrade != null ? "categoryGrade=" + categoryGrade + ", " : "") +
                 (image != null ? "image=" + image + ", " : "") +
+                (rank != null ? "rank=" + rank + ", " : "") +
             "}";
     }
 
