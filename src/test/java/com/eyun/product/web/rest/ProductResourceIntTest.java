@@ -68,6 +68,9 @@ public class ProductResourceIntTest {
     private static final Boolean DEFAULT_DELETED = false;
     private static final Boolean UPDATED_DELETED = true;
 
+    private static final String DEFAULT_DETAILS = "AAAAAAAAAA";
+    private static final String UPDATED_DETAILS = "BBBBBBBBBB";
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -121,7 +124,8 @@ public class ProductResourceIntTest {
             .shopId(DEFAULT_SHOP_ID)
             .createdTime(DEFAULT_CREATED_TIME)
             .updatedTime(DEFAULT_UPDATED_TIME)
-            .deleted(DEFAULT_DELETED);
+            .deleted(DEFAULT_DELETED)
+            .details(DEFAULT_DETAILS);
         return product;
     }
 
@@ -153,6 +157,7 @@ public class ProductResourceIntTest {
         assertThat(testProduct.getCreatedTime()).isEqualTo(DEFAULT_CREATED_TIME);
         assertThat(testProduct.getUpdatedTime()).isEqualTo(DEFAULT_UPDATED_TIME);
         assertThat(testProduct.isDeleted()).isEqualTo(DEFAULT_DELETED);
+        assertThat(testProduct.getDetails()).isEqualTo(DEFAULT_DETAILS);
     }
 
     @Test
@@ -230,7 +235,8 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].shopId").value(hasItem(DEFAULT_SHOP_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
+            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS.toString())));
     }
 
     @Test
@@ -250,7 +256,8 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.shopId").value(DEFAULT_SHOP_ID.intValue()))
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
             .andExpect(jsonPath("$.updatedTime").value(DEFAULT_UPDATED_TIME.toString()))
-            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()));
+            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()))
+            .andExpect(jsonPath("$.details").value(DEFAULT_DETAILS.toString()));
     }
 
     @Test
@@ -606,6 +613,45 @@ public class ProductResourceIntTest {
         // Get all the productList where deleted is null
         defaultProductShouldNotBeFound("deleted.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllProductsByDetailsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where details equals to DEFAULT_DETAILS
+        defaultProductShouldBeFound("details.equals=" + DEFAULT_DETAILS);
+
+        // Get all the productList where details equals to UPDATED_DETAILS
+        defaultProductShouldNotBeFound("details.equals=" + UPDATED_DETAILS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductsByDetailsIsInShouldWork() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where details in DEFAULT_DETAILS or UPDATED_DETAILS
+        defaultProductShouldBeFound("details.in=" + DEFAULT_DETAILS + "," + UPDATED_DETAILS);
+
+        // Get all the productList where details equals to UPDATED_DETAILS
+        defaultProductShouldNotBeFound("details.in=" + UPDATED_DETAILS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductsByDetailsIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where details is not null
+        defaultProductShouldBeFound("details.specified=true");
+
+        // Get all the productList where details is null
+        defaultProductShouldNotBeFound("details.specified=false");
+    }
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -620,7 +666,8 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].shopId").value(hasItem(DEFAULT_SHOP_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
+            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS.toString())));
     }
 
     /**
@@ -661,7 +708,8 @@ public class ProductResourceIntTest {
             .shopId(UPDATED_SHOP_ID)
             .createdTime(UPDATED_CREATED_TIME)
             .updatedTime(UPDATED_UPDATED_TIME)
-            .deleted(UPDATED_DELETED);
+            .deleted(UPDATED_DELETED)
+            .details(UPDATED_DETAILS);
         ProductDTO productDTO = productMapper.toDto(updatedProduct);
 
         restProductMockMvc.perform(put("/api/products")
@@ -680,6 +728,7 @@ public class ProductResourceIntTest {
         assertThat(testProduct.getCreatedTime()).isEqualTo(UPDATED_CREATED_TIME);
         assertThat(testProduct.getUpdatedTime()).isEqualTo(UPDATED_UPDATED_TIME);
         assertThat(testProduct.isDeleted()).isEqualTo(UPDATED_DELETED);
+        assertThat(testProduct.getDetails()).isEqualTo(UPDATED_DETAILS);
     }
 
     @Test

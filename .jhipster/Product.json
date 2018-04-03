@@ -35,6 +35,10 @@
         {
             "fieldName": "deleted",
             "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "details",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180323035650",

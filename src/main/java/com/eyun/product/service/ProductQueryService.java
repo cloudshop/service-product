@@ -99,6 +99,9 @@ public class ProductQueryService extends QueryService<Product> {
             if (criteria.getDeleted() != null) {
                 specification = specification.and(buildSpecification(criteria.getDeleted(), Product_.deleted));
             }
+            if (criteria.getDetails() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getDetails(), Product_.details));
+            }
         }
         return specification;
     }

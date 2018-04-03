@@ -29,6 +29,8 @@ public class ProductDTO implements Serializable {
 
     private Boolean deleted;
 
+    private String details;
+
     public Long getId() {
         return id;
     }
@@ -93,6 +95,14 @@ public class ProductDTO implements Serializable {
         this.deleted = deleted;
     }
 
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -125,6 +135,7 @@ public class ProductDTO implements Serializable {
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted='" + isDeleted() + "'" +
+            ", details='" + getDetails() + "'" +
             "}";
     }
 }

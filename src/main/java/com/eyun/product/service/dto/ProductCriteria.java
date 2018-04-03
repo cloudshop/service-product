@@ -42,6 +42,8 @@ public class ProductCriteria implements Serializable {
 
     private BooleanFilter deleted;
 
+    private StringFilter details;
+
     public ProductCriteria() {
     }
 
@@ -109,6 +111,14 @@ public class ProductCriteria implements Serializable {
         this.deleted = deleted;
     }
 
+    public StringFilter getDetails() {
+        return details;
+    }
+
+    public void setDetails(StringFilter details) {
+        this.details = details;
+    }
+
     @Override
     public String toString() {
         return "ProductCriteria{" +
@@ -120,6 +130,7 @@ public class ProductCriteria implements Serializable {
                 (createdTime != null ? "createdTime=" + createdTime + ", " : "") +
                 (updatedTime != null ? "updatedTime=" + updatedTime + ", " : "") +
                 (deleted != null ? "deleted=" + deleted + ", " : "") +
+                (details != null ? "details=" + details + ", " : "") +
             "}";
     }
 

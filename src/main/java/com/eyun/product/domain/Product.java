@@ -47,6 +47,9 @@ public class Product implements Serializable {
     @Column(name = "deleted")
     private Boolean deleted;
 
+    @Column(name = "details")
+    private String details;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -146,6 +149,19 @@ public class Product implements Serializable {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public Product details(String details) {
+        this.details = details;
+        return this;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -179,6 +195,7 @@ public class Product implements Serializable {
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted='" + isDeleted() + "'" +
+            ", details='" + getDetails() + "'" +
             "}";
     }
 }
