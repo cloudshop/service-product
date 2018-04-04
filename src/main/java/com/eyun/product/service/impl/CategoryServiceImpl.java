@@ -12,6 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Service Implementation for managing Category.
@@ -30,7 +35,44 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
     }
-
+    @Override
+    public Map getCategory(Long id)throws Exception{
+        Map result=new HashMap();
+        List<Map<String,String>> category=categoryRepository.getRootCategory();
+        result.put("firstCategory",category);
+        List<Map<String,String>>subList=categoryRepository.getSubCategory(id);
+        List<Map<String,String>> secondList=new ArrayList<Map<String,String>>();
+        if (!subList.isEmpty()&&subList.size()>0){
+            String secondId="";
+            Map second=new HashMap();
+            List subIdlist=new ArrayList();
+            List<Map<String,String>> thirdList=new ArrayList<Map<String,String>>();
+            for (Map<String,String> map:subList){
+                if (!secondId.equals(String.valueOf(map.get("secondid")))){
+                    secondId=String.valueOf(map.get("secondid"));
+                    second=new HashMap();
+                    thirdList=new ArrayList<>();
+                }
+                second.put("secondId",secondId);
+                second.put("secondName",map.get("secondname"));
+                Map third=new HashMap();
+                third.put("thirdid",String.valueOf(map.get("thirdid")));
+                third.put("parentid",String.valueOf(map.get("parentid")));
+                third.put("thirdName",map.get("thirdname"));
+                third.put("target",map.get("target"));
+                third.put("target_type",map.get("target_type"));
+                third.put("logo",map.get("logo"));
+                thirdList.add(third);
+                second.put("thirdCategory",thirdList);
+                if (!subIdlist.contains(secondId)){
+                    subIdlist.add(secondId);
+                    secondList.add(second);
+                }
+            }
+        }
+        result.put("secondCategory",secondList);
+        return result;
+    }
     /**
      * Save a category.
      *

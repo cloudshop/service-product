@@ -9,6 +9,10 @@ import com.eyun.product.service.dto.ProductDTO;
 import com.eyun.product.service.dto.ProductCriteria;
 import com.eyun.product.service.ProductQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,15 +23,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * REST controller for managing Product.
  */
+@Api("商品服务")
 @RestController
 @RequestMapping("/api")
 public class ProductResource {
@@ -99,6 +106,7 @@ public class ProductResource {
     public ResponseEntity<List<ProductDTO>> getAllProducts(ProductCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Products by criteria: {}", criteria);
         Page<ProductDTO> page = productQueryService.findByCriteria(criteria, pageable);
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/products");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -115,6 +123,29 @@ public class ProductResource {
         log.debug("REST request to get Product : {}", id);
         ProductDTO productDTO = productService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productDTO));
+    }
+
+    @ApiOperation("商品信息")
+    @GetMapping("/product/content")
+    @Timed
+    public ResponseEntity findProductByProductId(@RequestParam("id") Long id){
+            Map result=productService.findProductById(id);
+            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+        }
+    @ApiOperation("商品列表")
+    @GetMapping("/product/all")
+    @Timed
+    public ResponseEntity findProductByCatewgoryId(@RequestParam("categoryid") Long categoryid,@RequestParam(value = "productName",required = false)String productName){
+        Map result=productService.findProductByCatewgory(categoryid,productName);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
+
+    @ApiOperation("收藏的商品")
+    @PostMapping("/product/follow")
+    @Timed
+    public ResponseEntity findProductsByIds(@RequestBody List<Long> ids){
+        List<Map<String,String>> resultList=productService.findProductByIds(ids);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resultList));
     }
 
     /**

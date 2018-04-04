@@ -1,8 +1,11 @@
 package com.eyun.product.service;
 
 import com.eyun.product.service.dto.CategoryDTO;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Map;
 
 /**
  * Service Interface for managing Category.
@@ -25,6 +28,7 @@ public interface CategoryService {
      */
     Page<CategoryDTO> findAll(Pageable pageable);
 
+    public Map getCategory(Long id)throws Exception;
     /**
      * Get the "id" category.
      *
