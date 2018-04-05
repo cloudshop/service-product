@@ -70,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
         Map result=new HashMap();
         Map product=productRepository.findProductById(id);
         result.put("product",product);
-        List<Map<String,String>>attr=productRepository.findProductAttrById(id);
+        List<Map>attr=productRepository.findProductAttrById(id);
         result.put("attrbute",attr);
         return result;
     }

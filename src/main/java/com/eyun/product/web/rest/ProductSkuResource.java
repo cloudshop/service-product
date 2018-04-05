@@ -9,6 +9,8 @@ import com.eyun.product.service.dto.ProductSkuDTO;
 import com.eyun.product.service.dto.ProductSkuCriteria;
 import com.eyun.product.service.ProductSkuQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -23,11 +25,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * REST controller for managing ProductSku.
  */
+@Api("商品sku")
 @RestController
 @RequestMapping("/api")
 public class ProductSkuResource {
@@ -64,7 +68,14 @@ public class ProductSkuResource {
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
-
+    @ApiOperation("更新库存")
+    @PostMapping("/product-skus/stock/{processtype}")
+    @Timed
+    public ResponseEntity updateProductSkuCount(@Valid @RequestBody ProductSkuDTO productSkuDTO,@PathVariable Integer processtype) throws Exception {
+        log.debug("REST request to update ProductSku : {}", productSkuDTO);
+        Map result = productSkuService.updateStockCount(productSkuDTO,processtype);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
     /**
      * PUT  /product-skus : Updates an existing productSku.
      *

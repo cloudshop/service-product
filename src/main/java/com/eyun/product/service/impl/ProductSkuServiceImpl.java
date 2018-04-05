@@ -12,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Service Implementation for managing ProductSku.
@@ -43,6 +46,28 @@ public class ProductSkuServiceImpl implements ProductSkuService {
         ProductSku productSku = productSkuMapper.toEntity(productSkuDTO);
         productSku = productSkuRepository.save(productSku);
         return productSkuMapper.toDto(productSku);
+    }
+
+    @Override
+    public Map updateStockCount(ProductSkuDTO productSkuDTO, Integer processType) {
+        String messgae="success";
+        String content="更改库存成功";;
+        ProductSku productSku=productSkuRepository.findOne(productSkuDTO.getId());
+        if (processType==0){//减库存
+            if(productSku.getCount()>=productSkuDTO.getCount()){
+                productSku.setCount(productSku.getCount()-productSkuDTO.getCount());
+            }else {
+                messgae="failed";
+                content="更改库存失败！库存不足";
+            }
+        }else {
+            productSku.setCount(productSku.getCount()+productSkuDTO.getCount());
+        }
+        Map result=new HashMap();
+        result.put("messgae",messgae);
+        result.put("content",content);
+        productSkuRepository.save(productSku);
+        return result;
     }
 
     /**
