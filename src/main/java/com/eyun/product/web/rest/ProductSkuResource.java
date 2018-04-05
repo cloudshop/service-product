@@ -69,7 +69,7 @@ public class ProductSkuResource {
             .body(result);
     }
     @ApiOperation("更新库存")
-    @PostMapping("/product-skus/stock/{processtype}")
+    @PutMapping("/product-skus/stock/{processtype}")
     @Timed
     public ResponseEntity updateProductSkuCount(@Valid @RequestBody ProductSkuDTO productSkuDTO,@PathVariable Integer processtype) throws Exception {
         log.debug("REST request to update ProductSku : {}", productSkuDTO);
