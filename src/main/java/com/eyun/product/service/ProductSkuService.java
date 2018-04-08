@@ -4,6 +4,8 @@ import com.eyun.product.service.dto.ProductSkuDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Map;
+
 /**
  * Service Interface for managing ProductSku.
  */
@@ -16,6 +18,8 @@ public interface ProductSkuService {
      * @return the persisted entity
      */
     ProductSkuDTO save(ProductSkuDTO productSkuDTO);
+
+    Map updateStockCount(ProductSkuDTO productSkuDTO, Integer processType);
 
     /**
      * Get all the productSkus.
