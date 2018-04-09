@@ -13,14 +13,13 @@ public class ProductSkuDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+
     private Long productId;
 
-    @NotNull
     @Min(value = 0)
     private Integer count;
 
-    @NotNull
+
     @Min(value = 0)
     private Integer price;
 

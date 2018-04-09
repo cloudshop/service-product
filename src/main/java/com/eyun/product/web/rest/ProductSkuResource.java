@@ -71,7 +71,7 @@ public class ProductSkuResource {
     @ApiOperation("更新库存")
     @PutMapping("/product-skus/stock/{processtype}")
     @Timed
-    public ResponseEntity updateProductSkuCount(@Valid @RequestBody ProductSkuDTO productSkuDTO,@PathVariable Integer processtype) throws Exception {
+    public ResponseEntity updateProductSkuCount(@RequestBody ProductSkuDTO productSkuDTO,@PathVariable Integer processtype) throws Exception {
         log.debug("REST request to update ProductSku : {}", productSkuDTO);
         Map result = productSkuService.updateStockCount(productSkuDTO,processtype);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));

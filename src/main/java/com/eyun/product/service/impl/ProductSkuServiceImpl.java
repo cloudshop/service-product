@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,20 +54,26 @@ public class ProductSkuServiceImpl implements ProductSkuService {
         String messgae="success";
         String content="更改库存成功";;
         ProductSku productSku=productSkuRepository.findOne(productSkuDTO.getId());
-        if (processType==0){//减库存
-            if(productSku.getCount()>=productSkuDTO.getCount()){
-                productSku.setCount(productSku.getCount()-productSkuDTO.getCount());
-            }else {
-                messgae="failed";
-                content="更改库存失败！库存不足";
+        if (productSku!=null){
+            if (processType==0){//减库存
+                if(productSku.getCount()>=productSkuDTO.getCount()){
+                    productSku.setCount(productSku.getCount()-productSkuDTO.getCount());
+                    productSkuRepository.save(productSku);
+                }else {
+                    messgae="failed";
+                    content="更改库存失败！库存不足";
+                }
+            }else {//加库存
+                productSku.setCount(productSku.getCount()+productSkuDTO.getCount());
+                productSkuRepository.save(productSku);
             }
         }else {
-            productSku.setCount(productSku.getCount()+productSkuDTO.getCount());
+            messgae="failed";
+            content="更改库存失败！无此商品sku";
         }
         Map result=new HashMap();
         result.put("messgae",messgae);
         result.put("content",content);
-        productSkuRepository.save(productSku);
         return result;
     }
 
