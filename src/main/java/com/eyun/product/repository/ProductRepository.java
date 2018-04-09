@@ -20,7 +20,7 @@ import java.util.Map;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     /*获取商品信息*/
-    @Query(value = "SELECT p.id AS id, p. NAME AS productName, sku.price AS price, sku.sku_name AS attr, IFNULL(p.details,\"\") AS details FROM product p LEFT JOIN product_sku sku ON p.id = sku.product_id WHERE p.id = :id AND sku.deleted = 0",nativeQuery = true)
+    @Query(value = "SELECT p.id AS id, p.shop_id AS shopid,p. NAME AS productName, sku.price AS price, sku.sku_name AS attr, IFNULL(p.details,\"\") AS details FROM product p LEFT JOIN product_sku sku ON p.id = sku.product_id WHERE p.id = :id AND sku.deleted = 0",nativeQuery = true)
     public Map findProductById(@Param("id") Long id);
 
     /*获取商品全部属性*/

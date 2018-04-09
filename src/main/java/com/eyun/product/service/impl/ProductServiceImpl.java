@@ -5,6 +5,7 @@ import com.eyun.product.service.ProductService;
 import com.eyun.product.domain.Product;
 import com.eyun.product.repository.ProductRepository;
 import com.eyun.product.service.dto.ProductDTO;
+import com.eyun.product.service.dto.ProductSeachParam;
 import com.eyun.product.service.mapper.ProductMapper;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SQLQuery;
@@ -76,15 +77,23 @@ public class ProductServiceImpl implements ProductService {
     }
     /*商品列表*/
     @Override
-    public Map findProductByCatewgory(Long CatewgoryId,String productName) {
-        String select="SELECT p.id AS id, p. NAME AS NAME, p.list_price AS listPrice, ( SELECT IFNULL(img.img_url,\"\") FROM product_img img WHERE img.jhi_type = 1 AND img.product_id = p.id AND img.deleted=0 ) AS url FROM product p LEFT JOIN brand b ON b.id = p.brand_id LEFT JOIN category ca ON ca.id = b.category_id WHERE ca.id = :categoryid AND p.deleted = 0  ";
-        String sql=select;
-        if (StringUtils.isNotBlank(productName)){
-            sql+="and p. NAME like \"%"+productName+"%\"";
+    public Map findProductByCatewgory(ProductSeachParam productSeachParam) {
+        StringBuffer sql=new StringBuffer("SELECT p.id AS id, p. NAME AS NAME, sku.price AS listPrice, ( SELECT IFNULL(img.img_url,\"\") FROM product_img img WHERE img.jhi_type = 1 AND img.product_id = p.id AND img.deleted=0 ) AS url FROM product p LEFT JOIN product_sku sku ON p.id=sku.product_id LEFT JOIN brand b ON b.id = p.brand_id LEFT JOIN category ca ON ca.id = b.category_id WHERE ca.id = :categoryid AND p.deleted = 0  ");
+        if (StringUtils.isNotBlank(productSeachParam.getProductName())){
+            sql.append("and p. NAME like \"%"+productSeachParam.getProductName()+"%\"");
         }
-        Query query=entityManager.createNativeQuery(sql);
+        if (StringUtils.isNotBlank(productSeachParam.getSale())){
+            sql.append("ORDER BY sku.count");
+        }
+        if (StringUtils.isNotBlank(productSeachParam.getPrice())){
+            sql.append("ORDER BY p.list_price");
+        }
+        if (productSeachParam.getStartPrice()!=null&&productSeachParam.getEndPrice()!=null){
+            sql.append("AND sku.price BETWEEN "+productSeachParam.getStartPrice()+" AND "+productSeachParam.getEndPrice());
+        }
+        Query query=entityManager.createNativeQuery(sql.toString());
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        query.setParameter("categoryid",CatewgoryId);
+        query.setParameter("categoryid",productSeachParam.getCategoryId());
         List<Map> list=query.getResultList();
         Map result=new HashMap();
         result.put("mainContent",list);

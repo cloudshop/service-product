@@ -2,6 +2,7 @@ package com.eyun.product.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.eyun.product.service.ProductService;
+import com.eyun.product.service.dto.ProductSeachParam;
 import com.eyun.product.web.rest.errors.BadRequestAlertException;
 import com.eyun.product.web.rest.util.HeaderUtil;
 import com.eyun.product.web.rest.util.PaginationUtil;
@@ -133,10 +134,10 @@ public class ProductResource {
             return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
         }
     @ApiOperation("商品列表")
-    @GetMapping("/product/all")
+    @PostMapping("/product/all")
     @Timed
-    public ResponseEntity findProductByCatewgoryId(@RequestParam("categoryid") Long categoryid,@RequestParam(value = "productName",required = false)String productName){
-        Map result=productService.findProductByCatewgory(categoryid,productName);
+    public ResponseEntity findProductByCatewgoryId(@RequestBody ProductSeachParam productSeachParam){
+        Map result=productService.findProductByCatewgory(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
 

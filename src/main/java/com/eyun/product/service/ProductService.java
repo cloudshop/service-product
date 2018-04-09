@@ -2,6 +2,7 @@ package com.eyun.product.service;
 
 import com.eyun.product.service.dto.ProductDTO;
 
+import com.eyun.product.service.dto.ProductSeachParam;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public interface ProductService {
 
     public Map findProductById(Long id);
 
-    public Map findProductByCatewgory(Long CatewgoryId, String productName);
+    public Map findProductByCatewgory(ProductSeachParam productSeachParam);
 
     public List<Map<String,String>> findProductByIds(List<Long> ids);
 
