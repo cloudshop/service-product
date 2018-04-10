@@ -69,10 +69,13 @@ public class ProductSkuResource {
             .body(result);
     }
     @ApiOperation("更新库存")
-    @PutMapping("/product-skus/stock/{processtype}")
+    @GetMapping("/product-skus/stock/{processtype}/{id}/{count}")
     @Timed
-    public ResponseEntity updateProductSkuCount(@RequestBody ProductSkuDTO productSkuDTO,@PathVariable Integer processtype) throws Exception {
-        log.debug("REST request to update ProductSku : {}", productSkuDTO);
+    public ResponseEntity updateProductSkuCount(@PathVariable Integer processtype,@PathVariable Long id ,@PathVariable Integer count) throws Exception {
+        
+        ProductSkuDTO productSkuDTO = new ProductSkuDTO();
+        productSkuDTO.setCount(count);
+        productSkuDTO.setId(id);;
         Map result = productSkuService.updateStockCount(productSkuDTO,processtype);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
