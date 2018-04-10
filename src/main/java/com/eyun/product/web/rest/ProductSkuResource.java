@@ -72,7 +72,6 @@ public class ProductSkuResource {
     @GetMapping("/product-skus/stock/{processtype}/{id}/{count}")
     @Timed
     public ResponseEntity updateProductSkuCount(@PathVariable Integer processtype,@PathVariable Long id ,@PathVariable Integer count) throws Exception {
-        
         ProductSkuDTO productSkuDTO = new ProductSkuDTO();
         productSkuDTO.setCount(count);
         productSkuDTO.setId(id);;
