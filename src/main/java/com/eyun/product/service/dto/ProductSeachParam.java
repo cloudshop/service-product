@@ -1,6 +1,7 @@
 package com.eyun.product.service.dto;
 
 public class ProductSeachParam {
+
     private Long categoryId;
 
     private String productName;
@@ -12,6 +13,9 @@ public class ProductSeachParam {
     private Integer startPrice;
 
     private Integer endPrice;
+
+    private Integer pageNumber;
+    private Integer pageSize;
 
     public Long getCategoryId() {
         return categoryId;
@@ -59,6 +63,22 @@ public class ProductSeachParam {
 
     public void setEndPrice(Integer endPrice) {
         this.endPrice = endPrice;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     @Override
