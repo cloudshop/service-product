@@ -104,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
         StringBuffer fromSku=new StringBuffer("LEFT JOIN product_sku sku ON p.id=sku.product_id ");
         StringBuffer addWhere=new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 ");
         StringBuffer groupBy=new StringBuffer(" GROUP BY p.id");
-        StringBuffer select=new StringBuffer("SELECT p.id AS id, p. NAME AS NAME, p.list_price AS listPrice, ( SELECT IFNULL(img.img_url,\"\") FROM product_img img WHERE img.jhi_type = 1 AND img.product_id = p.id AND img.deleted=0 ) AS url FROM product p  LEFT JOIN brand b ON b.id = p.brand_id LEFT JOIN category ca ON ca.id = b.category_id ");
+        StringBuffer select=new StringBuffer("SELECT p.id AS id, p. NAME AS NAME, p.list_price AS listPrice, ( SELECT IFNULL(img.img_url,\"\") FROM product_img img WHERE img.jhi_type = 1 AND img.product_id = p.id AND img.deleted=0 limit 0,1) AS url FROM product p  LEFT JOIN brand b ON b.id = p.brand_id LEFT JOIN category ca ON ca.id = b.category_id ");
         if (StringUtils.isBlank(productSeachParam.getProductName())&&StringUtils.isBlank(productSeachParam.getSale())&&StringUtils.isBlank(productSeachParam.getPrice())&&productSeachParam.getStartPrice()==null&&productSeachParam.getEndPrice()==null){
             sql=select.append(addWhere).toString();
         }
