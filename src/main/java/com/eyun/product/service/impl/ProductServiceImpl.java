@@ -100,8 +100,6 @@ public class ProductServiceImpl implements ProductService {
     /*商品列表*/
     @Override
     public Map findProductByCatewgory(ProductSeachParam productSeachParam) {
-        //Integer start=(productSeachParam.getPageNumber()-1)*productSeachParam.getPageSize();
-        //Integer end=productSeachParam.getPageSize();
         String sql="";
         StringBuffer fromSku=new StringBuffer("LEFT JOIN product_sku sku ON p.id=sku.product_id ");
         StringBuffer addWhere=new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 ");
@@ -122,7 +120,6 @@ public class ProductServiceImpl implements ProductService {
         if (productSeachParam.getStartPrice()!=null&&productSeachParam.getEndPrice()!=null){
             sql=select.append(addWhere).append(" AND p.list_price BETWEEN "+productSeachParam.getStartPrice()+" AND "+productSeachParam.getEndPrice()).append(groupBy).toString();
         }
-        log.info("sql>>>>"+sql);
         Query query=entityManager.createNativeQuery(sql);
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         query.setParameter("categoryid",productSeachParam.getCategoryId());
