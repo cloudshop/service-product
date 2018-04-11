@@ -102,20 +102,28 @@ public class ProductServiceImpl implements ProductService {
     public Map findProductByCatewgory(ProductSeachParam productSeachParam) {
         //Integer start=(productSeachParam.getPageNumber()-1)*productSeachParam.getPageSize();
         //Integer end=productSeachParam.getPageSize();
-        StringBuffer sql=new StringBuffer("SELECT p.id AS id, p. NAME AS NAME, sku.price AS listPrice, ( SELECT IFNULL(img.img_url,\"\") FROM product_img img WHERE img.jhi_type = 1 AND img.product_id = p.id AND img.deleted=0 ) AS url FROM product p LEFT JOIN product_sku sku ON p.id=sku.product_id LEFT JOIN brand b ON b.id = p.brand_id LEFT JOIN category ca ON ca.id = b.category_id WHERE ca.id = :categoryid AND p.deleted = 0");
+        String sql="";
+        StringBuffer fromSku=new StringBuffer("LEFT JOIN product_sku sku ON p.id=sku.product_id ");
+        StringBuffer addWhere=new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 ");
+        StringBuffer groupBy=new StringBuffer(" GROUP BY p.id");
+        StringBuffer select=new StringBuffer("SELECT p.id AS id, p. NAME AS NAME, p.list_price AS listPrice, ( SELECT IFNULL(img.img_url,\"\") FROM product_img img WHERE img.jhi_type = 1 AND img.product_id = p.id AND img.deleted=0 ) AS url FROM product p  LEFT JOIN brand b ON b.id = p.brand_id LEFT JOIN category ca ON ca.id = b.category_id ");
+        if (StringUtils.isBlank(productSeachParam.getProductName())&&StringUtils.isBlank(productSeachParam.getSale())&&StringUtils.isBlank(productSeachParam.getPrice())&&productSeachParam.getStartPrice()==null&&productSeachParam.getEndPrice()==null){
+            sql=select.append(addWhere).toString();
+        }
         if (StringUtils.isNotBlank(productSeachParam.getProductName())){
-            sql.append(" and p. NAME like \"%"+productSeachParam.getProductName()+"%\"");
+            sql=select.append(addWhere).append(" and p. NAME like \"%"+productSeachParam.getProductName()+"%\"").toString();
         }
         if (StringUtils.isNotBlank(productSeachParam.getSale())){
-            sql.append(" ORDER BY sku.count");
+            sql=select.append(fromSku).append(addWhere).append(groupBy).append(" ORDER BY sku.count").toString();
         }
         if (StringUtils.isNotBlank(productSeachParam.getPrice())){
-            sql.append(" ORDER BY p.list_price");
+            sql=select.append(addWhere).append(" ORDER BY p.list_price").toString();
         }
         if (productSeachParam.getStartPrice()!=null&&productSeachParam.getEndPrice()!=null){
-            sql.append(" AND sku.price BETWEEN "+productSeachParam.getStartPrice()+" AND "+productSeachParam.getEndPrice());
+            sql=select.append(addWhere).append(" AND p.list_price BETWEEN "+productSeachParam.getStartPrice()+" AND "+productSeachParam.getEndPrice()).append(groupBy).toString();
         }
-        Query query=entityManager.createNativeQuery(sql.toString());
+        log.info("sql>>>>"+sql);
+        Query query=entityManager.createNativeQuery(sql);
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         query.setParameter("categoryid",productSeachParam.getCategoryId());
         List<Map> list=query.getResultList();
