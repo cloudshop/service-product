@@ -12,6 +12,7 @@
     <include file="config/liquibase/changelog/20180323063640_added_entity_AttrValue.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180323070834_added_entity_ProductSku.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180403080207_added_entity_ProductImg.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180404120207_added_entity_SkuImg.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>
