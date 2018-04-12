@@ -28,7 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     public List<Map> findProductAttrById(@Param("id") Long id);
 
     /*批量获取商品*/
-    @Query(value = "SELECT sku.id AS skuId, sku.sku_name AS skuName, sku.price AS price, substring_index(img.img_url, \",\", 1) AS url FROM product_sku sku LEFT JOIN sku_img img ON sku.id = img.sku_id AND sku.id IN (:ids)",nativeQuery = true)
+    @Query(value = "SELECT ifnull(sku.id,\"\") AS skuId, ifnull(sku.sku_name,\"\") AS skuName, ifnull(sku.price ,\"\")AS price, ifnull(substring_index(img.img_url, \",\", 1),\"\") AS url FROM product_sku sku LEFT JOIN sku_img img ON sku.id = img.sku_id WHERE sku.id IN (:ids)",nativeQuery = true)
     public List<Map> findProductByIds(@Param("ids")List<Long> ids);
 
 }

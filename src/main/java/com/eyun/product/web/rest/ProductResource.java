@@ -144,7 +144,7 @@ public class ProductResource {
     @ApiOperation("收藏的商品")
     @PostMapping("/product/follow")
     @Timed
-    public ResponseEntity findProductsByIds(@RequestBody List<Long> ids){
+    public ResponseEntity findProductsByIds(@NotNull@RequestBody List<Long> ids){
         List<Map> resultList=productService.findProductByIds(ids);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resultList));
     }
