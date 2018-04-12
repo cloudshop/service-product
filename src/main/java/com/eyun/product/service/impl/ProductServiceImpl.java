@@ -130,12 +130,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Map<String,String>> findProductByIds(List<Long> ids) {
-        String sql="SELECT p.id id, p. NAME AS productName, p.list_price AS Price, b.brand_name AS brandName, IFNULL(GROUP_CONCAT(av.jhi_value),\"\") AS attrValue FROM product p LEFT JOIN brand b ON p.brand_id = b.id LEFT JOIN attribute att ON att.product_id = p.id LEFT JOIN attr_value av ON att.id = av.attr_id WHERE p.id IN (?1) GROUP BY p.id";
-        Query query=entityManager.createNativeQuery(sql);
-        query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        query.setParameter("1",ids);
-        List<Map<String,String>> productList=query.getResultList();
+    public List<Map> findProductByIds(List<Long> ids) {
+        List<Map> productList =productRepository.findProductByIds(ids);
         return productList;
     }
 

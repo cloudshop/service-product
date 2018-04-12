@@ -145,7 +145,7 @@ public class ProductResource {
     @PostMapping("/product/follow")
     @Timed
     public ResponseEntity findProductsByIds(@RequestBody List<Long> ids){
-        List<Map<String,String>> resultList=productService.findProductByIds(ids);
+        List<Map> resultList=productService.findProductByIds(ids);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resultList));
     }
 

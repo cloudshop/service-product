@@ -28,7 +28,7 @@ public interface ProductService {
 
     public Map findProductByCatewgory(ProductSeachParam productSeachParam);
 
-    public List<Map<String,String>> findProductByIds(List<Long> ids);
+    public List<Map> findProductByIds(List<Long> ids);
 
     /**
      * Get all the products.
