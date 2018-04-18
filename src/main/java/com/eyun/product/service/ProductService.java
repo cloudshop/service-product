@@ -1,5 +1,6 @@
 package com.eyun.product.service;
 
+import com.eyun.product.service.dto.ProductContentDTO;
 import com.eyun.product.service.dto.ProductDTO;
 
 import com.eyun.product.service.dto.ProductSeachParam;
@@ -23,7 +24,8 @@ public interface ProductService {
      * @return the persisted entity
      */
     ProductDTO save(ProductDTO productDTO);
-
+    /*发布商品*/
+    public Map publishProductAndSku(ProductContentDTO productContentDTO);
     public Map findProductById(Long id);
 
     public Map findProductByCatewgory(ProductSeachParam productSeachParam);
