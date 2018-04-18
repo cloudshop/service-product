@@ -1,9 +1,12 @@
 package com.eyun.product.service.impl;
 
-import com.eyun.product.repository.CategoryRepository;
+import com.eyun.product.domain.AttrValue;
+import com.eyun.product.domain.Attribute;
+import com.eyun.product.domain.ProductImg;
+import com.eyun.product.repository.*;
 import com.eyun.product.service.ProductService;
 import com.eyun.product.domain.Product;
-import com.eyun.product.repository.ProductRepository;
+import com.eyun.product.service.dto.ProductContentDTO;
 import com.eyun.product.service.dto.ProductDTO;
 import com.eyun.product.service.dto.ProductSeachParam;
 import com.eyun.product.service.mapper.ProductMapper;
@@ -23,10 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.util.*;
 
 
 /**
@@ -43,7 +44,15 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     @Autowired
+    AttributeRepository attributeRepository;
+
+    @Autowired
+    AttrValueRepository attrValueRepository;
+
+    @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    ProductImgRepository productImgRepository;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -65,6 +74,59 @@ public class ProductServiceImpl implements ProductService {
         Product product = productMapper.toEntity(productDTO);
         product = productRepository.save(product);
         return productMapper.toDto(product);
+    }
+
+    @Override
+    public Map publishProductAndSku(ProductContentDTO productContentDTO) {
+        String message="success";
+        String content="发布商品成功";
+        Product product=productRepository.findProductByName(productContentDTO.getProductName());
+        if (product==null){
+            product=new Product();
+            product.setName(productContentDTO.getProductName());
+            product.setShopId(productContentDTO.getShopId());
+            product.setBrandId(productContentDTO.getBrandId());
+            product.setListPrice(productContentDTO.getListPrice());
+            product.setDetails(productContentDTO.getDescription());
+            product.setDeleted(false);
+            product.setCreatedTime(Instant.now());
+            product=productRepository.save(product);//product
+            ProductImg productImg=new ProductImg();
+            productImg .setImgUrl(productContentDTO.getMainImage());
+            productImg.setProductId(product.getId());
+            productImg.setCreatedTime(Instant.now());
+            productImg.setDeleted(false);
+            productImgRepository.save(productImg);//productImage
+        }
+        List<Map<String,String>>attrList=productContentDTO.getAttr();
+        for (Map<String,String> attr:attrList){
+            Iterator<Map.Entry<String,String>> iterator=attr.entrySet().iterator();
+            while (iterator.hasNext()){
+                Map.Entry<String,String>entry=iterator.next();
+                String key=entry.getKey();
+                String value=entry.getValue();
+                Attribute attribute=attributeRepository.findAttributeByProductIdAndNameAndDeleted(product.getId(),key,0);
+                if (attribute==null){
+                    attribute=new Attribute();
+                    attribute.setProductId(product.getId());
+                    attribute.setName(key);
+                    attribute.setCreatedTime(Instant.now());
+                    attribute.setDeleted(0);
+                    attribute=attributeRepository.save(attribute);//attr
+                }
+                AttrValue attrValue=new AttrValue();
+                attrValue.setAttrId(attribute.getId());
+                attrValue.setValue(value);
+                attrValue.setCreatedTime(Instant.now());
+                attrValue.deleted(false);
+                attrValue=attrValueRepository.save(attrValue);//attrValue
+
+            }
+        }
+        Map result=new HashMap();
+        result.put("message",message);
+        result.put("content",content);
+        return result;
     }
 
     @Override

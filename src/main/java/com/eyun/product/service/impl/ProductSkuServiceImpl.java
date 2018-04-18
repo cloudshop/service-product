@@ -72,7 +72,7 @@ public class ProductSkuServiceImpl implements ProductSkuService {
             content="更改库存失败！无此商品sku";
         }
         Map result=new HashMap();
-        result.put("messgae",messgae);
+        result.put("message",messgae);
         result.put("content",content);
         return result;
     }

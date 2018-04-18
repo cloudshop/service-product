@@ -13,4 +13,6 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface AttributeRepository extends JpaRepository<Attribute, Long>, JpaSpecificationExecutor<Attribute> {
 
+    /*获取商品attr*/
+    public Attribute findAttributeByProductIdAndNameAndDeleted(Long productId,String name,Integer deleted);
 }

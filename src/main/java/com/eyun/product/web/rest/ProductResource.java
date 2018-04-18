@@ -2,6 +2,7 @@ package com.eyun.product.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.eyun.product.service.ProductService;
+import com.eyun.product.service.dto.ProductContentDTO;
 import com.eyun.product.service.dto.ProductSeachParam;
 import com.eyun.product.web.rest.errors.BadRequestAlertException;
 import com.eyun.product.web.rest.util.HeaderUtil;
@@ -64,15 +65,19 @@ public class ProductResource {
     @Timed
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) throws URISyntaxException {
         log.debug("REST request to save Product : {}", productDTO);
-        if (productDTO.getId() != null) {
-            throw new BadRequestAlertException("A new product cannot already have an ID", ENTITY_NAME, "idexists");
-        }
         ProductDTO result = productService.save(productDTO);
         return ResponseEntity.created(new URI("/api/products/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        .body(result);
     }
-
+    @ApiOperation("商品发布")
+    @PostMapping("/product/publish")
+    @Timed
+    public ResponseEntity pulishProduct(@RequestBody ProductContentDTO productContentDTO)throws Exception{
+        log.debug("REST request to save Product : {}", productContentDTO);
+        Map result=productService.publishProductAndSku(productContentDTO);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
     /**
      * PUT  /products : Updates an existing product.
      *
@@ -141,7 +146,7 @@ public class ProductResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
 
-    @ApiOperation("收藏的商品")
+    @ApiOperation("批量获取商品")
     @PostMapping("/product/follow")
     @Timed
     public ResponseEntity findProductsByIds(@NotNull@RequestBody List<Long> ids){

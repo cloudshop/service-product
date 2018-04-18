@@ -68,13 +68,14 @@ public class ProductSkuResource {
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+    /*0：减库存 1：增加库存*/
     @ApiOperation("更新库存")
     @GetMapping("/product-skus/stock/{processtype}/{id}/{count}")
     @Timed
     public ResponseEntity updateProductSkuCount(@PathVariable Integer processtype,@PathVariable Long id ,@PathVariable Integer count) throws Exception {
         ProductSkuDTO productSkuDTO = new ProductSkuDTO();
         productSkuDTO.setCount(count);
-        productSkuDTO.setId(id);;
+        productSkuDTO.setId(id);
         Map result = productSkuService.updateStockCount(productSkuDTO,processtype);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
@@ -129,7 +130,14 @@ public class ProductSkuResource {
         ProductSkuDTO productSkuDTO = productSkuService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productSkuDTO));
     }
-
+    @ApiOperation("获取sku")
+    @GetMapping("/product-sku/{id}")
+    @Timed
+    public ResponseEntity<ProductSkuDTO> getSkuById(@PathVariable Long id) {
+        log.debug("REST request to get ProductSku : {}", id);
+        ProductSkuDTO productSkuDTO = productSkuService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productSkuDTO));
+    }
     /**
      * DELETE  /product-skus/:id : delete the "id" productSku.
      *
