@@ -130,14 +130,6 @@ public class ProductSkuResource {
         ProductSkuDTO productSkuDTO = productSkuService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productSkuDTO));
     }
-    @ApiOperation("获取sku")
-    @GetMapping("/product-sku/{id}")
-    @Timed
-    public ResponseEntity<ProductSkuDTO> getSkuById(@PathVariable Long id) {
-        log.debug("REST request to get ProductSku : {}", id);
-        ProductSkuDTO productSkuDTO = productSkuService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productSkuDTO));
-    }
     /**
      * DELETE  /product-skus/:id : delete the "id" productSku.
      *
