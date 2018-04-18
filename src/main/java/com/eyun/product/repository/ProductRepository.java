@@ -34,4 +34,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     /*根据商品名称获取商品*/
     public Product findProductByName(String name);
 
+    /*获取店铺商品*/
+    public List<Product> findProductsByShopIdAndDeleted(Long shopId,Boolean deleted);
 }

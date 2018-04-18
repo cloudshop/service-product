@@ -197,6 +197,12 @@ public class ProductServiceImpl implements ProductService {
         return productList;
     }
 
+    @Override
+    public List<Product> findProductByShopIdAndDeleted(Long shopId, Boolean deleted) {
+        List<Product> productList =productRepository.findProductsByShopIdAndDeleted(shopId,deleted);
+        return productList;
+    }
+
     /**
      * Get all the products.
      *

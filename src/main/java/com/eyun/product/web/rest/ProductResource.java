@@ -1,6 +1,7 @@
 package com.eyun.product.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.eyun.product.domain.Product;
 import com.eyun.product.service.ProductService;
 import com.eyun.product.service.dto.ProductContentDTO;
 import com.eyun.product.service.dto.ProductSeachParam;
@@ -153,7 +154,13 @@ public class ProductResource {
         List<Map> resultList=productService.findProductByIds(ids);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resultList));
     }
-
+    @ApiOperation("获取店铺商品")
+    @GetMapping("/product/shop")
+    @Timed
+    public ResponseEntity<List<Product>> getAllProductsShop(@RequestParam("shopId") Long shopId) {
+        List<Product>list=productService.findProductByShopIdAndDeleted(shopId,false);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
     /**
      * DELETE  /products/:id : delete the "id" product.
      *

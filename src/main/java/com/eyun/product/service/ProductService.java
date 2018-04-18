@@ -1,5 +1,6 @@
 package com.eyun.product.service;
 
+import com.eyun.product.domain.Product;
 import com.eyun.product.service.dto.ProductContentDTO;
 import com.eyun.product.service.dto.ProductDTO;
 
@@ -31,6 +32,8 @@ public interface ProductService {
     public Map findProductByCatewgory(ProductSeachParam productSeachParam);
 
     public List<Map> findProductByIds(List<Long> ids);
+
+    public List<Product> findProductByShopIdAndDeleted(Long shopId, Boolean deleted);
 
     /**
      * Get all the products.
