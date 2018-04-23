@@ -10,6 +10,8 @@ import com.eyun.product.service.dto.SkuImgDTO;
 import com.eyun.product.service.dto.SkuImgCriteria;
 import com.eyun.product.service.SkuImgQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ import java.util.Optional;
 /**
  * REST controller for managing SkuImg.
  */
+@Api("sku图片服务")
 @RestController
 @RequestMapping("/api")
 public class SkuImgResource {
@@ -117,6 +120,7 @@ public class SkuImgResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(skuImgDTO));
     }
 
+    @ApiOperation("获取sku图片")
     @GetMapping("/skuimgs/{skuId}")
     @Timed
     public ResponseEntity getSkuImgs(@PathVariable Long skuId) {
