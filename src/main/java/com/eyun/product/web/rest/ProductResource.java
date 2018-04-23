@@ -165,7 +165,7 @@ public class ProductResource {
     @ApiOperation("生成商品sku")
     @PostMapping("/product/initsku")
     @Timed
-    public ResponseEntity initSku(@RequestBody List<Map<String,List<String>>> productAttr) throws Exception{
+    public ResponseEntity initSku(@RequestBody List<Map> productAttr) throws Exception{
         List list=productService.initSku(productAttr);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(list));
     }

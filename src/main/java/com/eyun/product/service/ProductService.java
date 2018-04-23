@@ -36,7 +36,7 @@ public interface ProductService {
 
     public List<Product> findProductByShopIdAndDeleted(Long shopId, Boolean deleted);
 
-    public List initSku( List<Map<String,List<String>>> productAttr)throws Exception;
+    public List initSku( List<Map> productAttr)throws Exception;
 
     /**
      * Get all the products.

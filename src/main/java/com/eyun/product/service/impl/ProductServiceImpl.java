@@ -10,9 +10,13 @@ import com.eyun.product.service.dto.ProductContentDTO;
 import com.eyun.product.service.dto.ProductDTO;
 import com.eyun.product.service.dto.ProductSeachParam;
 import com.eyun.product.service.mapper.ProductMapper;
+import com.fasterxml.jackson.datatype.jsonorg.JSONObjectSerializer;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,27 +205,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List initSku(List<Map<String, List<String>>> productAttr) throws Exception{
-        Map<String,List<String>>elemet=productAttr.remove(0);
-        Iterator<Map.Entry<String,List<String>>>iterator=elemet.entrySet().iterator();
-        Map.Entry<String,List<String>>entry=iterator.next();
-        String attr=entry.getKey();
-        List<String>valueList=entry.getValue();
+    public List initSku(List<Map> productAttr) throws Exception{
+        Map elemet=productAttr.remove(0);
+        List valueArray=(List)elemet.get("attrValue");
         List<Map> attrList=new ArrayList();
-        for(String value:valueList){
+        for(int i=0;i<valueArray.size();i++){
             if (productAttr.size()==1){
-                Map<String,List<String>>otherElemet=productAttr.get(0);
-                Iterator<Map.Entry<String,List<String>>>ite=otherElemet.entrySet().iterator();
-                while (ite.hasNext()){
-                    Map.Entry<String,List<String>>otherEntry=ite.next();
-                    String attrOther=otherEntry.getKey();
-                    List<String>valueListOther=otherEntry.getValue();
-                    for (String otherValue:valueListOther){
-                        Map map=new HashMap();
-                        map.put("attr",value);
-                        map.put("attrAnother",otherValue);
-                        attrList.add(map);
-                    }
+                Map elemet1=productAttr.get(0);
+                List valueArrayAnother=(List)elemet1.get("attrValue");
+                for (int j=0;j<valueArrayAnother.size();j++){
+                    Map map=new HashMap();
+                    map.put("attr",valueArray.get(i));
+                    map.put("attrAnother",valueArrayAnother.get(j));
+                    attrList.add(map);
                 }
             }
         }
