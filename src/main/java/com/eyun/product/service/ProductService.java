@@ -8,6 +8,7 @@ import com.eyun.product.service.dto.ProductSeachParam;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,8 @@ public interface ProductService {
     public List<Map> findProductByIds(List<Long> ids);
 
     public List<Product> findProductByShopIdAndDeleted(Long shopId, Boolean deleted);
+
+    public List initSku( List<Map<String,List<String>>> productAttr)throws Exception;
 
     /**
      * Get all the products.

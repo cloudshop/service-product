@@ -161,6 +161,14 @@ public class ProductResource {
         List<Product>list=productService.findProductByShopIdAndDeleted(shopId,false);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+    @ApiOperation("生成商品sku")
+    @PostMapping("/product/initsku")
+    @Timed
+    public ResponseEntity initSku(@RequestBody List<Map<String,List<String>>> productAttr) throws Exception{
+        List list=productService.initSku(productAttr);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(list));
+    }
     /**
      * DELETE  /products/:id : delete the "id" product.
      *

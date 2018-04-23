@@ -16,13 +16,10 @@ import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -203,6 +200,34 @@ public class ProductServiceImpl implements ProductService {
         return productList;
     }
 
+    @Override
+    public List initSku(List<Map<String, List<String>>> productAttr) throws Exception{
+        Map<String,List<String>>elemet=productAttr.remove(0);
+        Iterator<Map.Entry<String,List<String>>>iterator=elemet.entrySet().iterator();
+        Map.Entry<String,List<String>>entry=iterator.next();
+        String attr=entry.getKey();
+        List<String>valueList=entry.getValue();
+        List<Map> attrList=new ArrayList();
+        for(String value:valueList){
+            if (productAttr.size()==1){
+                Map<String,List<String>>otherElemet=productAttr.get(0);
+                Iterator<Map.Entry<String,List<String>>>ite=otherElemet.entrySet().iterator();
+                while (ite.hasNext()){
+                    Map.Entry<String,List<String>>otherEntry=ite.next();
+                    String attrOther=otherEntry.getKey();
+                    List<String>valueListOther=otherEntry.getValue();
+                    for (String otherValue:valueListOther){
+                        Map map=new HashMap();
+                        map.put("attr",value);
+                        map.put("attrAnother",otherValue);
+                        attrList.add(map);
+                    }
+                }
+            }
+        }
+        return attrList;
+    }
+
     /**
      * Get all the products.
      *
@@ -241,4 +266,51 @@ public class ProductServiceImpl implements ProductService {
         log.debug("Request to delete Product : {}", id);
         productRepository.delete(id);
     }
+   /* public static void main(String[]args)throws Exception{
+        List<Map<String,List<String>>> list=new ArrayList();
+        List list1=new ArrayList();
+        list1.add("白色");
+        list1.add("黑色");
+        list1.add("灰色");
+        list1.add("蓝色");
+        list1.add("金色");
+        Map<String,List<String>> map1=new HashMap();
+        map1.put("颜色",list1);
+        list.add(map1);
+        List list2=new ArrayList();
+        list2.add("64G");
+        list2.add("128G");
+        list2.add("256G");
+        Map<String,List<String>> map2=new HashMap();
+        map2.put("内存",list2);
+        list.add(map2);
+        List list3=new ArrayList();
+        list3.add("公开版");
+        list3.add("双网通版");
+        list3.add("分期版");
+        Map<String,List<String>> map3=new HashMap();
+        map3.put("版本",list3);
+        list.add(map3);
+        for (Map<String,List<String>> map:list){
+            Iterator<Map.Entry<String,List<String>>>iterator=map.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, List<String>> entry = iterator.next();
+                String attr = entry.getKey();
+                List<String> valueList = entry.getValue();
+                for (String value : valueList) {
+                    System.out.println(attr + ":" + value);
+                }
+            }
+        }
+    *//********************************************************************************************//*
+
+
+       for (JSONObject json:attrList){
+            Iterator<String> ite=json.keys();
+            while (ite.hasNext()){
+                String key=ite.next();
+                System.out.println(key+":"+json.get(key));
+            }
+        }
+    }*/
 }
