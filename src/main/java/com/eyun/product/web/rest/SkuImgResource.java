@@ -1,6 +1,7 @@
 package com.eyun.product.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.eyun.product.domain.SkuImg;
 import com.eyun.product.service.SkuImgService;
 import com.eyun.product.web.rest.errors.BadRequestAlertException;
 import com.eyun.product.web.rest.util.HeaderUtil;
@@ -116,6 +117,12 @@ public class SkuImgResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(skuImgDTO));
     }
 
+    @GetMapping("/skuimgs/{skuId}")
+    @Timed
+    public ResponseEntity getSkuImgs(@PathVariable Long skuId) {
+        List<SkuImg> result= skuImgService.findSkuImageBySkuId(skuId);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
     /**
      * DELETE  /sku-imgs/:id : delete the "id" skuImg.
      *

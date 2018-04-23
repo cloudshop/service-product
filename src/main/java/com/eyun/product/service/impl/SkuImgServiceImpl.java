@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * Service Implementation for managing SkuImg.
@@ -71,6 +73,12 @@ public class SkuImgServiceImpl implements SkuImgService {
         log.debug("Request to get SkuImg : {}", id);
         SkuImg skuImg = skuImgRepository.findOne(id);
         return skuImgMapper.toDto(skuImg);
+    }
+
+    @Override
+    public List<SkuImg> findSkuImageBySkuId(Long skuId) {
+        List<SkuImg> list=skuImgRepository.findAllBySkuId(skuId);
+        return list;
     }
 
     /**

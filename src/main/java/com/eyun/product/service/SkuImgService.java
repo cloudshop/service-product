@@ -1,8 +1,11 @@
 package com.eyun.product.service;
 
+import com.eyun.product.domain.SkuImg;
 import com.eyun.product.service.dto.SkuImgDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * Service Interface for managing SkuImg.
@@ -32,6 +35,8 @@ public interface SkuImgService {
      * @return the entity
      */
     SkuImgDTO findOne(Long id);
+
+    List<SkuImg> findSkuImageBySkuId(Long skuId);
 
     /**
      * Delete the "id" skuImg.
