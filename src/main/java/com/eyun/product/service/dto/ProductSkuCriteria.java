@@ -8,7 +8,7 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-
+import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.InstantFilter;
 
 
@@ -32,7 +32,7 @@ public class ProductSkuCriteria implements Serializable {
 
     private IntegerFilter count;
 
-    private IntegerFilter price;
+    private BigDecimalFilter price;
 
     private IntegerFilter status;
 
@@ -47,6 +47,8 @@ public class ProductSkuCriteria implements Serializable {
     private InstantFilter updatedTime;
 
     private BooleanFilter deleted;
+
+    private BigDecimalFilter transfer;
 
     public ProductSkuCriteria() {
     }
@@ -75,11 +77,11 @@ public class ProductSkuCriteria implements Serializable {
         this.count = count;
     }
 
-    public IntegerFilter getPrice() {
+    public BigDecimalFilter getPrice() {
         return price;
     }
 
-    public void setPrice(IntegerFilter price) {
+    public void setPrice(BigDecimalFilter price) {
         this.price = price;
     }
 
@@ -139,6 +141,14 @@ public class ProductSkuCriteria implements Serializable {
         this.deleted = deleted;
     }
 
+    public BigDecimalFilter getTransfer() {
+        return transfer;
+    }
+
+    public void setTransfer(BigDecimalFilter transfer) {
+        this.transfer = transfer;
+    }
+
     @Override
     public String toString() {
         return "ProductSkuCriteria{" +
@@ -153,6 +163,7 @@ public class ProductSkuCriteria implements Serializable {
                 (createdTime != null ? "createdTime=" + createdTime + ", " : "") +
                 (updatedTime != null ? "updatedTime=" + updatedTime + ", " : "") +
                 (deleted != null ? "deleted=" + deleted + ", " : "") +
+                (transfer != null ? "transfer=" + transfer + ", " : "") +
             "}";
     }
 

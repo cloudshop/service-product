@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -32,8 +33,8 @@ public class Product implements Serializable {
     @Column(name = "brand_id", nullable = false)
     private Long brandId;
 
-    @Column(name = "list_price")
-    private Integer listPrice;
+    @Column(name = "list_price", precision=10, scale=2)
+    private BigDecimal listPrice;
 
     @Column(name = "shop_id")
     private Long shopId;
@@ -85,16 +86,16 @@ public class Product implements Serializable {
         this.brandId = brandId;
     }
 
-    public Integer getListPrice() {
+    public BigDecimal getListPrice() {
         return listPrice;
     }
 
-    public Product listPrice(Integer listPrice) {
+    public Product listPrice(BigDecimal listPrice) {
         this.listPrice = listPrice;
         return this;
     }
 
-    public void setListPrice(Integer listPrice) {
+    public void setListPrice(BigDecimal listPrice) {
         this.listPrice = listPrice;
     }
 

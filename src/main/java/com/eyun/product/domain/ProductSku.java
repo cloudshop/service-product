@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -34,9 +35,9 @@ public class ProductSku implements Serializable {
     private Integer count;
 
     @NotNull
-    @Min(value = 0)
-    @Column(name = "price", nullable = false)
-    private Integer price;
+    @DecimalMin(value = "0")
+    @Column(name = "price", precision=10, scale=2, nullable = false)
+    private BigDecimal price;
 
     @Column(name = "status")
     private Integer status;
@@ -58,6 +59,11 @@ public class ProductSku implements Serializable {
 
     @Column(name = "deleted")
     private Boolean deleted;
+
+    @DecimalMin(value = "0")
+    @DecimalMax(value = "1")
+    @Column(name = "transfer", precision=10, scale=2)
+    private BigDecimal transfer;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -94,16 +100,16 @@ public class ProductSku implements Serializable {
         this.count = count;
     }
 
-    public Integer getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public ProductSku price(Integer price) {
+    public ProductSku price(BigDecimal price) {
         this.price = price;
         return this;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -197,6 +203,19 @@ public class ProductSku implements Serializable {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+    public BigDecimal getTransfer() {
+        return transfer;
+    }
+
+    public ProductSku transfer(BigDecimal transfer) {
+        this.transfer = transfer;
+        return this;
+    }
+
+    public void setTransfer(BigDecimal transfer) {
+        this.transfer = transfer;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -233,6 +252,7 @@ public class ProductSku implements Serializable {
             ", createdTime='" + getCreatedTime() + "'" +
             ", updatedTime='" + getUpdatedTime() + "'" +
             ", deleted='" + isDeleted() + "'" +
+            ", transfer=" + getTransfer() +
             "}";
     }
 }

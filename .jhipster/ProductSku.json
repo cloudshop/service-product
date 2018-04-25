@@ -20,7 +20,7 @@
         },
         {
             "fieldName": "price",
-            "fieldType": "Integer",
+            "fieldType": "BigDecimal",
             "fieldValidateRules": [
                 "required",
                 "min"
@@ -55,6 +55,16 @@
         {
             "fieldName": "deleted",
             "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "transfer",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "0",
+            "fieldValidateRulesMax": "1"
         }
     ],
     "changelogDate": "20180323070834",
@@ -63,6 +73,6 @@
     "entityTableName": "product_sku",
     "jpaMetamodelFiltering": true,
     "pagination": "pagination",
-    "microserviceName": "jhipsterSampleApplication",
+    "microserviceName": "product",
     "searchEngine": false
 }

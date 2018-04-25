@@ -30,7 +30,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="price" type="integer">
+            <column name="price" type="decimal(10,2)">
                 <constraints nullable="false" />
             </column>
 
@@ -59,6 +59,10 @@
             </column>
 
             <column name="deleted" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="transfer" type="decimal(10,2)">
                 <constraints nullable="true" />
             </column>
 

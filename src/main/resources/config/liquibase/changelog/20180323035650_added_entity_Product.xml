@@ -30,7 +30,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="list_price" type="integer">
+            <column name="list_price" type="decimal(10,2)">
                 <constraints nullable="true" />
             </column>
 
@@ -50,7 +50,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="details" type="varchar(500)">
+            <column name="details" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 

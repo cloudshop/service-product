@@ -1,6 +1,7 @@
 package com.eyun.product.service;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -107,6 +108,9 @@ public class ProductSkuQueryService extends QueryService<ProductSku> {
             }
             if (criteria.getDeleted() != null) {
                 specification = specification.and(buildSpecification(criteria.getDeleted(), ProductSku_.deleted));
+            }
+            if (criteria.getTransfer() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getTransfer(), ProductSku_.transfer));
             }
         }
         return specification;

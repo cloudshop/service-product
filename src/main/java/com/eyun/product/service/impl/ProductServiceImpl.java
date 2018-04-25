@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
 
@@ -87,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
             product.setName(productContentDTO.getProductName());
             product.setShopId(productContentDTO.getShopId());
             product.setBrandId(productContentDTO.getBrandId());
-            product.setListPrice(productContentDTO.getListPrice());
+            product.setListPrice(new BigDecimal(productContentDTO.getListPrice()));
             product.setDetails(productContentDTO.getDescription());
             product.setDeleted(false);
             product.setCreatedTime(Instant.now());
