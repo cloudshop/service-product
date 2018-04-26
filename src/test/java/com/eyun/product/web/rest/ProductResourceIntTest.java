@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -53,8 +54,8 @@ public class ProductResourceIntTest {
     private static final Long DEFAULT_BRAND_ID = 1L;
     private static final Long UPDATED_BRAND_ID = 2L;
 
-    private static final Integer DEFAULT_LIST_PRICE = 1;
-    private static final Integer UPDATED_LIST_PRICE = 2;
+    private static final BigDecimal DEFAULT_LIST_PRICE = new BigDecimal(1);
+    private static final BigDecimal UPDATED_LIST_PRICE = new BigDecimal(2);
 
     private static final Long DEFAULT_SHOP_ID = 1L;
     private static final Long UPDATED_SHOP_ID = 2L;
@@ -231,7 +232,7 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].brandId").value(hasItem(DEFAULT_BRAND_ID.intValue())))
-            .andExpect(jsonPath("$.[*].listPrice").value(hasItem(DEFAULT_LIST_PRICE)))
+            .andExpect(jsonPath("$.[*].listPrice").value(hasItem(DEFAULT_LIST_PRICE.intValue())))
             .andExpect(jsonPath("$.[*].shopId").value(hasItem(DEFAULT_SHOP_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
@@ -252,7 +253,7 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.id").value(product.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.brandId").value(DEFAULT_BRAND_ID.intValue()))
-            .andExpect(jsonPath("$.listPrice").value(DEFAULT_LIST_PRICE))
+            .andExpect(jsonPath("$.listPrice").value(DEFAULT_LIST_PRICE.intValue()))
             .andExpect(jsonPath("$.shopId").value(DEFAULT_SHOP_ID.intValue()))
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
             .andExpect(jsonPath("$.updatedTime").value(DEFAULT_UPDATED_TIME.toString()))
@@ -403,33 +404,6 @@ public class ProductResourceIntTest {
         // Get all the productList where listPrice is null
         defaultProductShouldNotBeFound("listPrice.specified=false");
     }
-
-    @Test
-    @Transactional
-    public void getAllProductsByListPriceIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        productRepository.saveAndFlush(product);
-
-        // Get all the productList where listPrice greater than or equals to DEFAULT_LIST_PRICE
-        defaultProductShouldBeFound("listPrice.greaterOrEqualThan=" + DEFAULT_LIST_PRICE);
-
-        // Get all the productList where listPrice greater than or equals to UPDATED_LIST_PRICE
-        defaultProductShouldNotBeFound("listPrice.greaterOrEqualThan=" + UPDATED_LIST_PRICE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllProductsByListPriceIsLessThanSomething() throws Exception {
-        // Initialize the database
-        productRepository.saveAndFlush(product);
-
-        // Get all the productList where listPrice less than or equals to DEFAULT_LIST_PRICE
-        defaultProductShouldNotBeFound("listPrice.lessThan=" + DEFAULT_LIST_PRICE);
-
-        // Get all the productList where listPrice less than or equals to UPDATED_LIST_PRICE
-        defaultProductShouldBeFound("listPrice.lessThan=" + UPDATED_LIST_PRICE);
-    }
-
 
     @Test
     @Transactional
@@ -662,7 +636,7 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].brandId").value(hasItem(DEFAULT_BRAND_ID.intValue())))
-            .andExpect(jsonPath("$.[*].listPrice").value(hasItem(DEFAULT_LIST_PRICE)))
+            .andExpect(jsonPath("$.[*].listPrice").value(hasItem(DEFAULT_LIST_PRICE.intValue())))
             .andExpect(jsonPath("$.[*].shopId").value(hasItem(DEFAULT_SHOP_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))

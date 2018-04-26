@@ -1,6 +1,7 @@
 package com.eyun.product.service;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -75,7 +76,7 @@ public class ProductQueryService extends QueryService<Product> {
     private Specifications<Product> createSpecification(ProductCriteria criteria) {
         Specifications<Product> specification = Specifications.where(null);
         if (criteria != null) {
-            if (criteria.getId() != null) {
+            /*if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Product_.id));
             }
             if (criteria.getName() != null) {
@@ -101,7 +102,7 @@ public class ProductQueryService extends QueryService<Product> {
             }
             if (criteria.getDetails() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDetails(), Product_.details));
-            }
+            }*/
         }
         return specification;
     }

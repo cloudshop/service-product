@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -53,8 +54,8 @@ public class ProductSkuResourceIntTest {
     private static final Integer DEFAULT_COUNT = 0;
     private static final Integer UPDATED_COUNT = 1;
 
-    private static final Integer DEFAULT_PRICE = 0;
-    private static final Integer UPDATED_PRICE = 1;
+    private static final BigDecimal DEFAULT_PRICE = new BigDecimal(0);
+    private static final BigDecimal UPDATED_PRICE = new BigDecimal(1);
 
     private static final Integer DEFAULT_STATUS = 1;
     private static final Integer UPDATED_STATUS = 2;
@@ -76,6 +77,9 @@ public class ProductSkuResourceIntTest {
 
     private static final Boolean DEFAULT_DELETED = false;
     private static final Boolean UPDATED_DELETED = true;
+
+    private static final BigDecimal DEFAULT_TRANSFER = new BigDecimal(0);
+    private static final BigDecimal UPDATED_TRANSFER = new BigDecimal(1);
 
     @Autowired
     private ProductSkuRepository productSkuRepository;
@@ -133,7 +137,8 @@ public class ProductSkuResourceIntTest {
             .attrString(DEFAULT_ATTR_STRING)
             .createdTime(DEFAULT_CREATED_TIME)
             .updatedTime(DEFAULT_UPDATED_TIME)
-            .deleted(DEFAULT_DELETED);
+            .deleted(DEFAULT_DELETED)
+            .transfer(DEFAULT_TRANSFER);
         return productSku;
     }
 
@@ -168,6 +173,7 @@ public class ProductSkuResourceIntTest {
         assertThat(testProductSku.getCreatedTime()).isEqualTo(DEFAULT_CREATED_TIME);
         assertThat(testProductSku.getUpdatedTime()).isEqualTo(DEFAULT_UPDATED_TIME);
         assertThat(testProductSku.isDeleted()).isEqualTo(DEFAULT_DELETED);
+        assertThat(testProductSku.getTransfer()).isEqualTo(DEFAULT_TRANSFER);
     }
 
     @Test
@@ -260,14 +266,15 @@ public class ProductSkuResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(productSku.getId().intValue())))
             .andExpect(jsonPath("$.[*].productId").value(hasItem(DEFAULT_PRODUCT_ID.intValue())))
             .andExpect(jsonPath("$.[*].count").value(hasItem(DEFAULT_COUNT)))
-            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
+            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
             .andExpect(jsonPath("$.[*].skuName").value(hasItem(DEFAULT_SKU_NAME.toString())))
             .andExpect(jsonPath("$.[*].skuCode").value(hasItem(DEFAULT_SKU_CODE.toString())))
             .andExpect(jsonPath("$.[*].attrString").value(hasItem(DEFAULT_ATTR_STRING.toString())))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
+            .andExpect(jsonPath("$.[*].transfer").value(hasItem(DEFAULT_TRANSFER.intValue())));
     }
 
     @Test
@@ -283,14 +290,15 @@ public class ProductSkuResourceIntTest {
             .andExpect(jsonPath("$.id").value(productSku.getId().intValue()))
             .andExpect(jsonPath("$.productId").value(DEFAULT_PRODUCT_ID.intValue()))
             .andExpect(jsonPath("$.count").value(DEFAULT_COUNT))
-            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE))
+            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS))
             .andExpect(jsonPath("$.skuName").value(DEFAULT_SKU_NAME.toString()))
             .andExpect(jsonPath("$.skuCode").value(DEFAULT_SKU_CODE.toString()))
             .andExpect(jsonPath("$.attrString").value(DEFAULT_ATTR_STRING.toString()))
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
             .andExpect(jsonPath("$.updatedTime").value(DEFAULT_UPDATED_TIME.toString()))
-            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()));
+            .andExpect(jsonPath("$.deleted").value(DEFAULT_DELETED.booleanValue()))
+            .andExpect(jsonPath("$.transfer").value(DEFAULT_TRANSFER.intValue()));
     }
 
     @Test
@@ -463,33 +471,6 @@ public class ProductSkuResourceIntTest {
         // Get all the productSkuList where price is null
         defaultProductSkuShouldNotBeFound("price.specified=false");
     }
-
-    @Test
-    @Transactional
-    public void getAllProductSkusByPriceIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        productSkuRepository.saveAndFlush(productSku);
-
-        // Get all the productSkuList where price greater than or equals to DEFAULT_PRICE
-        defaultProductSkuShouldBeFound("price.greaterOrEqualThan=" + DEFAULT_PRICE);
-
-        // Get all the productSkuList where price greater than or equals to UPDATED_PRICE
-        defaultProductSkuShouldNotBeFound("price.greaterOrEqualThan=" + UPDATED_PRICE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllProductSkusByPriceIsLessThanSomething() throws Exception {
-        // Initialize the database
-        productSkuRepository.saveAndFlush(productSku);
-
-        // Get all the productSkuList where price less than or equals to DEFAULT_PRICE
-        defaultProductSkuShouldNotBeFound("price.lessThan=" + DEFAULT_PRICE);
-
-        // Get all the productSkuList where price less than or equals to UPDATED_PRICE
-        defaultProductSkuShouldBeFound("price.lessThan=" + UPDATED_PRICE);
-    }
-
 
     @Test
     @Transactional
@@ -790,6 +771,45 @@ public class ProductSkuResourceIntTest {
         // Get all the productSkuList where deleted is null
         defaultProductSkuShouldNotBeFound("deleted.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllProductSkusByTransferIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productSkuRepository.saveAndFlush(productSku);
+
+        // Get all the productSkuList where transfer equals to DEFAULT_TRANSFER
+        defaultProductSkuShouldBeFound("transfer.equals=" + DEFAULT_TRANSFER);
+
+        // Get all the productSkuList where transfer equals to UPDATED_TRANSFER
+        defaultProductSkuShouldNotBeFound("transfer.equals=" + UPDATED_TRANSFER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductSkusByTransferIsInShouldWork() throws Exception {
+        // Initialize the database
+        productSkuRepository.saveAndFlush(productSku);
+
+        // Get all the productSkuList where transfer in DEFAULT_TRANSFER or UPDATED_TRANSFER
+        defaultProductSkuShouldBeFound("transfer.in=" + DEFAULT_TRANSFER + "," + UPDATED_TRANSFER);
+
+        // Get all the productSkuList where transfer equals to UPDATED_TRANSFER
+        defaultProductSkuShouldNotBeFound("transfer.in=" + UPDATED_TRANSFER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductSkusByTransferIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        productSkuRepository.saveAndFlush(productSku);
+
+        // Get all the productSkuList where transfer is not null
+        defaultProductSkuShouldBeFound("transfer.specified=true");
+
+        // Get all the productSkuList where transfer is null
+        defaultProductSkuShouldNotBeFound("transfer.specified=false");
+    }
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -800,14 +820,15 @@ public class ProductSkuResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(productSku.getId().intValue())))
             .andExpect(jsonPath("$.[*].productId").value(hasItem(DEFAULT_PRODUCT_ID.intValue())))
             .andExpect(jsonPath("$.[*].count").value(hasItem(DEFAULT_COUNT)))
-            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
+            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
             .andExpect(jsonPath("$.[*].skuName").value(hasItem(DEFAULT_SKU_NAME.toString())))
             .andExpect(jsonPath("$.[*].skuCode").value(hasItem(DEFAULT_SKU_CODE.toString())))
             .andExpect(jsonPath("$.[*].attrString").value(hasItem(DEFAULT_ATTR_STRING.toString())))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
             .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(DEFAULT_UPDATED_TIME.toString())))
-            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())));
+            .andExpect(jsonPath("$.[*].deleted").value(hasItem(DEFAULT_DELETED.booleanValue())))
+            .andExpect(jsonPath("$.[*].transfer").value(hasItem(DEFAULT_TRANSFER.intValue())));
     }
 
     /**
@@ -851,7 +872,8 @@ public class ProductSkuResourceIntTest {
             .attrString(UPDATED_ATTR_STRING)
             .createdTime(UPDATED_CREATED_TIME)
             .updatedTime(UPDATED_UPDATED_TIME)
-            .deleted(UPDATED_DELETED);
+            .deleted(UPDATED_DELETED)
+            .transfer(UPDATED_TRANSFER);
         ProductSkuDTO productSkuDTO = productSkuMapper.toDto(updatedProductSku);
 
         restProductSkuMockMvc.perform(put("/api/product-skus")
@@ -873,6 +895,7 @@ public class ProductSkuResourceIntTest {
         assertThat(testProductSku.getCreatedTime()).isEqualTo(UPDATED_CREATED_TIME);
         assertThat(testProductSku.getUpdatedTime()).isEqualTo(UPDATED_UPDATED_TIME);
         assertThat(testProductSku.isDeleted()).isEqualTo(UPDATED_DELETED);
+        assertThat(testProductSku.getTransfer()).isEqualTo(UPDATED_TRANSFER);
     }
 
     @Test
