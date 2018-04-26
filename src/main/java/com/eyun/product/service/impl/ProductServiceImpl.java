@@ -318,13 +318,25 @@ public class ProductServiceImpl implements ProductService {
                     skuImgRepository.save(skuImg);
                 }
             } else {
-                    for (SkuImg image : list) {
-                        for (String img : skuImageList) {
+                Integer count=0;
+                    for (String img : skuImageList) {
+                        for (SkuImg image : list) {
+                            count++;
                             image.setImgUrl(img);
                             image.setDeleted(false);
                             image.setUpdatedTime(Instant.now());
                             skuImgRepository.save(image);
                         }
+                        continue;
+                        /*if (count>list.size()){
+                            SkuImg imgother=new SkuImg();
+                            imgother.setSkuId(skuId);
+                            imgother.setImgUrl(img);
+                            imgother.setType(1);//图片
+                            imgother.setCreatedTime(Instant.now());
+                            imgother.deleted(false);
+                            skuImgRepository.save(imgother);
+                        }*/
                     }
             }
 
@@ -378,7 +390,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         List<Map<String, List<String>>> list = new ArrayList();
         List list1 = new ArrayList();
         list1.add("白色");
@@ -414,8 +426,8 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
         }
-        /********************************************************************************************/
+        *//********************************************************************************************//*
 
 
-    }
+    }*/
 }
