@@ -20,6 +20,9 @@ public class ProductDTO implements Serializable {
     @NotNull
     private Long brandId;
 
+    @NotNull
+    private Long categoryId;
+
     private BigDecimal listPrice;
 
     private Long shopId;
@@ -54,6 +57,14 @@ public class ProductDTO implements Serializable {
 
     public void setBrandId(Long brandId) {
         this.brandId = brandId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public BigDecimal getListPrice() {
@@ -131,6 +142,7 @@ public class ProductDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", brandId=" + getBrandId() +
+            ", categoryId=" + getCategoryId() +
             ", listPrice=" + getListPrice() +
             ", shopId=" + getShopId() +
             ", createdTime='" + getCreatedTime() + "'" +

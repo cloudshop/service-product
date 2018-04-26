@@ -33,6 +33,10 @@ public class Product implements Serializable {
     @Column(name = "brand_id", nullable = false)
     private Long brandId;
 
+    @NotNull
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
+
     @Column(name = "list_price", precision=10, scale=2)
     private BigDecimal listPrice;
 
@@ -84,6 +88,19 @@ public class Product implements Serializable {
 
     public void setBrandId(Long brandId) {
         this.brandId = brandId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public Product categoryId(Long categoryId) {
+        this.categoryId = categoryId;
+        return this;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public BigDecimal getListPrice() {
@@ -191,6 +208,7 @@ public class Product implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", brandId=" + getBrandId() +
+            ", categoryId=" + getCategoryId() +
             ", listPrice=" + getListPrice() +
             ", shopId=" + getShopId() +
             ", createdTime='" + getCreatedTime() + "'" +
