@@ -4,6 +4,7 @@ package com.eyun.product.service.dto;
 import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -19,7 +20,7 @@ public class ProductDTO implements Serializable {
     @NotNull
     private Long brandId;
 
-    private Integer listPrice;
+    private BigDecimal listPrice;
 
     private Long shopId;
 
@@ -55,11 +56,11 @@ public class ProductDTO implements Serializable {
         this.brandId = brandId;
     }
 
-    public Integer getListPrice() {
+    public BigDecimal getListPrice() {
         return listPrice;
     }
 
-    public void setListPrice(Integer listPrice) {
+    public void setListPrice(BigDecimal listPrice) {
         this.listPrice = listPrice;
     }
 

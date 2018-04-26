@@ -30,7 +30,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="list_price" type="integer">
+            <column name="list_price" type="decimal(10,2)">
                 <constraints nullable="true" />
             </column>
 
@@ -50,7 +50,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="details" type="varchar(500)">
+            <column name="details" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -58,7 +58,7 @@
         </createTable>
         <dropDefaultValue tableName="product" columnName="created_time" columnDataType="datetime"/>
         <dropDefaultValue tableName="product" columnName="updated_time" columnDataType="datetime"/>
-        
+
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

@@ -8,7 +8,7 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-
+import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.InstantFilter;
 
 
@@ -32,7 +32,7 @@ public class ProductCriteria implements Serializable {
 
     private LongFilter brandId;
 
-    private IntegerFilter listPrice;
+    private BigDecimalFilter listPrice;
 
     private LongFilter shopId;
 
@@ -71,11 +71,11 @@ public class ProductCriteria implements Serializable {
         this.brandId = brandId;
     }
 
-    public IntegerFilter getListPrice() {
+    public BigDecimalFilter getListPrice() {
         return listPrice;
     }
 
-    public void setListPrice(IntegerFilter listPrice) {
+    public void setListPrice(BigDecimalFilter listPrice) {
         this.listPrice = listPrice;
     }
 

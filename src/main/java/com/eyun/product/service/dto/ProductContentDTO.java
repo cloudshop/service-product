@@ -1,26 +1,28 @@
 package com.eyun.product.service.dto;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ProductContentDTO implements Serializable {
+    @NotNull
     private String productName;
-    private String mainImage;//商品主图
+    private String mainImage;//商品主图url
+    @NotNull
     private Long brandId;
+    @NotNull
     private Long shopId;
-    private System article_number;//商家货号
-    private Integer listPrice;
+    @NotNull
+    private Integer listPrice;//列表价格
     private String description;//商品介绍
+    @NotNull
     private Integer paymentType;//支付方式
-    private Double skuPrice;//商品单价
-    private String transfer;//让利百分比 如10%
     private Long address;//商品所在地
-    private Integer skuCount;//sku单价
-    private Double freight;//运费
+    private Integer freight;//运费
     private List<Map<String,String>> attr=new ArrayList<>();
-    private List<String>skuImageUrl=new ArrayList<>();//sku图
+    private List<String>skuImageUrl=new ArrayList<>();//sku图url
 
     public String getProductName() {
         return productName;
@@ -44,14 +46,6 @@ public class ProductContentDTO implements Serializable {
 
     public void setBrandId(Long brandId) {
         this.brandId = brandId;
-    }
-
-    public System getArticle_number() {
-        return article_number;
-    }
-
-    public void setArticle_number(System article_number) {
-        this.article_number = article_number;
     }
 
     public Integer getListPrice() {
@@ -78,22 +72,6 @@ public class ProductContentDTO implements Serializable {
         this.paymentType = paymentType;
     }
 
-    public Double getSkuPrice() {
-        return skuPrice;
-    }
-
-    public void setSkuPrice(Double skuPrice) {
-        this.skuPrice = skuPrice;
-    }
-
-    public String getTransfer() {
-        return transfer;
-    }
-
-    public void setTransfer(String transfer) {
-        this.transfer = transfer;
-    }
-
     public Long getAddress() {
         return address;
     }
@@ -102,19 +80,11 @@ public class ProductContentDTO implements Serializable {
         this.address = address;
     }
 
-    public Integer getSkuCount() {
-        return skuCount;
-    }
-
-    public void setSkuCount(Integer skuCount) {
-        this.skuCount = skuCount;
-    }
-
-    public Double getFreight() {
+    public Integer getFreight() {
         return freight;
     }
 
-    public void setFreight(Double freight) {
+    public void setFreight(Integer freight) {
         this.freight = freight;
     }
 
@@ -148,14 +118,10 @@ public class ProductContentDTO implements Serializable {
             "productName='" + productName + '\'' +
             ", mainImage='" + mainImage + '\'' +
             ", brandId=" + brandId +
-            ", article_number=" + article_number +
             ", listPrice=" + listPrice +
             ", description='" + description + '\'' +
             ", paymentType=" + paymentType +
-            ", skuPrice=" + skuPrice +
-            ", transfer='" + transfer + '\'' +
             ", address=" + address +
-            ", skuCount=" + skuCount +
             ", freight=" + freight +
             ", attr=" + attr +
             ", skuImageUrl=" + skuImageUrl +

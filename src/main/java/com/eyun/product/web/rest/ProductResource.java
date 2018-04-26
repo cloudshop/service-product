@@ -74,9 +74,27 @@ public class ProductResource {
     @ApiOperation("商品发布")
     @PostMapping("/product/publish")
     @Timed
-    public ResponseEntity pulishProduct(@RequestBody ProductContentDTO productContentDTO)throws Exception{
+    public ResponseEntity pulishProduct(@Valid @RequestBody ProductContentDTO productContentDTO)throws Exception{
         log.debug("REST request to save Product : {}", productContentDTO);
-        Map result=productService.publishProductAndSku(productContentDTO);
+        List<Map> result=productService.publishProductAndSku(productContentDTO);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
+
+    @ApiOperation("上传sku图片")
+    @PostMapping("/product/skuImage")
+    @Timed
+    public ResponseEntity upLoadskuImage(@Valid @RequestBody List<Map> skuImage)throws Exception{
+        Map result=productService.upLoadskuImage(skuImage);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
+
+
+
+    @ApiOperation("sku列表(商家中心后台)")
+    @PostMapping("/product/skuStore")
+    @Timed
+    public ResponseEntity skuListStore(@Valid @RequestParam("shopId") Long shopId)throws Exception{
+        List<Map> result=productService.skuListStore(shopId);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
     /**
@@ -146,7 +164,13 @@ public class ProductResource {
         Map result=productService.findProductByCatewgory(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
-
+    @ApiOperation("首页,分类商品搜索")
+    @PostMapping("/product/search")
+    @Timed
+    public ResponseEntity findProductByParam(@RequestBody ProductSeachParam productSeachParam){
+        List<Map> resultList=productService.findProductByParam(productSeachParam);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resultList));
+    }
     @ApiOperation("批量获取商品")
     @PostMapping("/product/follow")
     @Timed
@@ -157,15 +181,15 @@ public class ProductResource {
     @ApiOperation("获取店铺商品")
     @GetMapping("/product/shop")
     @Timed
-    public ResponseEntity<List<Product>> getAllProductsShop(@RequestParam("shopId") Long shopId) {
-        List<Product>list=productService.findProductByShopIdAndDeleted(shopId,false);
-        return new ResponseEntity<>(list, HttpStatus.OK);
+    public ResponseEntity getAllProductsShop(@RequestParam("shopId") Long shopId) {
+        List<Map>list=productService.findProductByShopIdAndDeleted(shopId);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(list));
     }
 
     @ApiOperation("生成商品sku")
     @PostMapping("/product/initsku")
     @Timed
-    public ResponseEntity initSku(@RequestBody List<Map> productAttr) throws Exception{
+    public ResponseEntity initSku(@NotNull @RequestBody List<Map> productAttr) throws Exception{
         List list=productService.initSku(productAttr);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(list));
     }
