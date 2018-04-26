@@ -54,6 +54,9 @@ public class ProductResourceIntTest {
     private static final Long DEFAULT_BRAND_ID = 1L;
     private static final Long UPDATED_BRAND_ID = 2L;
 
+    private static final Long DEFAULT_CATEGORY_ID = 1L;
+    private static final Long UPDATED_CATEGORY_ID = 2L;
+
     private static final BigDecimal DEFAULT_LIST_PRICE = new BigDecimal(1);
     private static final BigDecimal UPDATED_LIST_PRICE = new BigDecimal(2);
 
@@ -121,6 +124,7 @@ public class ProductResourceIntTest {
         Product product = new Product()
             .name(DEFAULT_NAME)
             .brandId(DEFAULT_BRAND_ID)
+            .categoryId(DEFAULT_CATEGORY_ID)
             .listPrice(DEFAULT_LIST_PRICE)
             .shopId(DEFAULT_SHOP_ID)
             .createdTime(DEFAULT_CREATED_TIME)
@@ -153,6 +157,7 @@ public class ProductResourceIntTest {
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProduct.getBrandId()).isEqualTo(DEFAULT_BRAND_ID);
+        assertThat(testProduct.getCategoryId()).isEqualTo(DEFAULT_CATEGORY_ID);
         assertThat(testProduct.getListPrice()).isEqualTo(DEFAULT_LIST_PRICE);
         assertThat(testProduct.getShopId()).isEqualTo(DEFAULT_SHOP_ID);
         assertThat(testProduct.getCreatedTime()).isEqualTo(DEFAULT_CREATED_TIME);
@@ -221,6 +226,25 @@ public class ProductResourceIntTest {
 
     @Test
     @Transactional
+    public void checkCategoryIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = productRepository.findAll().size();
+        // set the field null
+        product.setCategoryId(null);
+
+        // Create the Product, which fails.
+        ProductDTO productDTO = productMapper.toDto(product);
+
+        restProductMockMvc.perform(post("/api/products")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(productDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Product> productList = productRepository.findAll();
+        assertThat(productList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllProducts() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
@@ -232,6 +256,7 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].brandId").value(hasItem(DEFAULT_BRAND_ID.intValue())))
+            .andExpect(jsonPath("$.[*].categoryId").value(hasItem(DEFAULT_CATEGORY_ID.intValue())))
             .andExpect(jsonPath("$.[*].listPrice").value(hasItem(DEFAULT_LIST_PRICE.intValue())))
             .andExpect(jsonPath("$.[*].shopId").value(hasItem(DEFAULT_SHOP_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
@@ -253,6 +278,7 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.id").value(product.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.brandId").value(DEFAULT_BRAND_ID.intValue()))
+            .andExpect(jsonPath("$.categoryId").value(DEFAULT_CATEGORY_ID.intValue()))
             .andExpect(jsonPath("$.listPrice").value(DEFAULT_LIST_PRICE.intValue()))
             .andExpect(jsonPath("$.shopId").value(DEFAULT_SHOP_ID.intValue()))
             .andExpect(jsonPath("$.createdTime").value(DEFAULT_CREATED_TIME.toString()))
@@ -363,6 +389,72 @@ public class ProductResourceIntTest {
 
         // Get all the productList where brandId less than or equals to UPDATED_BRAND_ID
         defaultProductShouldBeFound("brandId.lessThan=" + UPDATED_BRAND_ID);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllProductsByCategoryIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where categoryId equals to DEFAULT_CATEGORY_ID
+        defaultProductShouldBeFound("categoryId.equals=" + DEFAULT_CATEGORY_ID);
+
+        // Get all the productList where categoryId equals to UPDATED_CATEGORY_ID
+        defaultProductShouldNotBeFound("categoryId.equals=" + UPDATED_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductsByCategoryIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where categoryId in DEFAULT_CATEGORY_ID or UPDATED_CATEGORY_ID
+        defaultProductShouldBeFound("categoryId.in=" + DEFAULT_CATEGORY_ID + "," + UPDATED_CATEGORY_ID);
+
+        // Get all the productList where categoryId equals to UPDATED_CATEGORY_ID
+        defaultProductShouldNotBeFound("categoryId.in=" + UPDATED_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductsByCategoryIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where categoryId is not null
+        defaultProductShouldBeFound("categoryId.specified=true");
+
+        // Get all the productList where categoryId is null
+        defaultProductShouldNotBeFound("categoryId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductsByCategoryIdIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where categoryId greater than or equals to DEFAULT_CATEGORY_ID
+        defaultProductShouldBeFound("categoryId.greaterOrEqualThan=" + DEFAULT_CATEGORY_ID);
+
+        // Get all the productList where categoryId greater than or equals to UPDATED_CATEGORY_ID
+        defaultProductShouldNotBeFound("categoryId.greaterOrEqualThan=" + UPDATED_CATEGORY_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductsByCategoryIdIsLessThanSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where categoryId less than or equals to DEFAULT_CATEGORY_ID
+        defaultProductShouldNotBeFound("categoryId.lessThan=" + DEFAULT_CATEGORY_ID);
+
+        // Get all the productList where categoryId less than or equals to UPDATED_CATEGORY_ID
+        defaultProductShouldBeFound("categoryId.lessThan=" + UPDATED_CATEGORY_ID);
     }
 
 
@@ -636,6 +728,7 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].brandId").value(hasItem(DEFAULT_BRAND_ID.intValue())))
+            .andExpect(jsonPath("$.[*].categoryId").value(hasItem(DEFAULT_CATEGORY_ID.intValue())))
             .andExpect(jsonPath("$.[*].listPrice").value(hasItem(DEFAULT_LIST_PRICE.intValue())))
             .andExpect(jsonPath("$.[*].shopId").value(hasItem(DEFAULT_SHOP_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdTime").value(hasItem(DEFAULT_CREATED_TIME.toString())))
@@ -678,6 +771,7 @@ public class ProductResourceIntTest {
         updatedProduct
             .name(UPDATED_NAME)
             .brandId(UPDATED_BRAND_ID)
+            .categoryId(UPDATED_CATEGORY_ID)
             .listPrice(UPDATED_LIST_PRICE)
             .shopId(UPDATED_SHOP_ID)
             .createdTime(UPDATED_CREATED_TIME)
@@ -697,6 +791,7 @@ public class ProductResourceIntTest {
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProduct.getBrandId()).isEqualTo(UPDATED_BRAND_ID);
+        assertThat(testProduct.getCategoryId()).isEqualTo(UPDATED_CATEGORY_ID);
         assertThat(testProduct.getListPrice()).isEqualTo(UPDATED_LIST_PRICE);
         assertThat(testProduct.getShopId()).isEqualTo(UPDATED_SHOP_ID);
         assertThat(testProduct.getCreatedTime()).isEqualTo(UPDATED_CREATED_TIME);

@@ -32,6 +32,8 @@ public class ProductCriteria implements Serializable {
 
     private LongFilter brandId;
 
+    private LongFilter categoryId;
+
     private BigDecimalFilter listPrice;
 
     private LongFilter shopId;
@@ -69,6 +71,14 @@ public class ProductCriteria implements Serializable {
 
     public void setBrandId(LongFilter brandId) {
         this.brandId = brandId;
+    }
+
+    public LongFilter getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(LongFilter categoryId) {
+        this.categoryId = categoryId;
     }
 
     public BigDecimalFilter getListPrice() {
@@ -125,6 +135,7 @@ public class ProductCriteria implements Serializable {
                 (id != null ? "id=" + id + ", " : "") +
                 (name != null ? "name=" + name + ", " : "") +
                 (brandId != null ? "brandId=" + brandId + ", " : "") +
+                (categoryId != null ? "categoryId=" + categoryId + ", " : "") +
                 (listPrice != null ? "listPrice=" + listPrice + ", " : "") +
                 (shopId != null ? "shopId=" + shopId + ", " : "") +
                 (createdTime != null ? "createdTime=" + createdTime + ", " : "") +

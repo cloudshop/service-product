@@ -16,6 +16,13 @@
                 "required"
             ]
         },
+		{
+            "fieldName": "categoryId",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
         {
             "fieldName": "listPrice",
             "fieldType": "BigDecimal"

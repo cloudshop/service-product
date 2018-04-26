@@ -76,7 +76,7 @@ public class ProductQueryService extends QueryService<Product> {
     private Specifications<Product> createSpecification(ProductCriteria criteria) {
         Specifications<Product> specification = Specifications.where(null);
         if (criteria != null) {
-            /*if (criteria.getId() != null) {
+            if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Product_.id));
             }
             if (criteria.getName() != null) {
@@ -84,6 +84,9 @@ public class ProductQueryService extends QueryService<Product> {
             }
             if (criteria.getBrandId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getBrandId(), Product_.brandId));
+            }
+            if (criteria.getCategoryId() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCategoryId(), Product_.categoryId));
             }
             if (criteria.getListPrice() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getListPrice(), Product_.listPrice));
@@ -102,7 +105,7 @@ public class ProductQueryService extends QueryService<Product> {
             }
             if (criteria.getDetails() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDetails(), Product_.details));
-            }*/
+            }
         }
         return specification;
     }
