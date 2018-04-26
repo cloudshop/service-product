@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -15,4 +16,5 @@ import java.util.List;
 @Repository
 public interface AttrValueRepository extends JpaRepository<AttrValue, Long>, JpaSpecificationExecutor<AttrValue> {
 
+    public List<AttrValue> findAllByAttrId(Long attrId);
 }

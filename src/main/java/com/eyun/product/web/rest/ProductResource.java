@@ -84,7 +84,7 @@ public class ProductResource {
     @PostMapping("/product/skuImage")
     @Timed
     public ResponseEntity upLoadskuImage(@Valid @RequestBody List<Map> skuImage)throws Exception{
-        Map result=productService.upLoadskuImage(skuImage);
+        String result=productService.upLoadskuImage(skuImage);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
 
