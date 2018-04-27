@@ -351,7 +351,7 @@ public class ProductServiceImpl implements ProductService {
                             image.setImgUrl(img);
                             image.setDeleted(false);
                             image.setUpdatedTime(Instant.now());
-                            //skuImgRepository.save(image);
+                            skuImgRepository.save(image);
                             list.remove(image);
                             count++;
                             if (count==list.size()){
@@ -364,11 +364,11 @@ public class ProductServiceImpl implements ProductService {
                     if (left >0) {
                         SkuImg image = new SkuImg();
                         image.setSkuId(skuId);
-                        //image.setImgUrl(skuImageList.get(i));
+                        image.setImgUrl(img);
                         image.setType(1);
                         image.setCreatedTime(Instant.now());
                         image.setDeleted(false);
-                        //skuImgRepository.save(image);
+                        skuImgRepository.save(image);
                     }
                 }
 
