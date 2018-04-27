@@ -422,8 +422,8 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    public static void main(String[] args) throws Exception {
-        /*List<Map<String, List<String>>> list = new ArrayList();
+    /*public static void main(String[] args) throws Exception {
+        List<Map<String, List<String>>> list = new ArrayList();
         List list1 = new ArrayList();
         list1.add("白色");
         list1.add("黑色");
@@ -457,21 +457,8 @@ public class ProductServiceImpl implements ProductService {
                     System.out.println(attr + ":" + value);
                 }
             }
-        }*/
-        /********************************************************************************************/
-
-        System.out.println("--------测试continue2-------");
-        lable1:
-        for (int i = 1; i < 10; i++) {
-            lable2:
-            System.out.println("i=" + i);
-            for (int j = 0; j < 10; j++) {
-                if (j == 9) {
-                    continue lable1;
-                }
-
-            }
         }
+        *//********************************************************************************************//*
     }
-
+*/
 }
