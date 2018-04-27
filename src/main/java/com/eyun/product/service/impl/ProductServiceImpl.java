@@ -91,6 +91,7 @@ public class ProductServiceImpl implements ProductService {
             product.setName(productContentDTO.getProductName());
             product.setShopId(productContentDTO.getShopId());
             product.setBrandId(productContentDTO.getBrandId());
+            product.setCategoryId(productContentDTO.getCategoryId());
             product.setListPrice(new BigDecimal(productContentDTO.getListPrice()));
             product.setDetails(productContentDTO.getDescription());
             product.setDeleted(false);
@@ -119,6 +120,7 @@ public class ProductServiceImpl implements ProductService {
             productImg.setDeleted(false);
             productImgRepository.save(productImg);//productImage
         }
+
         List<Map<String, String>> attrList = productContentDTO.getAttr();
         for (Map<String, String> attr : attrList) {
             String attrName = attr.get("attr");
@@ -126,8 +128,9 @@ public class ProductServiceImpl implements ProductService {
             String attrAnother = attr.get("attrAnother");
             String AnotherValue = attr.get("AnotherValue");
             if (StringUtils.isBlank(attrName) && StringUtils.isBlank(value)) {
-                throw new BadRequestAlertException("商品attr为空！", "attr", "attrNotfound");
+                throw new BadRequestAlertException("商品属性为空！", "attr", "attrNotfound");
             }
+            StringBuffer skuName = new StringBuffer(value);
             Attribute attribute = attributeRepository.findAttributeByProductIdAndNameAndDeleted(product.getId(), attrName, 0);
             if (attribute == null) {
                 attribute = new Attribute();
@@ -136,11 +139,11 @@ public class ProductServiceImpl implements ProductService {
                 attribute.status(0);
                 attribute.setCreatedTime(Instant.now());
                 attribute.setDeleted(0);
-                attribute=attributeRepository.save(attribute);//attr
+                attribute = attributeRepository.save(attribute);//attr
             }
-            AttrValue attrValue = null;
-            List<AttrValue> attrValueList = attrValueRepository.findAllByAttrId(attribute.getId());
-            if (!attrValueList.contains(value)) {
+
+            AttrValue attrValue = attrValueRepository.findAllByAttrIdAndValue(attribute.getId(), value);
+            if (attrValue == null) {
                 attrValue = new AttrValue();
                 attrValue.setAttrId(attribute.getId());
                 attrValue.setValue(value);
@@ -148,8 +151,10 @@ public class ProductServiceImpl implements ProductService {
                 attrValue.deleted(false);
                 attrValue = attrValueRepository.save(attrValue);//attrValue
             }
-            AttrValue attrValueAnother = null;
+            StringBuffer attrString = new StringBuffer().append(attrValue.getId());
+
             if (StringUtils.isNotBlank(attrAnother) && StringUtils.isNotBlank(AnotherValue)) {
+                skuName.append(" ").append(AnotherValue);
                 Attribute attributeAnother = attributeRepository.findAttributeByProductIdAndNameAndDeleted(product.getId(), attrAnother, 0);
                 if (attributeAnother == null) {
                     attributeAnother = new Attribute();
@@ -158,68 +163,57 @@ public class ProductServiceImpl implements ProductService {
                     attributeAnother.status(0);
                     attributeAnother.setCreatedTime(Instant.now());
                     attributeAnother.setDeleted(0);
-                    attributeAnother=attributeRepository.save(attributeAnother);//attr
+                    attributeAnother = attributeRepository.save(attributeAnother);//attr
                 }
 
-                List<AttrValue> attrValueList1 = attrValueRepository.findAllByAttrId(attributeAnother.getId());
-                if (!attrValueList1.contains(AnotherValue)) {
+                AttrValue attrValueAnother = attrValueRepository.findAllByAttrIdAndValue(attributeAnother.getId(), AnotherValue);
+                if (attrValueAnother == null) {
                     attrValueAnother = new AttrValue();
                     attrValueAnother.setAttrId(attributeAnother.getId());
                     attrValueAnother.setValue(AnotherValue);
                     attrValueAnother.setCreatedTime(Instant.now());
                     attrValueAnother.deleted(false);
-                    attrValueRepository.save(attrValueAnother);//attrValue
+                    attrValueAnother = attrValueRepository.save(attrValueAnother);//attrValue
                 }
+                attrString.append(",").append(attrValueAnother.getId());
             }
 
             String skuPrice = attr.get("skuPrice");
             String transfer = attr.get("transfer").substring(0, attr.get("transfer").indexOf("%"));//让利
             String skuCount = attr.get("skuCount");
             String skuCode = attr.get("skuCode");
-            String skuName = null;
-            StringBuffer attrString =null;
-            if (attrValue != null) {
-                attrString = new StringBuffer().append(attrValue.getId());
-                skuName = value;
-            }
-            if (attrValueAnother != null) {
-                attrString = new StringBuffer().append(attrValueAnother.getId());
-                skuName = AnotherValue;
-            }
-            if (attrValue != null && attrValueAnother != null) {
-                attrString = new StringBuffer().append(attrValue.getId()).append(",").append(attrValueAnother.getId());
-                skuName = value + " " + AnotherValue;
-            }
-            if (attrString.length()>0) {
-                ProductSku sku = productSkuRepository.findByProductIdAndAttrString(product.getId(), attrString.toString());
-                if (sku == null) {
-                    sku = new ProductSku();
-                    sku.setProductId(product.getId());
-                    sku.skuName(productContentDTO.getProductName() + " " + skuName);
-                    sku.setPrice(new BigDecimal(skuPrice));
-                    sku.setCount(Integer.valueOf(skuCount));
-                    sku.setAttrString(attrString.toString());
-                    sku.setSkuCode(skuCode);
-                    Double fer = Double.valueOf(transfer);
-                    DecimalFormat df = new DecimalFormat("0.00");
-                    BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
-                    sku.setTransfer(decimal);
-                    sku.setCreatedTime(Instant.now());
-                    sku.status(0);
-                    sku.setDeleted(false);
-                    sku = productSkuRepository.save(sku);//sku
-                } else {
-                    sku.setPrice(new BigDecimal(skuPrice));
-                    sku.setCount(sku.getCount() + Integer.valueOf(skuCount));
-                    sku.setUpdatedTime(Instant.now());
-                    sku.setDeleted(false);
-                    sku = productSkuRepository.save(sku);
+
+            ProductSku sku = productSkuRepository.findByProductIdAndAttrString(product.getId(), attrString.toString());
+            if (sku == null) {
+                sku = new ProductSku();
+                sku.setProductId(product.getId());
+                sku.skuName(productContentDTO.getProductName() + " " + skuName);
+                sku.setPrice(new BigDecimal(skuPrice));
+                sku.setCount(Integer.valueOf(skuCount));
+                sku.setAttrString(attrString.toString());
+                sku.setSkuCode(skuCode);
+                Double fer = Double.valueOf(transfer);
+                if (fer <= 0) {
+                    throw new BadRequestAlertException("让利百分比威大于0", "transfer", "transferDosentrRequert");
                 }
-                Map skuMap = new HashMap();
-                skuMap.put("skuId", sku.getId());
-                skuMap.put("skuName", productContentDTO.getProductName() + " " + skuName);
-                result.add(skuMap);
+                DecimalFormat df = new DecimalFormat("0.00");
+                BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
+                sku.setTransfer(decimal);
+                sku.setCreatedTime(Instant.now());
+                sku.status(0);
+                sku.setDeleted(false);
+                sku = productSkuRepository.save(sku);//sku
+            } else {
+                sku.setPrice(new BigDecimal(skuPrice));
+                sku.setCount(sku.getCount() + Integer.valueOf(skuCount));
+                sku.setUpdatedTime(Instant.now());
+                sku.setDeleted(false);
+                sku = productSkuRepository.save(sku);
             }
+            Map skuMap = new HashMap();
+            skuMap.put("skuId", sku.getId());
+            skuMap.put("skuName", productContentDTO.getProductName() + " " + skuName);
+            result.add(skuMap);
         }
         return result;
     }
