@@ -9,15 +9,19 @@ import java.util.Map;
 public class ProductContentDTO implements Serializable {
     @NotNull
     private String productName;
+    @NotNull
     private String mainImage;//商品主图url
     @NotNull
+    private Long categoryId;
+
     private Long brandId;
+
     @NotNull
     private Long shopId;
+
     @NotNull
     private Integer listPrice;//列表价格
     private String description;//商品介绍
-    @NotNull
     private Integer paymentType;//支付方式
     private Long address;//商品所在地
     private Integer freight;//运费
@@ -112,12 +116,22 @@ public class ProductContentDTO implements Serializable {
         this.shopId = shopId;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     @Override
     public String toString() {
         return "ProductContentDTO{" +
             "productName='" + productName + '\'' +
             ", mainImage='" + mainImage + '\'' +
+            ", categoryId=" + categoryId +
             ", brandId=" + brandId +
+            ", shopId=" + shopId +
             ", listPrice=" + listPrice +
             ", description='" + description + '\'' +
             ", paymentType=" + paymentType +
