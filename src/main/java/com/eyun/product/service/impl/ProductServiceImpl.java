@@ -194,7 +194,7 @@ public class ProductServiceImpl implements ProductService {
                 sku.setSkuCode(skuCode);
                 Double fer = Double.valueOf(transfer);
                 if (fer <= 0) {
-                    throw new BadRequestAlertException("让利百分比威大于0", "transfer", "transferDosentrRequert");
+                    throw new BadRequestAlertException("让利百分比必须大于0", "transfer", "transferDosentrRequert");
                 }
                 DecimalFormat df = new DecimalFormat("0.00");
                 BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));

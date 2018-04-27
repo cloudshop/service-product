@@ -1,6 +1,7 @@
 package com.eyun.product.repository;
 
 import com.eyun.product.domain.AttrValue;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.data.jpa.repository.*;
@@ -16,5 +17,5 @@ import java.util.Map;
 @Repository
 public interface AttrValueRepository extends JpaRepository<AttrValue, Long>, JpaSpecificationExecutor<AttrValue> {
 
-    public List<AttrValue> findAllByAttrId(Long attrId);
+    public AttrValue findAllByAttrIdAndValue(Long attrId,String value);
 }
