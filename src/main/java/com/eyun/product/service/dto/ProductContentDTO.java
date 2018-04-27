@@ -26,7 +26,6 @@ public class ProductContentDTO implements Serializable {
     private Long address;//商品所在地
     private Integer freight;//运费
     private List<Map<String,String>> attr=new ArrayList<>();
-    private List<String>skuImageUrl=new ArrayList<>();//sku图url
 
     public String getProductName() {
         return productName;
@@ -100,14 +99,6 @@ public class ProductContentDTO implements Serializable {
         this.attr = attr;
     }
 
-    public List<String> getSkuImageUrl() {
-        return skuImageUrl;
-    }
-
-    public void setSkuImageUrl(List<String> skuImageUrl) {
-        this.skuImageUrl = skuImageUrl;
-    }
-
     public Long getShopId() {
         return shopId;
     }
@@ -138,7 +129,6 @@ public class ProductContentDTO implements Serializable {
             ", address=" + address +
             ", freight=" + freight +
             ", attr=" + attr +
-            ", skuImageUrl=" + skuImageUrl +
             '}';
     }
 }
