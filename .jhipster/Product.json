@@ -11,10 +11,7 @@
         },
         {
             "fieldName": "brandId",
-            "fieldType": "Long",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldType": "Long"
         },
 		{
             "fieldName": "categoryId",

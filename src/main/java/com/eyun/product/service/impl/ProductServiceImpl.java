@@ -343,33 +343,35 @@ public class ProductServiceImpl implements ProductService {
                 }
             } else {
                 Integer count = 0;
+                lable1:
                 for (String img : skuImageList) {
-                    for (SkuImg image : list) {
-                        count++;
-                        if (count == list.size()) {
-                            break;
-                        }
-                        image.setImgUrl(img);
-                        image.setDeleted(false);
-                        image.setUpdatedTime(Instant.now());
-                        skuImgRepository.save(image);
-                        if (skuImageList.size() > 0) {
-                            skuImageList.remove(img);
+                    if (list.size() > 0) {
+                        lable2:
+                        for (SkuImg image : list) {
+                            image.setImgUrl(img);
+                            image.setDeleted(false);
+                            image.setUpdatedTime(Instant.now());
+                            //skuImgRepository.save(image);
+                            list.remove(image);
+                            count++;
+                            if (count==list.size()){
+                                break;
+                            }
+                            continue lable1;
                         }
                     }
-                    continue;
-                }
-                if (skuImageList.size() > 0) {
-                    for (String img : skuImageList) {
+                    Integer left = skuImageList.size() - count;
+                    if (left >0) {
                         SkuImg image = new SkuImg();
                         image.setSkuId(skuId);
-                        image.setImgUrl(img);
+                        //image.setImgUrl(skuImageList.get(i));
                         image.setType(1);
                         image.setCreatedTime(Instant.now());
                         image.setDeleted(false);
-                        skuImgRepository.save(image);
+                        //skuImgRepository.save(image);
                     }
                 }
+
             }
         }
         return "success";
@@ -420,8 +422,8 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    /*public static void main(String[] args) throws Exception {
-        List<Map<String, List<String>>> list = new ArrayList();
+    public static void main(String[] args) throws Exception {
+        /*List<Map<String, List<String>>> list = new ArrayList();
         List list1 = new ArrayList();
         list1.add("白色");
         list1.add("黑色");
@@ -455,9 +457,21 @@ public class ProductServiceImpl implements ProductService {
                     System.out.println(attr + ":" + value);
                 }
             }
+        }*/
+        /********************************************************************************************/
+
+        System.out.println("--------测试continue2-------");
+        lable1:
+        for (int i = 1; i < 10; i++) {
+            lable2:
+            System.out.println("i=" + i);
+            for (int j = 0; j < 10; j++) {
+                if (j == 9) {
+                    continue lable1;
+                }
+
+            }
         }
-        *//********************************************************************************************//*
+    }
 
-
-    }*/
 }
