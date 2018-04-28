@@ -11,6 +11,7 @@ import com.eyun.product.service.ProductSkuQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,9 +22,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,17 +72,19 @@ public class ProductSkuResource {
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
     /*0：减库存 1：增加库存*/
     @ApiOperation("更新库存")
     @GetMapping("/product-skus/stock/{processtype}/{id}/{count}")
     @Timed
-    public ResponseEntity updateProductSkuCount(@PathVariable Integer processtype,@PathVariable Long id ,@PathVariable Integer count) throws Exception {
+    public ResponseEntity updateProductSkuCount(@PathVariable Integer processtype, @PathVariable Long id, @PathVariable Integer count) throws Exception {
         ProductSkuDTO productSkuDTO = new ProductSkuDTO();
         productSkuDTO.setCount(count);
         productSkuDTO.setId(id);
-        Map result = productSkuService.updateStockCount(productSkuDTO,processtype);
+        Map result = productSkuService.updateStockCount(productSkuDTO, processtype);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
+
     /**
      * PUT  /product-skus : Updates an existing productSku.
      *
@@ -117,6 +123,33 @@ public class ProductSkuResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    /*
+     * type：0 编辑 ，1：下架
+     * */
+    @ApiOperation("编辑,下架")
+    @PostMapping("/product/handle/{type}")
+    @Timed
+    public ResponseEntity<ProductSkuDTO> skuHandle(@NotNull @PathVariable Integer type, @RequestBody ProductSkuDTO productSkuDTO) throws Exception {
+        log.debug("REST request to handle ProductSku : {}", productSkuDTO);
+        if (productSkuDTO.getPrice() != null && productSkuDTO.getPrice().equals(0)) {
+            throw new BadRequestAlertException("商品单价不能为0！", "skuPrice", "skuPriceUnValidate");
+        }
+        if (StringUtils.isNotBlank(productSkuDTO.getProfit())) {
+            if (productSkuDTO.getProfit().indexOf("%")>0){//验证0%
+                String profit=productSkuDTO.getProfit().substring(0,productSkuDTO.getProfit().indexOf("%"));
+                if (Double.valueOf(profit)<0){
+                    throw new BadRequestAlertException("商品让利不能为0！", "transfer", "transferUnValidate");
+                }
+                Double fer = Double.valueOf(profit);
+                DecimalFormat df = new DecimalFormat("0.00");
+                BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
+                productSkuDTO.setTransfer(decimal);
+            }
+        }
+        ProductSkuDTO productSku = productSkuService.skuHandle(type, productSkuDTO);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productSku));
+    }
+
     /**
      * GET  /product-skus/:id : get the "id" productSku.
      *
@@ -130,6 +163,7 @@ public class ProductSkuResource {
         ProductSkuDTO productSkuDTO = productSkuService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productSkuDTO));
     }
+
     /**
      * DELETE  /product-skus/:id : delete the "id" productSku.
      *

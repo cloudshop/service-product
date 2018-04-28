@@ -3,7 +3,10 @@ package com.eyun.product.service;
 import com.eyun.product.service.dto.ProductSkuDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 
 /**
@@ -20,6 +23,8 @@ public interface ProductSkuService {
     ProductSkuDTO save(ProductSkuDTO productSkuDTO);
 
     Map updateStockCount(ProductSkuDTO productSkuDTO, Integer processType);
+
+    public ProductSkuDTO skuHandle(Integer type,ProductSkuDTO productSkuDTO)throws Exception;
 
     /**
      * Get all the productSkus.

@@ -1,19 +1,27 @@
 package com.eyun.product.service.impl;
 
+import com.eyun.product.service.FeignOrderCilent;
+import com.eyun.product.service.FeignShopCarClient;
 import com.eyun.product.service.ProductSkuService;
 import com.eyun.product.domain.ProductSku;
 import com.eyun.product.repository.ProductSkuRepository;
 import com.eyun.product.service.dto.ProductSkuDTO;
 import com.eyun.product.service.mapper.ProductSkuMapper;
+import com.eyun.product.web.rest.errors.BadRequestAlertException;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -30,6 +38,10 @@ public class ProductSkuServiceImpl implements ProductSkuService {
 
     private final ProductSkuMapper productSkuMapper;
 
+    @Autowired
+    FeignShopCarClient feignShopCarClient;
+    @Autowired
+    FeignOrderCilent feignOrderCilent;
     public ProductSkuServiceImpl(ProductSkuRepository productSkuRepository, ProductSkuMapper productSkuMapper) {
         this.productSkuRepository = productSkuRepository;
         this.productSkuMapper = productSkuMapper;
@@ -75,6 +87,38 @@ public class ProductSkuServiceImpl implements ProductSkuService {
         result.put("message",messgae);
         result.put("content",content);
         return result;
+    }
+
+    /*type：0 编辑 ，1：下架*/
+    @Override
+    public ProductSkuDTO skuHandle(Integer type,ProductSkuDTO productSkuDTO) throws Exception {
+        ProductSku productSku=productSkuRepository.findOne(productSkuDTO.getId());
+        switch (type){
+            case 0:
+                if (productSkuDTO.getCount()!=null&&productSkuDTO.getCount()>0){
+                    productSku.setCount(productSkuDTO.getCount());
+                }
+                if (productSkuDTO.getPrice()!=null){
+                    productSku.setPrice(productSkuDTO.getPrice());
+                }
+                if (productSkuDTO.getTransfer()!=null){
+                    productSku.setTransfer(productSkuDTO.getTransfer());
+                }
+                break;
+            case 1:
+                Map<String,String> sku=feignShopCarClient.getShopCartBySkuId(productSkuDTO.getId());
+                if (sku!=null){
+                    throw new BadRequestAlertException("该商品已加入购物车，不能下架","shopcar","allreadyInshopcar");
+                }
+                List list=feignOrderCilent.findOrderItemByskuid(productSkuDTO.getId());
+                if (!list.isEmpty()){
+                    throw new BadRequestAlertException("该商品已结算，不能下架","order","allreadyInOrder");
+                }
+                productSku.status(1);//0：上架 1：下架
+                break;
+        }
+        productSku=productSkuRepository.save(productSku);
+        return productSkuMapper.toDto(productSku);
     }
 
     /**

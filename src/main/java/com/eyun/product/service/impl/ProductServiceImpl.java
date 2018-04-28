@@ -125,11 +125,11 @@ public class ProductServiceImpl implements ProductService {
         for (Map<String, String> attr : attrList) {
             String attrName = attr.get("attr");
             String value = attr.get("attrValue");
-            String attrAnother = attr.get("attrAnother");
-            String AnotherValue = attr.get("AnotherValue");
-            if (StringUtils.isBlank(attrName) && StringUtils.isBlank(value)) {
+            if (!checkParam(attrName)||!checkParam(value)){
                 throw new BadRequestAlertException("商品属性为空！", "attr", "attrNotfound");
             }
+            String attrAnother = attr.get("attrAnother");
+            String AnotherValue = attr.get("AnotherValue");
             StringBuffer skuName = new StringBuffer(value);
             Attribute attribute = attributeRepository.findAttributeByProductIdAndNameAndDeleted(product.getId(), attrName, 0);
             if (attribute == null) {
@@ -179,10 +179,21 @@ public class ProductServiceImpl implements ProductService {
             }
 
             String skuPrice = attr.get("skuPrice");
-            String transfer = attr.get("transfer").substring(0, attr.get("transfer").indexOf("%"));//让利
+            if (!checkParam(skuPrice)){
+                throw new BadRequestAlertException("商品单价为空！", "skuPrice", "skuPriceNotfound");
+            }
+            String transfer = attr.get("transfer")/*.substring(0, attr.get("transfer").indexOf("%"))*/;//让利
+            if (!checkParam(transfer)){
+                throw new BadRequestAlertException("商品让利为空！", "transfer", "transferNotfound");
+            }
+            if(transfer.indexOf("%")>0){
+                transfer=transfer.substring(0, transfer.indexOf("%"));
+            }
             String skuCount = attr.get("skuCount");
             String skuCode = attr.get("skuCode");
-
+            if (!checkParam(skuCode)){
+                throw new BadRequestAlertException("商品编号为空！", "skuCode", "skuCodeNotfound");
+            }
             ProductSku sku = productSkuRepository.findByProductIdAndAttrString(product.getId(), attrString.toString());
             if (sku == null) {
                 sku = new ProductSku();
@@ -414,6 +425,13 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(product);
     }
 
+    public Boolean checkParam(String param){
+        if (StringUtils.isNotBlank(param)){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Delete the product by id.
      *
@@ -425,8 +443,8 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-   /* public static void main(String[] args) throws Exception {
-       *//* List<Map<String, List<String>>> list = new ArrayList();
+/*   public static void main(String[] args) throws Exception {
+        List<Map<String, List<String>>> list = new ArrayList();
         List list1 = new ArrayList();
         list1.add("白色");
         list1.add("黑色");
@@ -449,7 +467,7 @@ public class ProductServiceImpl implements ProductService {
         list3.add("分期版");
         Map<String, List<String>> map3 = new HashMap();
         map3.put("版本", list3);
-        list.add(map3);*//*
+        list.add(map3);
         List<Map<String,Object>> list = new ArrayList();
         Map<String,Object> map1 = new HashMap();
         map1.put("attr","颜色");
@@ -477,13 +495,11 @@ public class ProductServiceImpl implements ProductService {
         list3.add("分期版");
         map3.put("attrValue",list3);
         list.add(map3);
-        *//********************************************************************************************//*
         list.remove(0);
 
         for (Map<String, Object> map : list) {
 
         }
-
     }*/
 
 }
