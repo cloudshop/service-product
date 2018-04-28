@@ -328,7 +328,7 @@ public class ProductServiceImpl implements ProductService {
     public List skuListStore(ProductSeachParam productSeachParam) throws Exception {
         Long shopId=productSeachParam.getShopId();
         Integer num=productSeachParam.getPageNum();
-        Integer size=productSeachParam.getPageNum();
+        Integer size=productSeachParam.getPageSize();
         Integer start=(num-1)*size;
         List<Map> result = productSkuRepository.findProductSkusByShopId(shopId,start,size);
         return result;
