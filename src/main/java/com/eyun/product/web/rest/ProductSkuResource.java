@@ -135,16 +135,19 @@ public class ProductSkuResource {
             throw new BadRequestAlertException("商品单价不能为0！", "skuPrice", "skuPriceUnValidate");
         }
         if (StringUtils.isNotBlank(productSkuDTO.getProfit())) {
+            String profit="";
             if (productSkuDTO.getProfit().indexOf("%")>0){//验证0%
-                String profit=productSkuDTO.getProfit().substring(0,productSkuDTO.getProfit().indexOf("%"));
+                profit=productSkuDTO.getProfit().substring(0,productSkuDTO.getProfit().indexOf("%"));
                 if (Double.valueOf(profit)<0){
                     throw new BadRequestAlertException("商品让利不能为0！", "transfer", "transferUnValidate");
                 }
-                Double fer = Double.valueOf(profit);
-                DecimalFormat df = new DecimalFormat("0.00");
-                BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
-                productSkuDTO.setTransfer(decimal);
+            }else {
+                profit=productSkuDTO.getProfit();
             }
+            Double fer = Double.valueOf(profit);
+            DecimalFormat df = new DecimalFormat("0.00");
+            BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
+            productSkuDTO.setTransfer(decimal);
         }
         ProductSkuDTO productSku = productSkuService.skuHandle(type, productSkuDTO);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productSku));
