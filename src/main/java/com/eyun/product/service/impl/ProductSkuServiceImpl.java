@@ -106,8 +106,8 @@ public class ProductSkuServiceImpl implements ProductSkuService {
                 }
                 break;
             case 1:
-                Map<String,String> sku=feignShopCarClient.getShopCartBySkuId(productSkuDTO.getId());
-                if (sku!=null){
+                List<Map> sku=feignShopCarClient.getShopCartBySkuId(productSkuDTO.getId());
+                if (!sku.isEmpty()){
                     throw new BadRequestAlertException("该商品已加入购物车，不能下架","shopcar","allreadyInshopcar");
                 }
                 List list=feignOrderCilent.findOrderItemByskuid(productSkuDTO.getId());
