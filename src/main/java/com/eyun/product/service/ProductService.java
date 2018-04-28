@@ -29,7 +29,6 @@ public interface ProductService {
      */
     ProductDTO save(ProductDTO productDTO);
 
-    /*发布商品*/
     public List<Map> publishProductAndSku(ProductContentDTO productContentDTO)throws Exception;
 
     public Map findProductById(Long id);
@@ -42,7 +41,7 @@ public interface ProductService {
 
     public List initSku( List<Map> productAttr)throws Exception;
 
-    public List skuListStore(long shopId)throws Exception;
+    public List skuListStore(ProductSeachParam productSeachParam)throws Exception;
 
     public String upLoadskuImage(List<Map> skuImage)throws Exception;
 

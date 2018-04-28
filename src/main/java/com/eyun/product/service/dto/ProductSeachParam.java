@@ -1,8 +1,12 @@
 package com.eyun.product.service.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class ProductSeachParam {
 
     private Long categoryId;
+    @NotNull
+    private Long shopId;
 
     private String productName;
 
@@ -14,11 +18,20 @@ public class ProductSeachParam {
 
     private Integer endPrice;
 
-    private Integer pageNumber;
+    private Integer pageNum;
+
     private Integer pageSize;
 
     public Long getCategoryId() {
         return categoryId;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 
     public void setCategoryId(Long categoryId) {
@@ -65,12 +78,12 @@ public class ProductSeachParam {
         this.endPrice = endPrice;
     }
 
-    public Integer getPageNumber() {
-        return pageNumber;
+    public Integer getPageNum() {
+        return pageNum;
     }
 
-    public void setPageNumber(Integer pageNumber) {
-        this.pageNumber = pageNumber;
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
     }
 
     public Integer getPageSize() {
@@ -85,11 +98,13 @@ public class ProductSeachParam {
     public String toString() {
         return "ProductSeachParam{" +
             "categoryId=" + categoryId +
+            ", shopId=" + shopId +
             ", productName='" + productName + '\'' +
             ", sale='" + sale + '\'' +
             ", price='" + price + '\'' +
             ", startPrice=" + startPrice +
             ", endPrice=" + endPrice +
+            ", pageSize=" + pageSize +
             '}';
     }
 }

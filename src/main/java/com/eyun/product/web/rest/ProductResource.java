@@ -93,8 +93,8 @@ public class ProductResource {
     @ApiOperation("sku列表(商家中心后台)")
     @PostMapping("/product/skuStore")
     @Timed
-    public ResponseEntity skuListStore(@Valid @RequestParam("shopId") Long shopId)throws Exception{
-        List<Map> result=productService.skuListStore(shopId);
+    public ResponseEntity skuListStore(@Valid @RequestBody ProductSeachParam productSeachParam)throws Exception{
+        List<Map> result=productService.skuListStore(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
     /**

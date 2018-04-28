@@ -256,7 +256,7 @@ public class ProductServiceImpl implements ProductService {
         StringBuffer fromSku = new StringBuffer("LEFT JOIN product_sku sku ON p.id=sku.product_id ");
         StringBuffer addWhere = new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 ");
         StringBuffer groupBy = new StringBuffer(" GROUP BY p.id");
-        StringBuffer select = new StringBuffer("SELECT p.id AS id, p. NAME AS NAME, p.list_price AS listPrice, ( SELECT IFNULL(img.img_url,\"\") FROM product_img img WHERE img.jhi_type = 1 AND img.product_id = p.id AND img.deleted=0 limit 0,1) AS url FROM product p  LEFT JOIN brand b ON b.id = p.brand_id LEFT JOIN category ca ON ca.id = b.category_id ");
+        StringBuffer select = new StringBuffer("SELECT p.id AS id, p. NAME AS NAME, p.list_price AS listPrice, img.img_url AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id LEFT JOIN category ca ON ca.id = p.category_id ");
         if (StringUtils.isBlank(productSeachParam.getProductName()) && StringUtils.isBlank(productSeachParam.getSale()) && StringUtils.isBlank(productSeachParam.getPrice()) && productSeachParam.getStartPrice() == null && productSeachParam.getEndPrice() == null) {
             sql = select.append(addWhere).toString();
         }
@@ -314,8 +314,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List skuListStore(long shopId) throws Exception {
-        List<Map> result = productSkuRepository.findProductSkusByShopId(shopId);
+    public List skuListStore(ProductSeachParam productSeachParam) throws Exception {
+        Long shopId=productSeachParam.getShopId();
+        Integer num=productSeachParam.getPageNum();
+        Integer size=productSeachParam.getPageNum();
+        Integer start=(num-1)*size;
+        List<Map> result = productSkuRepository.findProductSkusByShopId(shopId,start,size);
         return result;
     }
 
@@ -346,7 +350,6 @@ public class ProductServiceImpl implements ProductService {
                 lable1:
                 for (String img : skuImageList) {
                     if (list.size() > 0) {
-                        lable2:
                         for (SkuImg image : list) {
                             image.setImgUrl(img);
                             image.setDeleted(false);
@@ -422,8 +425,8 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    /*public static void main(String[] args) throws Exception {
-        List<Map<String, List<String>>> list = new ArrayList();
+    public static void main(String[] args) throws Exception {
+       /* List<Map<String, List<String>>> list = new ArrayList();
         List list1 = new ArrayList();
         list1.add("白色");
         list1.add("黑色");
@@ -446,8 +449,26 @@ public class ProductServiceImpl implements ProductService {
         list3.add("分期版");
         Map<String, List<String>> map3 = new HashMap();
         map3.put("版本", list3);
-        list.add(map3);
-        for (Map<String, List<String>> map : list) {
+        list.add(map3);*/
+        List<Map<String,Object>> list = new ArrayList();
+        Map<String,Object> map1 = new HashMap();
+        map1.put("attr","颜色");
+        List list1 = new ArrayList();
+        list1.add("白色");
+        list1.add("黑色");
+        list1.add("灰色");
+        list1.add("蓝色");
+        list1.add("金色");
+        map1.put("attrValue",list1);
+        list.add(map1);
+        Map<String,Object> map2 = new HashMap();
+        map1.put("attr","内存");
+        List list2 = new ArrayList();
+        list2.add("64G");
+        list2.add("128G");
+        list2.add("256G");
+        map1.put("attrValue",list1);
+       /* for (Map<String, List<String>> map : list) {
             Iterator<Map.Entry<String, List<String>>> iterator = map.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, List<String>> entry = iterator.next();
@@ -457,8 +478,8 @@ public class ProductServiceImpl implements ProductService {
                     System.out.println(attr + ":" + value);
                 }
             }
-        }
-        *//********************************************************************************************//*
+        }*/
+        /********************************************************************************************/
     }
-*/
+
 }
