@@ -14,18 +14,20 @@ public class ProductSkuDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+
     private Long productId;
 
-    @NotNull
+
     @Min(value = 0)
     private Integer count;
 
-    @NotNull
+
     @DecimalMin(value = "0")
     private BigDecimal price;
 
     private Integer status;
+
+    private String profit;
 
     private String skuName;
 
@@ -139,6 +141,14 @@ public class ProductSkuDTO implements Serializable {
         this.transfer = transfer;
     }
 
+    public String getProfit() {
+        return profit;
+    }
+
+    public void setProfit(String profit) {
+        this.profit = profit;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -163,18 +173,19 @@ public class ProductSkuDTO implements Serializable {
     @Override
     public String toString() {
         return "ProductSkuDTO{" +
-            "id=" + getId() +
-            ", productId=" + getProductId() +
-            ", count=" + getCount() +
-            ", price=" + getPrice() +
-            ", status=" + getStatus() +
-            ", skuName='" + getSkuName() + "'" +
-            ", skuCode='" + getSkuCode() + "'" +
-            ", attrString='" + getAttrString() + "'" +
-            ", createdTime='" + getCreatedTime() + "'" +
-            ", updatedTime='" + getUpdatedTime() + "'" +
-            ", deleted='" + isDeleted() + "'" +
-            ", transfer=" + getTransfer() +
-            "}";
+            "id=" + id +
+            ", productId=" + productId +
+            ", count=" + count +
+            ", price=" + price +
+            ", status=" + status +
+            ", profit='" + profit + '\'' +
+            ", skuName='" + skuName + '\'' +
+            ", skuCode='" + skuCode + '\'' +
+            ", attrString='" + attrString + '\'' +
+            ", createdTime=" + createdTime +
+            ", updatedTime=" + updatedTime +
+            ", deleted=" + deleted +
+            ", transfer=" + transfer +
+            '}';
     }
 }
