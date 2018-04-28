@@ -200,7 +200,7 @@ public class ProductServiceImpl implements ProductService {
                 BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
                 sku.setTransfer(decimal);
                 sku.setCreatedTime(Instant.now());
-                sku.status(0);
+                sku.status(0);//上架
                 sku.setDeleted(false);
                 sku = productSkuRepository.save(sku);//sku
             } else {
@@ -425,8 +425,8 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    public static void main(String[] args) throws Exception {
-       /* List<Map<String, List<String>>> list = new ArrayList();
+   /* public static void main(String[] args) throws Exception {
+       *//* List<Map<String, List<String>>> list = new ArrayList();
         List list1 = new ArrayList();
         list1.add("白色");
         list1.add("黑色");
@@ -449,7 +449,7 @@ public class ProductServiceImpl implements ProductService {
         list3.add("分期版");
         Map<String, List<String>> map3 = new HashMap();
         map3.put("版本", list3);
-        list.add(map3);*/
+        list.add(map3);*//*
         List<Map<String,Object>> list = new ArrayList();
         Map<String,Object> map1 = new HashMap();
         map1.put("attr","颜色");
@@ -462,24 +462,28 @@ public class ProductServiceImpl implements ProductService {
         map1.put("attrValue",list1);
         list.add(map1);
         Map<String,Object> map2 = new HashMap();
-        map1.put("attr","内存");
+        map2.put("attr","内存");
         List list2 = new ArrayList();
         list2.add("64G");
         list2.add("128G");
         list2.add("256G");
-        map1.put("attrValue",list1);
-       /* for (Map<String, List<String>> map : list) {
-            Iterator<Map.Entry<String, List<String>>> iterator = map.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, List<String>> entry = iterator.next();
-                String attr = entry.getKey();
-                List<String> valueList = entry.getValue();
-                for (String value : valueList) {
-                    System.out.println(attr + ":" + value);
-                }
-            }
-        }*/
-        /********************************************************************************************/
-    }
+        map2.put("attrValue",list2);
+        list.add(map2);
+        Map<String,Object> map3 = new HashMap();
+        map3.put("attr","版本");
+        List list3 = new ArrayList();
+        list3.add("公开版");
+        list3.add("双网通版");
+        list3.add("分期版");
+        map3.put("attrValue",list3);
+        list.add(map3);
+        *//********************************************************************************************//*
+        list.remove(0);
+
+        for (Map<String, Object> map : list) {
+
+        }
+
+    }*/
 
 }
