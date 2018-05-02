@@ -11,5 +11,5 @@ import java.util.Map;
 public interface FeignShopCarClient {
 
     @GetMapping("/api/shoppingcar/{skuId}")
-    public List<Map> getShopCartBySkuId(@PathVariable("skuId") Long skuId);
+    public List getShopCartBySkuId(@PathVariable("skuId") Long skuId);
 }

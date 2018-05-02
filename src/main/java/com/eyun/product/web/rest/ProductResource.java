@@ -2,6 +2,7 @@ package com.eyun.product.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.eyun.product.domain.Product;
+import com.eyun.product.service.FeignMercurieClient;
 import com.eyun.product.service.ProductService;
 import com.eyun.product.service.dto.ProductContentDTO;
 import com.eyun.product.service.dto.ProductSeachParam;
@@ -14,10 +15,9 @@ import com.eyun.product.service.ProductQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -50,6 +50,9 @@ public class ProductResource {
 
     private final ProductQueryService productQueryService;
 
+    @Autowired
+    FeignMercurieClient feignMercurieClient;
+
     public ProductResource(ProductService productService, ProductQueryService productQueryService) {
         this.productService = productService;
         this.productQueryService = productQueryService;
@@ -76,6 +79,13 @@ public class ProductResource {
     @Timed
     public ResponseEntity pulishProduct(@Valid @RequestBody ProductContentDTO productContentDTO)throws Exception{
         log.debug("REST request to save Product : {}", productContentDTO);
+        try {
+            Map<String,String> Mercury=feignMercurieClient.findUserMercuryId();
+            productContentDTO.setShopId(Long.valueOf(Mercury.get("id")));
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("获取店铺ID失败",e);
+        }
         List<Map> result=productService.publishProductAndSku(productContentDTO);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
@@ -94,6 +104,13 @@ public class ProductResource {
     @PostMapping("/product/skuStore")
     @Timed
     public ResponseEntity skuListStore(@Valid @RequestBody ProductSeachParam productSeachParam)throws Exception{
+        try {
+            Map<String,String> Mercury=feignMercurieClient.findUserMercuryId();
+            productSeachParam.setShopId(Long.valueOf(Mercury.get("id")));
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("获取店铺ID失败",e);
+        }
         List<Map> result=productService.skuListStore(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }

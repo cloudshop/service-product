@@ -25,7 +25,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.time.Instant;
 import java.util.*;
 
@@ -90,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
             product = new Product();
             product.setName(productContentDTO.getProductName());
             product.setShopId(productContentDTO.getShopId());
-            product.setBrandId(productContentDTO.getBrandId());
+            //product.setBrandId(productContentDTO.getBrandId());
             product.setCategoryId(productContentDTO.getCategoryId());
             product.setListPrice(new BigDecimal(productContentDTO.getListPrice()));
             product.setDetails(productContentDTO.getDescription());
@@ -98,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCreatedTime(Instant.now());
             product = productRepository.save(product);//product
         } else {
-            product.setBrandId(productContentDTO.getBrandId());
+            product.setCategoryId(productContentDTO.getCategoryId());
             product.setListPrice(new BigDecimal(productContentDTO.getListPrice()));
             product.setDetails(productContentDTO.getDescription());
             product.setDeleted(false);
@@ -125,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
         for (Map<String, String> attr : attrList) {
             String attrName = attr.get("attr");
             String value = attr.get("attrValue");
-            if (!checkParam(attrName)||!checkParam(value)){
+            if (!checkParam(attrName) || !checkParam(value)) {
                 throw new BadRequestAlertException("商品属性为空！", "attr", "attrNotfound");
             }
             String attrAnother = attr.get("attrAnother");
@@ -179,19 +178,19 @@ public class ProductServiceImpl implements ProductService {
             }
 
             String skuPrice = attr.get("skuPrice");
-            if (!checkParam(skuPrice)){
+            if (!checkParam(skuPrice)) {
                 throw new BadRequestAlertException("商品单价为空！", "skuPrice", "skuPriceNotfound");
             }
             String transfer = attr.get("transfer")/*.substring(0, attr.get("transfer").indexOf("%"))*/;//让利
-            if (!checkParam(transfer)){
+            if (!checkParam(transfer)) {
                 throw new BadRequestAlertException("商品让利为空！", "transfer", "transferNotfound");
             }
-            if(transfer.indexOf("%")>0){
-                transfer=transfer.substring(0, transfer.indexOf("%"));
+            if (transfer.indexOf("%") > 0) {
+                transfer = transfer.substring(0, transfer.indexOf("%"));
             }
             String skuCount = attr.get("skuCount");
             String skuCode = attr.get("skuCode");
-            if (!checkParam(skuCode)){
+            if (!checkParam(skuCode)) {
                 throw new BadRequestAlertException("商品编号为空！", "skuCode", "skuCodeNotfound");
             }
             ProductSku sku = productSkuRepository.findByProductIdAndAttrString(product.getId(), attrString.toString());
@@ -326,11 +325,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List skuListStore(ProductSeachParam productSeachParam) throws Exception {
-        Long shopId=productSeachParam.getShopId();
-        Integer num=productSeachParam.getPageNum();
-        Integer size=productSeachParam.getPageSize();
-        Integer start=(num-1)*size;
-        List<Map> result = productSkuRepository.findProductSkusByShopId(shopId,start,size);
+        Long shopId = productSeachParam.getShopId();
+        Integer num = productSeachParam.getPageNum();
+        Integer size = productSeachParam.getPageSize();
+        Integer start = (num - 1) * size;
+        List<Map> result = productSkuRepository.findProductSkusByShopId(shopId, start, size);
         return result;
     }
 
@@ -368,14 +367,14 @@ public class ProductServiceImpl implements ProductService {
                             skuImgRepository.save(image);
                             list.remove(image);
                             count++;
-                            if (count==list.size()){
+                            if (count == list.size()) {
                                 break;
                             }
                             continue lable1;
                         }
                     }
                     Integer left = skuImageList.size() - count;
-                    if (left >0) {
+                    if (left > 0) {
                         SkuImg image = new SkuImg();
                         image.setSkuId(skuId);
                         image.setImgUrl(img);
@@ -425,8 +424,8 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(product);
     }
 
-    public Boolean checkParam(String param){
-        if (StringUtils.isNotBlank(param)){
+    public Boolean checkParam(String param) {
+        if (StringUtils.isNotBlank(param)) {
             return true;
         }
         return false;
@@ -443,61 +442,64 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-/*   public static void main(String[] args) throws Exception {
-        List<Map<String, List<String>>> list = new ArrayList();
-        List list1 = new ArrayList();
-        list1.add("白色");
-        list1.add("黑色");
-        list1.add("灰色");
-        list1.add("蓝色");
-        list1.add("金色");
-        Map<String, List<String>> map1 = new HashMap();
-        map1.put("颜色", list1);
-        list.add(map1);
-        List list2 = new ArrayList();
-        list2.add("64G");
-        list2.add("128G");
-        list2.add("256G");
-        Map<String, List<String>> map2 = new HashMap();
-        map2.put("内存", list2);
-        list.add(map2);
-        List list3 = new ArrayList();
-        list3.add("公开版");
-        list3.add("双网通版");
-        list3.add("分期版");
-        Map<String, List<String>> map3 = new HashMap();
-        map3.put("版本", list3);
-        list.add(map3);
-        List<Map<String,Object>> list = new ArrayList();
-        Map<String,Object> map1 = new HashMap();
-        map1.put("attr","颜色");
-        List list1 = new ArrayList();
-        list1.add("白色");
-        list1.add("黑色");
-        list1.add("灰色");
-        list1.add("蓝色");
-        list1.add("金色");
-        map1.put("attrValue",list1);
-        list.add(map1);
-        Map<String,Object> map2 = new HashMap();
-        map2.put("attr","内存");
-        List list2 = new ArrayList();
-        list2.add("64G");
-        list2.add("128G");
-        list2.add("256G");
-        map2.put("attrValue",list2);
-        list.add(map2);
-        Map<String,Object> map3 = new HashMap();
-        map3.put("attr","版本");
-        List list3 = new ArrayList();
-        list3.add("公开版");
-        list3.add("双网通版");
-        list3.add("分期版");
-        map3.put("attrValue",list3);
-        list.add(map3);
-        list.remove(0);
+    /*public static void main(String[] args) throws Exception {
 
-        for (Map<String, Object> map : list) {
+        List<Map<String, Object>> list = new ArrayList();
+        Map<String, Object> map1 = new HashMap();
+        map1.put("attr", "颜色");
+        List list1 = new ArrayList();
+        list1.add("白色");
+        list1.add("黑色");
+        list1.add("灰色");
+        list1.add("蓝色");
+        list1.add("金色");
+        map1.put("attrValue", list1);
+        list.add(map1);
+        Map<String, Object> map2 = new HashMap();
+        map2.put("attr", "内存");
+        List list2 = new ArrayList();
+        list2.add("64G");
+        list2.add("128G");
+        list2.add("256G");
+        map2.put("attrValue", list2);
+        list.add(map2);
+        Map<String, Object> map3 = new HashMap();
+        map3.put("attr", "版本");
+        List list3 = new ArrayList();
+        list3.add("公开版");
+        list3.add("双网通版");
+        list3.add("分期版");
+        map3.put("attrValue", list3);
+        list.add(map3);
+        System.out.println("**********************************************initSku**************************************************");
+
+        *//*Integer index = 0;
+        String key = "attr";*//*
+        List<Map<String, String>> resultList = new ArrayList<>();
+        Map<String, Object> element = list.remove(0);
+        String attr = element.get("attr").toString();
+        List<String> valueList = (List<String>) element.get("attrValue");
+        for (String value : valueList) {
+            for (int i = 0; i < list.size(); i++) {
+                Map<String, Object> elementOther = list.get(i);
+                String attrOther = elementOther.get("attr").toString();
+                List<String> valueList1 = (List<String>) elementOther.get("attrValue");
+                for (String valueOther : valueList1) {
+                    Map<String, String> result = new HashMap();
+                    result.put(attr, value);
+                    result.put(attrOther, valueOther);
+                    resultList.add(result);
+                }
+            }
+        }
+        System.out.println(resultList.size());
+        for (Map<String, String> element1 : resultList) {
+            Iterator<Map.Entry<String, String>> ite = element1.entrySet().iterator();
+            System.out.println("========================================");
+            while (ite.hasNext()) {
+                Map.Entry<String, String> entry = ite.next();
+                System.out.println(entry.getKey() + ":" + entry.getValue());
+            }
 
         }
     }*/
