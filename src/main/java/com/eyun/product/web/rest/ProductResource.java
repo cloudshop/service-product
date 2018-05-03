@@ -81,11 +81,11 @@ public class ProductResource {
     @Timed
     public ResponseEntity pulishProduct(@Valid @RequestBody ProductContentDTO productContentDTO) throws Exception {
         log.debug("REST request to publish Product : {}", productContentDTO);
-        Map<String, String> Mercury = feignMercurieClient.findUserMercuryId();
-        if (Mercury == null) {
+        Map mercury = feignMercurieClient.findUserMercuryId();
+        if (mercury == null) {
             throw new BadRequestAlertException("店铺ID为空", "mercuryId", "mercuryIdNotfound");
         }
-        productContentDTO.setShopId(Long.valueOf(Mercury.get("id")));
+        productContentDTO.setShopId(Long.valueOf(mercury.get("id").toString()));
         List<Map> result = productService.publishProductAndSku(productContentDTO);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
