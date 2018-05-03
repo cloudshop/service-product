@@ -91,14 +91,14 @@ public class ProductServiceImpl implements ProductService {
             product.setShopId(productContentDTO.getShopId());
             //product.setBrandId(productContentDTO.getBrandId());
             product.setCategoryId(productContentDTO.getCategoryId());
-            product.setListPrice(new BigDecimal(productContentDTO.getListPrice()));
+            product.setListPrice(productContentDTO.getListPrice());
             product.setDetails(productContentDTO.getDescription());
             product.setDeleted(false);
             product.setCreatedTime(Instant.now());
             product = productRepository.save(product);//product
         } else {
             product.setCategoryId(productContentDTO.getCategoryId());
-            product.setListPrice(new BigDecimal(productContentDTO.getListPrice()));
+            product.setListPrice(productContentDTO.getListPrice());
             product.setDetails(productContentDTO.getDescription());
             product.setDeleted(false);
             product.setUpdatedTime(Instant.now());
@@ -492,6 +492,7 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
         }
+
         System.out.println(resultList.size());
         for (Map<String, String> element1 : resultList) {
             Iterator<Map.Entry<String, String>> ite = element1.entrySet().iterator();
@@ -502,6 +503,6 @@ public class ProductServiceImpl implements ProductService {
             }
 
         }
-    }*/
-
+    }
+*/
 }
