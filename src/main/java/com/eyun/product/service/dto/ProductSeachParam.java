@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 public class ProductSeachParam {
 
     private Long categoryId;
-    @NotNull
+
     private Long shopId;
 
     private String productName;

@@ -15,6 +15,7 @@ import com.eyun.product.service.ProductQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,48 +73,45 @@ public class ProductResource {
         ProductDTO result = productService.save(productDTO);
         return ResponseEntity.created(new URI("/api/products/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-        .body(result);
+            .body(result);
     }
+
     @ApiOperation("商品发布")
     @PostMapping("/product/publish")
     @Timed
-    public ResponseEntity pulishProduct(@Valid @RequestBody ProductContentDTO productContentDTO)throws Exception{
+    public ResponseEntity pulishProduct(@Valid @RequestBody ProductContentDTO productContentDTO) throws Exception {
         log.debug("REST request to save Product : {}", productContentDTO);
-        try {
-            Map<String,String> Mercury=feignMercurieClient.findUserMercuryId();
-            productContentDTO.setShopId(Long.valueOf(Mercury.get("id")));
-        }catch (Exception e){
-            e.printStackTrace();
-            log.error("获取店铺ID失败",e);
+        Map<String, String> Mercury = feignMercurieClient.findUserMercuryId();
+        if (Mercury == null) {
+            throw new BadRequestAlertException("店铺ID为空", "mercuryId", "mercuryIdNotfound");
         }
-        List<Map> result=productService.publishProductAndSku(productContentDTO);
+        productContentDTO.setShopId(Long.valueOf(Mercury.get("id")));
+        List<Map> result = productService.publishProductAndSku(productContentDTO);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
 
     @ApiOperation("上传sku图片")
     @PostMapping("/product/skuImage")
     @Timed
-    public ResponseEntity upLoadskuImage(@Valid @RequestBody List<Map> skuImage)throws Exception{
-        String result=productService.upLoadskuImage(skuImage);
+    public ResponseEntity upLoadskuImage(@Valid @RequestBody List<Map> skuImage) throws Exception {
+        String result = productService.upLoadskuImage(skuImage);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
-
 
 
     @ApiOperation("sku列表(商家中心后台)")
     @PostMapping("/product/skuStore")
     @Timed
-    public ResponseEntity skuListStore(@Valid @RequestBody ProductSeachParam productSeachParam)throws Exception{
-        try {
-            Map<String,String> Mercury=feignMercurieClient.findUserMercuryId();
-            productSeachParam.setShopId(Long.valueOf(Mercury.get("id")));
-        }catch (Exception e){
-            e.printStackTrace();
-            log.error("获取店铺ID失败",e);
+    public ResponseEntity skuListStore(@RequestBody ProductSeachParam productSeachParam) throws Exception {
+        Map<String, String> Mercury = feignMercurieClient.findUserMercuryId();
+        if (Mercury == null) {
+            throw new BadRequestAlertException("店铺ID为空", "mercuryId", "mercuryIdNotfound");
         }
-        List<Map> result=productService.skuListStore(productSeachParam);
+        productSeachParam.setShopId(Long.valueOf(Mercury.get("id")));
+        List<Map> result = productService.skuListStore(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
+
     /**
      * PUT  /products : Updates an existing product.
      *
@@ -170,46 +168,51 @@ public class ProductResource {
     @ApiOperation("商品信息")
     @GetMapping("/product/content")
     @Timed
-    public ResponseEntity findProductByProductId(@RequestParam("id") Long id){
-            Map result=productService.findProductById(id);
-            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
-        }
+    public ResponseEntity findProductByProductId(@RequestParam("id") Long id) {
+        Map result = productService.findProductById(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
+
     @ApiOperation("商品列表")
     @PostMapping("/product/all")
     @Timed
-    public ResponseEntity findProductByCatewgoryId(@RequestBody ProductSeachParam productSeachParam){
-        Map result=productService.findProductByCatewgory(productSeachParam);
+    public ResponseEntity findProductByCatewgoryId(@RequestBody ProductSeachParam productSeachParam) {
+        Map result = productService.findProductByCatewgory(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
+
     @ApiOperation("首页,分类商品搜索")
     @PostMapping("/product/search")
     @Timed
-    public ResponseEntity findProductByParam(@RequestBody ProductSeachParam productSeachParam){
-        List<Map> resultList=productService.findProductByParam(productSeachParam);
+    public ResponseEntity findProductByParam(@RequestBody ProductSeachParam productSeachParam) {
+        List<Map> resultList = productService.findProductByParam(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resultList));
     }
+
     @ApiOperation("批量获取商品")
     @PostMapping("/product/follow")
     @Timed
-    public ResponseEntity findProductsByIds(@NotNull@RequestBody List<Long> ids){
-        List<Map> resultList=productService.findProductByIds(ids);
+    public ResponseEntity findProductsByIds(@NotNull @RequestBody List<Long> ids) {
+        List<Map> resultList = productService.findProductByIds(ids);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resultList));
     }
+
     @ApiOperation("获取店铺商品")
     @GetMapping("/product/shop")
     @Timed
     public ResponseEntity getAllProductsShop(@RequestParam("shopId") Long shopId) {
-        List<Map>list=productService.findProductByShopIdAndDeleted(shopId);
+        List<Map> list = productService.findProductByShopIdAndDeleted(shopId);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(list));
     }
 
     @ApiOperation("生成商品sku")
     @PostMapping("/product/initsku")
     @Timed
-    public ResponseEntity initSku(@NotNull @RequestBody List<Map> productAttr) throws Exception{
-        List list=productService.initSku(productAttr);
+    public ResponseEntity initSku(@NotNull @RequestBody List<Map> productAttr) throws Exception {
+        List list = productService.initSku(productAttr);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(list));
     }
+
     /**
      * DELETE  /products/:id : delete the "id" product.
      *
