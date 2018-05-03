@@ -16,6 +16,7 @@ public class ProductContentDTO implements Serializable {
 
     private Long brandId;
 
+    @NotNull
     private Long shopId;
 
     @NotNull
