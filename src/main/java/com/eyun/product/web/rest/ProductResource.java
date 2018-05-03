@@ -80,7 +80,7 @@ public class ProductResource {
     @PostMapping("/product/publish")
     @Timed
     public ResponseEntity pulishProduct(@Valid @RequestBody ProductContentDTO productContentDTO) throws Exception {
-        log.debug("REST request to save Product : {}", productContentDTO);
+        log.debug("REST request to publish Product : {}", productContentDTO);
         Map<String, String> Mercury = feignMercurieClient.findUserMercuryId();
         if (Mercury == null) {
             throw new BadRequestAlertException("店铺ID为空", "mercuryId", "mercuryIdNotfound");
@@ -103,11 +103,13 @@ public class ProductResource {
     @PostMapping("/product/skuStore")
     @Timed
     public ResponseEntity skuListStore(@RequestBody ProductSeachParam productSeachParam) throws Exception {
-        Map<String, String> Mercury = feignMercurieClient.findUserMercuryId();
-        if (Mercury == null) {
+        Map mercury = feignMercurieClient.findUserMercuryId();
+        log.info("mercury>>>>>>"+mercury);
+        if (mercury==null) {
             throw new BadRequestAlertException("店铺ID为空", "mercuryId", "mercuryIdNotfound");
         }
-        productSeachParam.setShopId(Long.valueOf(Mercury.get("id")));
+        log.info("id>>>>>"+mercury.get("id").toString());
+        productSeachParam.setShopId(Long.valueOf(mercury.get("id").toString()));
         List<Map> result = productService.skuListStore(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
