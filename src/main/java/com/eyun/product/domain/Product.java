@@ -29,7 +29,6 @@ public class Product implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
     @Column(name = "brand_id", nullable = false)
     private Long brandId;
 
