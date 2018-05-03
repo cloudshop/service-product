@@ -104,11 +104,9 @@ public class ProductResource {
     @Timed
     public ResponseEntity skuListStore(@RequestBody ProductSeachParam productSeachParam) throws Exception {
         Map mercury = feignMercurieClient.findUserMercuryId();
-        log.info("mercury>>>>>>"+mercury);
         if (mercury==null) {
             throw new BadRequestAlertException("店铺ID为空", "mercuryId", "mercuryIdNotfound");
         }
-        log.info("id>>>>>"+mercury.get("id").toString());
         productSeachParam.setShopId(Long.valueOf(mercury.get("id").toString()));
         List<Map> result = productService.skuListStore(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
