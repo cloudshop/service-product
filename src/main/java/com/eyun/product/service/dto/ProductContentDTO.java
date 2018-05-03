@@ -2,6 +2,7 @@ package com.eyun.product.service.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class ProductContentDTO implements Serializable {
     private Long shopId;
 
     @NotNull
-    private Integer listPrice;//列表价格
+    private BigDecimal listPrice;//列表价格
     private String description;//商品介绍
     private Integer paymentType;//支付方式
     private Long address;//商品所在地
@@ -51,11 +52,11 @@ public class ProductContentDTO implements Serializable {
         this.brandId = brandId;
     }
 
-    public Integer getListPrice() {
+    public BigDecimal getListPrice() {
         return listPrice;
     }
 
-    public void setListPrice(Integer listPrice) {
+    public void setListPrice(BigDecimal listPrice) {
         this.listPrice = listPrice;
     }
 
