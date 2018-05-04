@@ -107,11 +107,11 @@ public class ProductSkuServiceImpl implements ProductSkuService {
                 break;
             case 1:
                 List sku=feignShopCarClient.getShopCartBySkuId(productSkuDTO.getId());
-                if (sku!=null){
+                if (!sku.isEmpty()){
                     throw new BadRequestAlertException("该商品已加入购物车，不能下架","shopcar","allreadyInshopcar");
                 }
                 List list=feignOrderCilent.findOrderItemByskuid(productSkuDTO.getId());
-                if (list!=null){
+                if (!list.isEmpty()){
                     throw new BadRequestAlertException("该商品已结算，不能下架","order","allreadyInOrder");
                 }
                 productSku.status(1);//0：上架 1：下架

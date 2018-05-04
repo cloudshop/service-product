@@ -183,7 +183,7 @@ public class ProductServiceImpl implements ProductService {
             }
             String transfer = attr.get("transfer")/*.substring(0, attr.get("transfer").indexOf("%"))*/;//让利
             if (!checkParam(transfer)) {
-                throw new BadRequestAlertException("商品让利为空！", "transfer", "transferNotfound");
+                transfer = "0";
             }
             if (transfer.indexOf("%") > 0) {
                 transfer = transfer.substring(0, transfer.indexOf("%"));
@@ -194,6 +194,14 @@ public class ProductServiceImpl implements ProductService {
                 throw new BadRequestAlertException("商品编号为空！", "skuCode", "skuCodeNotfound");
             }
             ProductSku sku = productSkuRepository.findByProductIdAndAttrString(product.getId(), attrString.toString());
+            Double fer = Double.valueOf(transfer);
+            if (fer < 0) {
+                throw new BadRequestAlertException("让利百分不能小于0", "transfer", "transferDosentrRequert");
+            } else if (fer > 98) {
+                throw new BadRequestAlertException("让利百分比不能大于98", "transfer", "transferDosentrRequert");
+            }
+            DecimalFormat df = new DecimalFormat("0.00");
+            BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
             if (sku == null) {
                 sku = new ProductSku();
                 sku.setProductId(product.getId());
@@ -202,20 +210,16 @@ public class ProductServiceImpl implements ProductService {
                 sku.setCount(Integer.valueOf(skuCount));
                 sku.setAttrString(attrString.toString());
                 sku.setSkuCode(skuCode);
-                Double fer = Double.valueOf(transfer);
-                if (fer <= 0) {
-                    throw new BadRequestAlertException("让利百分比必须大于0", "transfer", "transferDosentrRequert");
-                }
-                DecimalFormat df = new DecimalFormat("0.00");
-                BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
                 sku.setTransfer(decimal);
                 sku.setCreatedTime(Instant.now());
                 sku.status(0);//上架
                 sku.setDeleted(false);
                 sku = productSkuRepository.save(sku);//sku
             } else {
+                sku.setSkuCode(skuCode);
+                sku.setTransfer(decimal);
                 sku.setPrice(new BigDecimal(skuPrice));
-                sku.setCount(sku.getCount() + Integer.valueOf(skuCount));
+                sku.setCount(Integer.valueOf(skuCount));
                 sku.setUpdatedTime(Instant.now());
                 sku.setDeleted(false);
                 sku = productSkuRepository.save(sku);
@@ -232,6 +236,11 @@ public class ProductServiceImpl implements ProductService {
     public Map findProductById(Long id) {
         Map result = new HashMap();
         Map product = productRepository.findProductById(id);
+        String[] urlArray = new String[]{};
+        if (product.get("url") != null) {
+            urlArray = product.get("url").toString().split(",");
+        }
+        product.put("url", urlArray);
         result.put("productContent", product);
         List attrbuteList = new ArrayList();
         List<Map> attrList = productRepository.findProductAttrById(id);
@@ -239,16 +248,22 @@ public class ProductServiceImpl implements ProductService {
             for (Map attr : attrList) {
                 Map value = new HashMap();
                 value.put("attname", attr.get("attname"));
-                Object object = attr.get("attvalue");
-                if (object != null) {
+                String attvalue = attr.get("attrvalue").toString();
+                if (StringUtils.isNotBlank(attvalue)) {
                     List list = new ArrayList();
-                    if (object.toString().indexOf(",") > 0) {
-                        String[] array = object.toString().split(",");
+                    if (attvalue.indexOf(",") > 0) {
+                        String[] array = attvalue.split(",");
                         for (String param : array) {
-                            list.add(param);
+                            Map map = new HashMap();
+                            map.put("valueId", param.substring(0, param.indexOf(":")));
+                            map.put("value", param.substring(param.indexOf(":")+1, param.length()));
+                            list.add(map);
                         }
                     } else {
-                        list.add(object);
+                        Map map = new HashMap();
+                        map.put("valueId", attvalue.substring(0, attvalue.indexOf(":")));
+                        map.put("value", attvalue.substring(attvalue.indexOf(":")+1, attvalue.length()));
+                        list.add(map);
                     }
                     value.put("attvalue", list);
                 }

@@ -20,11 +20,11 @@ import java.util.Map;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     /*获取商品信息*/
-    @Query(value = "SELECT sku.id AS id, p.shop_id AS shopid,sku.sku_name AS productName, sku.price AS price, sku.sku_code AS skuCode,IFNULL(p.details,\"\") AS details FROM product p LEFT JOIN product_sku sku ON p.id = sku.product_id WHERE p.id = :id AND sku.deleted = 0 LIMIT 0,1",nativeQuery = true)
+    @Query(value = "SELECT sku.id AS id, p.shop_id AS shopid, sku.sku_name AS productName, sku.price AS price, sku.sku_code AS skuCode, IFNULL(p.details, \"\") AS details, IFNULL(GROUP_CONCAT(img.img_url), \"\") AS url FROM product p LEFT JOIN product_sku sku ON p.id = sku.product_id LEFT JOIN sku_img img ON sku.id=img.sku_id WHERE p.id = :id AND sku.deleted = 0 LIMIT 0, 1",nativeQuery = true)
     public Map findProductById(@Param("id") Long id);
 
     /*获取商品全部属性*/
-    @Query(value = "SELECT  ifnull(att.name,\"\") AS attName, ifnull(GROUP_CONCAT(v.jhi_value),\"\") AS attValue FROM product p LEFT JOIN attribute att ON p.id = att.product_id LEFT JOIN attr_value v ON att.id = v.attr_id, (SELECT p.name FROM product p WHERE p.id= :id)t WHERE p.name = t.name GROUP BY att.name",nativeQuery = true)
+    @Query(value = "SELECT ifnull(att. NAME, \"\") AS attName, GROUP_CONCAT(v.id,\":\",v.jhi_value)AS attrValue FROM product p LEFT JOIN attribute att ON p.id = att.product_id LEFT JOIN attr_value v ON att.id = v.attr_id WHERE p.id = :id GROUP BY att. NAME",nativeQuery = true)
     public List<Map> findProductAttrById(@Param("id") Long id);
 
     /*批量获取商品*/
