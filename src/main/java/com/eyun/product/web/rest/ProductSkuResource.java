@@ -123,6 +123,13 @@ public class ProductSkuResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    @ApiOperation("过滤商品sku")
+    @PostMapping("/product/filtersku")
+    @Timed
+    public ResponseEntity filterSku(@NotNull @RequestBody List<Long> attrString) throws Exception {
+        ProductSkuDTO productSkuDTO = productSkuService.filterSku(attrString);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productSkuDTO));
+    }
     /*
      * type：0 编辑 ，1：下架
      * */

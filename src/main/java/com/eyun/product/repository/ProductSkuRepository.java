@@ -21,4 +21,8 @@ public interface ProductSkuRepository extends JpaRepository<ProductSku, Long>, J
 
      @Query(value = "SELECT sku.id AS skuId, sku.sku_name AS skuName, sku.count AS count, sku.price AS price, ifnull(sku.status,\"\") AS STATUS, sku.transfer AS transfer, sku.sku_code AS skuCode, IFNULL(sku.created_time, \"\") AS publishTime FROM product p, product_sku sku WHERE p.id = sku.product_id AND p.shop_id = :shopId LIMIT :start,:size",nativeQuery = true)
      public List<Map> findProductSkusByShopId(@Param("shopId") Long shopId,@Param("start") Integer start,@Param("size") Integer size);
+
+     /*获取sku的productId*/
+     @Query(value = "SELECT sku.product_id AS productId from product_sku sku WHERE sku.product_id=(SELECT sku.product_id FROM product_sku sku WHERE sku.id=:skuId)",nativeQuery = true)
+     public List<Map> findProductIdBySkuId(@Param("skuId")Long skuId);
 }

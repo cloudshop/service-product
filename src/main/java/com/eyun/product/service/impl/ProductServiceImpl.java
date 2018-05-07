@@ -12,9 +12,12 @@ import com.eyun.product.web.rest.errors.BadRequestAlertException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -256,13 +259,13 @@ public class ProductServiceImpl implements ProductService {
                         for (String param : array) {
                             Map map = new HashMap();
                             map.put("valueId", param.substring(0, param.indexOf(":")));
-                            map.put("value", param.substring(param.indexOf(":")+1, param.length()));
+                            map.put("value", param.substring(param.indexOf(":") + 1, param.length()));
                             list.add(map);
                         }
                     } else {
                         Map map = new HashMap();
                         map.put("valueId", attvalue.substring(0, attvalue.indexOf(":")));
-                        map.put("value", attvalue.substring(attvalue.indexOf(":")+1, attvalue.length()));
+                        map.put("value", attvalue.substring(attvalue.indexOf(":") + 1, attvalue.length()));
                         list.add(map);
                     }
                     value.put("attvalue", list);
@@ -457,7 +460,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    /*public static void main(String[] args) throws Exception {
+   /* public static void main(String[] args) throws Exception {
 
         List<Map<String, Object>> list = new ArrayList();
         Map<String, Object> map1 = new HashMap();
@@ -488,36 +491,48 @@ public class ProductServiceImpl implements ProductService {
         list.add(map3);
         System.out.println("**********************************************initSku**************************************************");
 
-        *//*Integer index = 0;
-        String key = "attr";*//*
+
+
         List<Map<String, String>> resultList = new ArrayList<>();
         Map<String, Object> element = list.remove(0);
         String attr = element.get("attr").toString();
         List<String> valueList = (List<String>) element.get("attrValue");
         for (String value : valueList) {
+            Map<String, String> result =new HashMap<>();
+            result.put(attr,value);
+            lable1:
             for (int i = 0; i < list.size(); i++) {
-                Map<String, Object> elementOther = list.get(i);
+                resultList.add(result);
+                Map<String, Object> elementOther = list.remove(i);
                 String attrOther = elementOther.get("attr").toString();
                 List<String> valueList1 = (List<String>) elementOther.get("attrValue");
                 for (String valueOther : valueList1) {
-                    Map<String, String> result = new HashMap();
-                    result.put(attr, value);
-                    result.put(attrOther, valueOther);
-                    resultList.add(result);
+                    result.put(attrOther,valueOther);
+                    //continue lable1;
                 }
+
             }
+
         }
+
 
         System.out.println(resultList.size());
-        for (Map<String, String> element1 : resultList) {
-            Iterator<Map.Entry<String, String>> ite = element1.entrySet().iterator();
+       for (Map<String, String> element1 : resultList) {
             System.out.println("========================================");
-            while (ite.hasNext()) {
-                Map.Entry<String, String> entry = ite.next();
-                System.out.println(entry.getKey() + ":" + entry.getValue());
+            Iterator<Map.Entry<String, String>> iterator = element1.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> param = iterator.next();
+                System.out.println(param.getKey() + ":" + param.getValue());
             }
 
         }
-    }
-*/
+       for (JSONArray jsonObject : resultList) {
+            System.out.println("========================================");
+            while (iterator.hasNext()) {
+                String key = iterator.next().toString();
+                System.out.println(key + ":" + jsonObject.get(key));
+            }
+        }
+    }*/
+
 }

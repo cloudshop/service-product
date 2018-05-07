@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +26,8 @@ public interface ProductSkuService {
     Map updateStockCount(ProductSkuDTO productSkuDTO, Integer processType);
 
     public ProductSkuDTO skuHandle(Integer type,ProductSkuDTO productSkuDTO)throws Exception;
+
+    public ProductSkuDTO filterSku(List<Long> attrString);
 
     /**
      * Get all the productSkus.

@@ -81,11 +81,13 @@ public class ProductResource {
     @Timed
     public ResponseEntity pulishProduct(@Valid @RequestBody ProductContentDTO productContentDTO) throws Exception {
         log.debug("REST request to publish Product : {}", productContentDTO);
-        Map mercury = feignMercurieClient.findUserMercuryId();
-        if (mercury == null) {
-            throw new BadRequestAlertException("店铺ID为空", "mercuryId", "mercuryIdNotfound");
+        try{
+            Map mercury = feignMercurieClient.findUserMercuryId();
+            productContentDTO.setShopId(Long.valueOf(mercury.get("id").toString()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BadRequestAlertException("获取当前登陆用户店铺失败", "mercuryId", "mercuryIdNotfound");
         }
-        productContentDTO.setShopId(Long.valueOf(mercury.get("id").toString()));
         List<Map> result = productService.publishProductAndSku(productContentDTO);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
@@ -103,11 +105,13 @@ public class ProductResource {
     @PostMapping("/product/skuStore")
     @Timed
     public ResponseEntity skuListStore(@RequestBody ProductSeachParam productSeachParam) throws Exception {
-        Map mercury = feignMercurieClient.findUserMercuryId();
-        if (mercury==null) {
-            throw new BadRequestAlertException("店铺ID为空", "mercuryId", "mercuryIdNotfound");
+        try{
+            Map mercury = feignMercurieClient.findUserMercuryId();
+            productSeachParam.setShopId(Long.valueOf(mercury.get("id").toString()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BadRequestAlertException("获取当前登陆用户店铺失败", "mercuryId", "mercuryIdNotfound");
         }
-        productSeachParam.setShopId(Long.valueOf(mercury.get("id").toString()));
         List<Map> result = productService.skuListStore(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }

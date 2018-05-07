@@ -1,5 +1,7 @@
 package com.eyun.product.service.impl;
 
+import com.eyun.product.domain.Product;
+import com.eyun.product.repository.ProductRepository;
 import com.eyun.product.service.FeignOrderCilent;
 import com.eyun.product.service.FeignShopCarClient;
 import com.eyun.product.service.ProductSkuService;
@@ -42,6 +44,8 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     FeignShopCarClient feignShopCarClient;
     @Autowired
     FeignOrderCilent feignOrderCilent;
+    @Autowired
+    ProductRepository productRepository;
     public ProductSkuServiceImpl(ProductSkuRepository productSkuRepository, ProductSkuMapper productSkuMapper) {
         this.productSkuRepository = productSkuRepository;
         this.productSkuMapper = productSkuMapper;
@@ -108,18 +112,30 @@ public class ProductSkuServiceImpl implements ProductSkuService {
             case 1:
                 List sku=feignShopCarClient.getShopCartBySkuId(productSkuDTO.getId());
                 if (!sku.isEmpty()){
-                    throw new BadRequestAlertException("该商品已加入购物车，不能下架","shopcar","allreadyInshopcar");
+                    throw new BadRequestAlertException("该商品已加入购物车","shopcar","allreadyInshopcar");
                 }
                 List list=feignOrderCilent.findOrderItemByskuid(productSkuDTO.getId());
                 if (!list.isEmpty()){
                     throw new BadRequestAlertException("该商品已结算，不能下架","order","allreadyInOrder");
                 }
                 productSku.status(1);//0：上架 1：下架
-                productSku.setDeleted(true);
+                List<Map>skuIds=productSkuRepository.findProductIdBySkuId(productSkuDTO.getId());
+                if (skuIds.size()==1){
+                    Product product=productRepository.findOne(Long.valueOf(skuIds.get(0).get("productId").toString()));
+                    product.setDeleted(true);
+                    productRepository.save(product);
+                }
                 break;
         }
         productSku=productSkuRepository.save(productSku);
+
         return productSkuMapper.toDto(productSku);
+    }
+
+    @Override
+    public ProductSkuDTO filterSku(List<Long> attrString) {
+        /*productSkuRepository*/
+        return null;
     }
 
     /**
