@@ -27,7 +27,7 @@ public interface ProductSkuService {
 
     public ProductSkuDTO skuHandle(Integer type,ProductSkuDTO productSkuDTO)throws Exception;
 
-    public ProductSkuDTO filterSku(List<Long> attrString);
+    public ProductSkuDTO filterSku(String attrString);
 
     /**
      * Get all the productSkus.

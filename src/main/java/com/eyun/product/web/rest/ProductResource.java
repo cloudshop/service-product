@@ -112,7 +112,7 @@ public class ProductResource {
             e.printStackTrace();
             throw new BadRequestAlertException("获取当前登陆用户店铺失败", "mercuryId", "mercuryIdNotfound");
         }
-        List<Map> result = productService.skuListStore(productSeachParam);
+        Map result = productService.skuListStore(productSeachParam);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
 

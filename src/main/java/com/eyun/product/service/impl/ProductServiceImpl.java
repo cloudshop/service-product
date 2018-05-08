@@ -27,6 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.*;
@@ -196,7 +197,7 @@ public class ProductServiceImpl implements ProductService {
             if (!checkParam(skuCode)) {
                 throw new BadRequestAlertException("商品编号为空！", "skuCode", "skuCodeNotfound");
             }
-            ProductSku sku = productSkuRepository.findByProductIdAndAttrString(product.getId(), attrString.toString());
+            ProductSku sku = productSkuRepository.findByAttrString(attrString.toString());
             Double fer = Double.valueOf(transfer);
             if (fer < 0) {
                 throw new BadRequestAlertException("让利百分不能小于0", "transfer", "transferDosentrRequert");
@@ -342,13 +343,36 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List skuListStore(ProductSeachParam productSeachParam) throws Exception {
+    public Map skuListStore(ProductSeachParam productSeachParam) throws Exception {
         Long shopId = productSeachParam.getShopId();
         Integer num = productSeachParam.getPageNum();
         Integer size = productSeachParam.getPageSize();
         Integer start = (num - 1) * size;
-        List<Map> result = productSkuRepository.findProductSkusByShopId(shopId, start, size);
-        return result;
+        String total="SELECT count(sku.id) AS count FROM product p, product_sku sku WHERE p.id = sku.product_id AND p.shop_id = :shopId";
+        Query query = entityManager.createNativeQuery(total);
+        query.setParameter("shopId", shopId);
+        Integer totalCount = Integer.valueOf(query.getSingleResult().toString());
+
+        String sqlLimit="SELECT sku.id AS skuId, sku.sku_name AS skuName, sku.count AS count, sku.price AS price, ifnull(sku.status,\"\") AS STATUS, sku.transfer AS transfer, sku.sku_code AS skuCode, IFNULL(sku.created_time, \"\") AS publishTime FROM product p, product_sku sku WHERE p.id = sku.product_id AND p.shop_id = :shopId LIMIT :start,:size";
+        Query querySku = entityManager.createNativeQuery(sqlLimit);
+        querySku.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        querySku.setParameter("shopId", shopId);
+        querySku.setParameter("start", start);
+        querySku.setParameter("size", size);
+        List<Map>result=querySku.getResultList();
+        Integer pageCount=0;
+       if(totalCount > 0){//计算总页数
+            if(totalCount%size>0){
+                pageCount=totalCount/size+1;
+            }else{
+                pageCount = totalCount/size;
+            }
+        }
+        Map sku=new HashMap();
+        sku.put("totalCount",totalCount);
+        sku.put("skuList",result);
+        sku.put("pageCount",pageCount);
+        return sku;
     }
 
     @Override
@@ -460,7 +484,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-   /* public static void main(String[] args) throws Exception {
+   /*public static void main(String[] args) throws Exception {
 
         List<Map<String, Object>> list = new ArrayList();
         Map<String, Object> map1 = new HashMap();
@@ -526,13 +550,13 @@ public class ProductServiceImpl implements ProductService {
             }
 
         }
-       for (JSONArray jsonObject : resultList) {
+       *//*for (JSONArray jsonObject : resultList) {
             System.out.println("========================================");
             while (iterator.hasNext()) {
                 String key = iterator.next().toString();
                 System.out.println(key + ":" + jsonObject.get(key));
             }
-        }
+        }*//*
     }*/
 
 }

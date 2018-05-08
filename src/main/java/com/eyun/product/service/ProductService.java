@@ -41,7 +41,7 @@ public interface ProductService {
 
     public List initSku( List<Map> productAttr)throws Exception;
 
-    public List skuListStore(ProductSeachParam productSeachParam)throws Exception;
+    public Map skuListStore(ProductSeachParam productSeachParam)throws Exception;
 
     public String upLoadskuImage(List<Map> skuImage)throws Exception;
 

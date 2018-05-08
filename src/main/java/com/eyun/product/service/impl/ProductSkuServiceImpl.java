@@ -133,9 +133,9 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     }
 
     @Override
-    public ProductSkuDTO filterSku(List<Long> attrString) {
-        /*productSkuRepository*/
-        return null;
+    public ProductSkuDTO filterSku(String attrString) {
+        ProductSku sku=productSkuRepository.findByAttrString(attrString);
+        return productSkuMapper.toDto(sku);
     }
 
     /**
