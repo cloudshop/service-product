@@ -121,7 +121,7 @@ public class ProductSkuServiceImpl implements ProductSkuService {
                 productSku.status(1);//0：上架 1：下架
                 List<Map>skuIds=productSkuRepository.findProductIdBySkuId(productSkuDTO.getId());
                 if (skuIds.size()==1){
-                    Product product=productRepository.findOne(Long.valueOf(skuIds.get(0).get("productId").toString()));
+                    Product product=productRepository.findOne(Long.valueOf(skuIds.get(0).get("productid").toString()));
                     product.setDeleted(true);
                     productRepository.save(product);
                 }
