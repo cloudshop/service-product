@@ -20,7 +20,7 @@ import java.util.Map;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     /*获取商品信息*/
-    @Query(value = "SELECT sku.id AS id, p.shop_id AS shopid, sku.sku_name AS productName, sku.price AS price, sku.sku_code AS skuCode, IFNULL(p.details, \"\") AS details, IFNULL(GROUP_CONCAT(img.img_url), \"\") AS url FROM product p LEFT JOIN product_sku sku ON p.id = sku.product_id LEFT JOIN sku_img img ON sku.id=img.sku_id WHERE p.id = :id AND sku.status = 0 LIMIT 0, 1",nativeQuery = true)
+    @Query(value = "SELECT ifnull(sku.id, \"\") AS id, p.shop_id AS shopid, ifnull(sku.sku_name, \"\") AS productName, ifnull(sku.price, \"\") AS price, ifnull(sku.sku_code, \"\") AS skuCode, IFNULL(p.details, \"\") AS details, IFNULL( GROUP_CONCAT(img.img_url), \"\" ) AS url FROM product p LEFT JOIN product_sku sku ON p.id = sku.product_id LEFT JOIN sku_img img ON sku.id = img.sku_id WHERE p.id = :id AND sku. STATUS = 0 AND sku.count > 0 LIMIT 0, 1",nativeQuery = true)
     public Map findProductById(@Param("id") Long id);
 
     /*获取商品全部属性*/

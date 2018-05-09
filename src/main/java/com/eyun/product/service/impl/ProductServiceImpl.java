@@ -283,11 +283,11 @@ public class ProductServiceImpl implements ProductService {
     public Map findProductByCatewgory(ProductSeachParam productSeachParam) {
         String sql = "";
         StringBuffer fromSku = new StringBuffer("LEFT JOIN product_sku sku ON p.id=sku.product_id ");
-        StringBuffer addWhere = new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 ");
+        StringBuffer addWhere = new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 AND sku.count>0");
         StringBuffer groupBy = new StringBuffer(" GROUP BY p.id");
-        StringBuffer select = new StringBuffer("SELECT p.id AS id, p. NAME AS NAME, p.list_price AS listPrice, img.img_url AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id LEFT JOIN category ca ON ca.id = p.category_id ");
+        StringBuffer select = new StringBuffer("SELECT DISTINCT(p.id) AS id, p. NAME AS NAME, p.list_price AS listPrice, img.img_url AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id LEFT JOIN category ca ON ca.id = p.category_id ");
         if (StringUtils.isBlank(productSeachParam.getProductName()) && StringUtils.isBlank(productSeachParam.getSale()) && StringUtils.isBlank(productSeachParam.getPrice()) && productSeachParam.getStartPrice() == null && productSeachParam.getEndPrice() == null) {
-            sql = select.append(addWhere).toString();
+            sql = select.append(fromSku).append(addWhere).toString();
         }
         if (StringUtils.isNotBlank(productSeachParam.getProductName())) {
             sql = select.append(addWhere).append(" and p. NAME like \"%" + productSeachParam.getProductName() + "%\"").toString();
