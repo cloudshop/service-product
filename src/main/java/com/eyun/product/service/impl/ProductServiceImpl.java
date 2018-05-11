@@ -244,6 +244,13 @@ public class ProductServiceImpl implements ProductService {
         if (product.get("url") != null) {
             urlArray = product.get("url").toString().split(",");
         }
+        String integral="";
+        if (product.get("price") != null&&product.get("transfer") != null){
+            Double price=Double.valueOf(product.get("price").toString());
+            Double transfer=Double.valueOf(product.get("transfer").toString());
+            integral=String.valueOf(price*transfer*10);
+        }
+        product.put("integral", integral);
         product.put("url", urlArray);
         result.put("productContent", product);
         List attrbuteList = new ArrayList();
