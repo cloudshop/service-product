@@ -118,7 +118,7 @@ jhipster:
         #allow-credentials: true
         #max-age: 1800
     mail:
-        from: product@localhost
+        from: product@192.168.1.10
     swagger:
         default-include-pattern: /api/.*
         title: product API

@@ -1,0 +1,78 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "productId",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "count",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": "0"
+        },
+        {
+            "fieldName": "price",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": "0"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "skuName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "skuCode",
+            "fieldType": "String",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldName": "attrString",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "createdTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "updatedTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "deleted",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "transfer",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "0",
+            "fieldValidateRulesMax": "1"
+        }
+    ],
+    "changelogDate": "20180323070834",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
+    "entityTableName": "product_sku",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination",
+    "microserviceName": "product",
+    "searchEngine": false
+}

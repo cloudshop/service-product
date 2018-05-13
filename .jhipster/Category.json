@@ -1,0 +1,61 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "parentId",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "isParent",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "target",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "targetType",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "createdTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "updatedTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "deleted",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "categoryGrade",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "image",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "rank",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180323040436",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
+    "entityTableName": "category",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination",
+    "microserviceName": "product",
+    "searchEngine": false
+}

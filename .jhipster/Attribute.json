@@ -1,0 +1,51 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "productId",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "createdTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "updatedTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "deleted",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "rank",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180323061247",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
+    "entityTableName": "attribute",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination",
+    "microserviceName": "product",
+    "searchEngine": false
+}
