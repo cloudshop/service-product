@@ -21,7 +21,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSp
     public List<Map<String,String>> getRootCategory();
 
     /*获取二级和三级分类*/
-    @Query(value = "SELECT b.id AS secondid, b. NAME AS secondName, c.id AS thirdid, c.parent_id AS parentid, IFNULL(c.target,\"\") AS target, IFNULL(c.target_type,\"\") AS target_type, IFNULL(c. NAME, \"\") AS thirdName, IFNULL(c.image, \"\") AS logo FROM category a, category b, category c WHERE a.id = b.parent_id AND b.id = c.parent_id AND c.deleted = 0 AND a.id =?1",nativeQuery = true)
+    @Query(value = "SELECT b.id AS secondid, b. NAME AS secondName, c.id AS thirdid, c.parent_id AS parentid, IFNULL(c.target,\"\") AS target, IFNULL(c.target_type,\"\") AS target_type, IFNULL(c. NAME, \"\") AS thirdName, IFNULL(c.image, \"\") AS logo FROM category a, category b, category c WHERE a.id = b.parent_id AND b.id = c.parent_id AND c.deleted = 0 AND a.id =?1 GROUP BY b.id,c.id",nativeQuery = true)
     public List<Map<String,String>> getSubCategory(Long id);
 
 }
