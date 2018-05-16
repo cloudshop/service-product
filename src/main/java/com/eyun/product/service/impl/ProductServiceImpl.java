@@ -76,6 +76,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ProductDTO save(ProductDTO productDTO) {
+        log.debug("request to save Product : {}", productDTO);
         log.debug("Request to save Product : {}", productDTO);
         Product product = productMapper.toEntity(productDTO);
         product = productRepository.save(product);
