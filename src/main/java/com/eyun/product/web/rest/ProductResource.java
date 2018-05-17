@@ -204,8 +204,8 @@ public class ProductResource {
     @ApiOperation("获取店铺商品")
     @GetMapping("/product/shop")
     @Timed
-    public ResponseEntity getAllProductsShop(@RequestParam("shopId") Long shopId) {
-        List<Map> list = productService.findProductByShopIdAndDeleted(shopId);
+    public ResponseEntity getAllProductsShop(@RequestParam("shopId") Long shopId,@RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize) {
+        List<Map> list = productService.findProductByShopIdAndDeleted(shopId,pageNum,pageSize);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(list));
     }
 

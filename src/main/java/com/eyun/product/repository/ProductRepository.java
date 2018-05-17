@@ -35,8 +35,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     public Product findProductByNameAndShopId(String name,Long shopId);
 
     /*获取店铺商品*/
-    @Query(value = "SELECT p.id AS id, p.name AS NAME, p.list_price AS listPrice, ifnull(img.img_url,\"\") AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id WHERE p.shop_id = :shopId AND p.deleted = 0",nativeQuery = true)
-    public List<Map> findProductsByShopIdAndDeleted(@Param("shopId")Long shopId);
+    @Query(value = "SELECT p.id AS id, p.name AS NAME, p.list_price AS listPrice, ifnull(img.img_url,\"\") AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id WHERE p.shop_id = :shopId AND p.deleted = 0 LIMIT :start,:size",nativeQuery = true)
+    public List<Map> findProductsByShopIdAndDeleted(@Param("shopId")Long shopId,@Param("start")Integer start,@Param("size")Integer size);
 
     /*首页，分类商品搜索*/
     @Query(value = "SELECT p.id AS productid, p. NAME AS productName, p.brand_id AS brandId, ifnull(p.list_price,\"\") AS listPrice, P.shop_id AS shopId, ifnull(img.img_url,\"\") AS imgUrl FROM product p LEFT JOIN product_img img ON p.id = img.product_id WHERE p. NAME LIKE CONCAT('%',:productName,'%') AND p.deleted = 0",nativeQuery = true)

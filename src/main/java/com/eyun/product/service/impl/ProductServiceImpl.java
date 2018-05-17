@@ -76,7 +76,6 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ProductDTO save(ProductDTO productDTO) {
-        log.debug("request to save Product : {}", productDTO);
         log.debug("Request to save Product : {}", productDTO);
         Product product = productMapper.toEntity(productDTO);
         product = productRepository.save(product);
@@ -291,6 +290,7 @@ public class ProductServiceImpl implements ProductService {
         StringBuffer addWhere = new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 AND sku.count>0");
         StringBuffer groupBy = new StringBuffer(" GROUP BY p.id");
         StringBuffer select = new StringBuffer("SELECT DISTINCT(p.id) AS id, p. NAME AS NAME, p.list_price AS listPrice, img.img_url AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id LEFT JOIN category ca ON ca.id = p.category_id ");
+        StringBuffer limit=new StringBuffer(" LIMIT :start,:size");
         if (StringUtils.isBlank(productSeachParam.getProductName()) && StringUtils.isBlank(productSeachParam.getSale()) && StringUtils.isBlank(productSeachParam.getPrice()) && productSeachParam.getStartPrice() == null && productSeachParam.getEndPrice() == null) {
             sql = select.append(fromSku).append(addWhere).toString();
         }
@@ -306,9 +306,14 @@ public class ProductServiceImpl implements ProductService {
         if (productSeachParam.getStartPrice() != null && productSeachParam.getEndPrice() != null) {
             sql = select.append(addWhere).append(" AND p.list_price BETWEEN " + productSeachParam.getStartPrice() + " AND " + productSeachParam.getEndPrice()).append(groupBy).toString();
         }
-        Query query = entityManager.createNativeQuery(sql);
+        Integer num = productSeachParam.getPageNum();
+        Integer size = productSeachParam.getPageSize();
+        Integer start = (num - 1) * size;
+        Query query = entityManager.createNativeQuery(sql+limit);
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         query.setParameter("categoryid", productSeachParam.getCategoryId());
+        query.setParameter("start",start);
+        query.setParameter("size",size);
         List<Map> list = query.getResultList();
         Map result = new HashMap();
         result.put("mainContent", list);
@@ -322,8 +327,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Map> findProductByShopIdAndDeleted(Long shopId) {
-        List<Map> productList = productRepository.findProductsByShopIdAndDeleted(shopId);
+    public List<Map> findProductByShopIdAndDeleted(Long shopId,Integer pageNum,Integer pageSize) {
+        Integer start = (pageNum - 1) * pageSize;
+        List<Map> productList = productRepository.findProductsByShopIdAndDeleted(shopId,start,pageSize);
         return productList;
     }
 

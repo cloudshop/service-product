@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,7 +38,7 @@ public interface ProductService {
 
     public List<Map> findProductByIds(List<Long> ids);
 
-    public List<Map> findProductByShopIdAndDeleted(Long shopId);
+    public List<Map> findProductByShopIdAndDeleted(Long shopId,Integer pageNum,Integer pageSize);
 
     public List initSku( List<Map> productAttr)throws Exception;
 
