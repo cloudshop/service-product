@@ -182,9 +182,9 @@ public class ProductServiceImpl implements ProductService {
             if (!checkParam(skuPrice)) {
                 throw new BadRequestAlertException("商品单价为空！", "skuPrice", "skuPriceNotfound");
             }
-            String transfer = attr.get("transfer")/*.substring(0, attr.get("transfer").indexOf("%"))*/;//让利
+            String transfer = attr.get("transfer");//让利
             if (!checkParam(transfer)) {
-                transfer = "0";
+                transfer = "10";
             }
             if (transfer.indexOf("%") > 0) {
                 transfer = transfer.substring(0, transfer.indexOf("%"));
@@ -196,10 +196,10 @@ public class ProductServiceImpl implements ProductService {
             }
             ProductSku sku = productSkuRepository.findByAttrString(attrString.toString());
             Double fer = Double.valueOf(transfer);
-            if (fer < 0) {
-                throw new BadRequestAlertException("让利百分不能小于0", "transfer", "transferDosentrRequert");
-            } else if (fer > 98) {
-                throw new BadRequestAlertException("让利百分比不能大于98", "transfer", "transferDosentrRequert");
+            if (fer < 10) {
+                throw new BadRequestAlertException("服务费百分比不能小于12", "ServiceCharge", "serviceChargeDosentrRequest");
+            } else if (fer > 96) {
+                throw new BadRequestAlertException("服务费百分比不能大于98", "ServiceCharge", "serviceChargeDosentrRequest");
             }
             DecimalFormat df = new DecimalFormat("0.00");
             BigDecimal decimal = new BigDecimal(df.format((double) fer / 100));
@@ -222,6 +222,7 @@ public class ProductServiceImpl implements ProductService {
                 sku.setPrice(new BigDecimal(skuPrice));
                 sku.setCount(Integer.valueOf(skuCount));
                 sku.setUpdatedTime(Instant.now());
+                sku.status(0);//上架
                 sku.setDeleted(false);
                 sku = productSkuRepository.save(sku);
             }

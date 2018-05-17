@@ -135,6 +135,12 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     @Override
     public ProductSkuDTO filterSku(String attrString) {
         ProductSku sku=productSkuRepository.findByAttrString(attrString);
+        if (sku.getStatus()==1){
+            throw new BadRequestAlertException("该商品已下架,请选择其他商品","sku","skuAllReadyundercarriage");
+        }
+        if (sku.getCount()==0){
+            throw new BadRequestAlertException("该商品无货,请选择其他商品","sku","skunotleft");
+        }
         return productSkuMapper.toDto(sku);
     }
 
