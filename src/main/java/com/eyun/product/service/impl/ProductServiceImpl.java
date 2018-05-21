@@ -220,7 +220,7 @@ public class ProductServiceImpl implements ProductService {
                 sku.setSkuCode(skuCode);
                 sku.setTransfer(decimal);
                 sku.setPrice(new BigDecimal(skuPrice));
-                sku.setCount(Integer.valueOf(skuCount));
+                sku.setCount(sku.getCount()+Integer.valueOf(skuCount));
                 sku.setUpdatedTime(Instant.now());
                 sku.status(0);//上架
                 sku.setDeleted(false);
@@ -242,11 +242,11 @@ public class ProductServiceImpl implements ProductService {
         if (product.get("url") != null) {
             urlArray = product.get("url").toString().split(",");
         }
-        String integral="";
-        if (product.get("price") != null&&product.get("transfer") != null){
-            Double price=Double.valueOf(product.get("price").toString());
-            Double transfer=Double.valueOf(product.get("transfer").toString());
-            integral=String.valueOf(price*transfer*10);
+        String integral = "";
+        if (product.get("price") != null && product.get("transfer") != null) {
+            Double price = Double.valueOf(product.get("price").toString());
+            Double transfer = Double.valueOf(product.get("transfer").toString());
+            integral = String.valueOf(price * transfer * 10);
         }
         product.put("integral", integral);
         product.put("url", urlArray);
@@ -291,7 +291,7 @@ public class ProductServiceImpl implements ProductService {
         StringBuffer addWhere = new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 AND sku.count>0");
         StringBuffer groupBy = new StringBuffer(" GROUP BY p.id");
         StringBuffer select = new StringBuffer("SELECT DISTINCT(p.id) AS id, p. NAME AS NAME, p.list_price AS listPrice, img.img_url AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id LEFT JOIN category ca ON ca.id = p.category_id ");
-        StringBuffer limit=new StringBuffer(" LIMIT :start,:size");
+        StringBuffer limit = new StringBuffer(" LIMIT :start,:size");
         if (StringUtils.isBlank(productSeachParam.getProductName()) && StringUtils.isBlank(productSeachParam.getSale()) && StringUtils.isBlank(productSeachParam.getPrice()) && productSeachParam.getStartPrice() == null && productSeachParam.getEndPrice() == null) {
             sql = select.append(fromSku).append(addWhere).toString();
         }
@@ -310,11 +310,11 @@ public class ProductServiceImpl implements ProductService {
         Integer num = productSeachParam.getPageNum();
         Integer size = productSeachParam.getPageSize();
         Integer start = (num - 1) * size;
-        Query query = entityManager.createNativeQuery(sql+limit);
+        Query query = entityManager.createNativeQuery(sql + limit);
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         query.setParameter("categoryid", productSeachParam.getCategoryId());
-        query.setParameter("start",start);
-        query.setParameter("size",size);
+        query.setParameter("start", start);
+        query.setParameter("size", size);
         List<Map> list = query.getResultList();
         Map result = new HashMap();
         result.put("mainContent", list);
@@ -328,9 +328,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Map> findProductByShopIdAndDeleted(Long shopId,Integer pageNum,Integer pageSize) {
+    public List<Map> findProductByShopIdAndDeleted(Long shopId, Integer pageNum, Integer pageSize) {
         Integer start = (pageNum - 1) * pageSize;
-        List<Map> productList = productRepository.findProductsByShopIdAndDeleted(shopId,start,pageSize);
+        List<Map> productList = productRepository.findProductsByShopIdAndDeleted(shopId, start, pageSize);
         return productList;
     }
 
@@ -360,30 +360,31 @@ public class ProductServiceImpl implements ProductService {
         Integer num = productSeachParam.getPageNum();
         Integer size = productSeachParam.getPageSize();
         Integer start = (num - 1) * size;
-        String total="SELECT count(sku.id) AS count FROM product p, product_sku sku WHERE p.id = sku.product_id AND p.shop_id = :shopId";
+        String total = "SELECT count(sku.id) AS count FROM product p, product_sku sku WHERE p.id = sku.product_id AND p.shop_id = :shopId";
         Query query = entityManager.createNativeQuery(total);
         query.setParameter("shopId", shopId);
         Integer totalCount = Integer.valueOf(query.getSingleResult().toString());
 
-        String sqlLimit="SELECT sku.id AS skuId, sku.sku_name AS skuName, sku.count AS count, sku.price AS price, ifnull(sku.status,\"\") AS STATUS, sku.transfer AS transfer, sku.sku_code AS skuCode, IFNULL(sku.created_time, \"\") AS publishTime FROM product p, product_sku sku WHERE p.id = sku.product_id AND p.shop_id = :shopId LIMIT :start,:size";
+        String sqlLimit = "SELECT sku.id AS skuId, sku.sku_name AS skuName, sku.count AS count, sku.price AS price, ifnull(sku.status,\"\") AS STATUS, sku.transfer AS transfer, sku.sku_code AS skuCode, IFNULL(sku.created_time, \"\") AS publishTime FROM product p, product_sku sku WHERE p.id = sku.product_id AND p.shop_id = :shopId LIMIT :start,:size";
         Query querySku = entityManager.createNativeQuery(sqlLimit);
         querySku.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         querySku.setParameter("shopId", shopId);
         querySku.setParameter("start", start);
         querySku.setParameter("size", size);
-        List<Map>result=querySku.getResultList();
-        Integer pageCount=0;
-       if(totalCount > 0){//计算总页数
-            if(totalCount%size>0){
-                pageCount=totalCount/size+1;
-            }else{
-                pageCount = totalCount/size;
+        List<Map> result = querySku.getResultList();
+        Integer pageCount = 0;
+        if (totalCount > 0) {//计算总页数
+            if (totalCount % size > 0) {
+                pageCount = totalCount / size + 1;
+            } else {
+                pageCount = totalCount / size;
+
             }
         }
-        Map sku=new HashMap();
-        sku.put("totalCount",totalCount);
-        sku.put("skuList",result);
-        sku.put("pageCount",pageCount);
+        Map sku = new HashMap();
+        sku.put("totalCount", totalCount);
+        sku.put("skuList", result);
+        sku.put("pageCount", pageCount);
         return sku;
     }
 
@@ -496,7 +497,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-   /*public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         List<Map<String, Object>> list = new ArrayList();
         Map<String, Object> map1 = new HashMap();
@@ -528,32 +529,29 @@ public class ProductServiceImpl implements ProductService {
         System.out.println("**********************************************initSku**************************************************");
 
 
-
+        Integer count = 0;
         List<Map<String, String>> resultList = new ArrayList<>();
-        Map<String, Object> element = list.remove(0);
-        String attr = element.get("attr").toString();
-        List<String> valueList = (List<String>) element.get("attrValue");
-        for (String value : valueList) {
-            Map<String, String> result =new HashMap<>();
-            result.put(attr,value);
-            lable1:
-            for (int i = 0; i < list.size(); i++) {
-                resultList.add(result);
-                Map<String, Object> elementOther = list.remove(i);
-                String attrOther = elementOther.get("attr").toString();
-                List<String> valueList1 = (List<String>) elementOther.get("attrValue");
-                for (String valueOther : valueList1) {
-                    result.put(attrOther,valueOther);
-                    //continue lable1;
+        while (list.size() > 0) {
+            count++;
+            Map<String, Object> element = list.remove(0);
+            String attr = element.get("attr").toString();
+            List<String> valueList = (List<String>) element.get("attrValue");
+            for (String value : valueList) {
+                Map<String, String> result = new IdentityHashMap<>();
+                result.put(attr, value);
+                //resultList.add(result);
+                if (count>1){
+                    for (Map<String, String> eloter:resultList){
+
+                    }
                 }
-
             }
-
         }
 
 
+
         System.out.println(resultList.size());
-       for (Map<String, String> element1 : resultList) {
+        for (Map<String, String> element1 : resultList) {
             System.out.println("========================================");
             Iterator<Map.Entry<String, String>> iterator = element1.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -562,13 +560,6 @@ public class ProductServiceImpl implements ProductService {
             }
 
         }
-       *//*for (JSONArray jsonObject : resultList) {
-            System.out.println("========================================");
-            while (iterator.hasNext()) {
-                String key = iterator.next().toString();
-                System.out.println(key + ":" + jsonObject.get(key));
-            }
-        }*//*
-    }*/
+    }
 
 }
