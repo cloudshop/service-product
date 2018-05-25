@@ -220,7 +220,7 @@ public class ProductServiceImpl implements ProductService {
                 sku.setSkuCode(skuCode);
                 sku.setTransfer(decimal);
                 sku.setPrice(new BigDecimal(skuPrice));
-                sku.setCount(sku.getCount()+Integer.valueOf(skuCount));
+                sku.setCount(sku.getCount() + Integer.valueOf(skuCount));
                 sku.setUpdatedTime(Instant.now());
                 sku.status(0);//上架
                 sku.setDeleted(false);
@@ -238,48 +238,50 @@ public class ProductServiceImpl implements ProductService {
     public Map findProductById(Long id) {
         Map result = new HashMap();
         Map product = productRepository.findProductById(id);
-        String[] urlArray = new String[]{};
-        if (product.get("url") != null) {
-            urlArray = product.get("url").toString().split(",");
-        }
-        String integral = "";
-        if (product.get("price") != null && product.get("transfer") != null) {
-            Double price = Double.valueOf(product.get("price").toString());
-            Double transfer = Double.valueOf(product.get("transfer").toString());
-            integral = String.valueOf(price * transfer * 10);
-        }
-        product.put("integral", integral);
-        product.put("url", urlArray);
-        result.put("productContent", product);
-        List attrbuteList = new ArrayList();
-        List<Map> attrList = productRepository.findProductAttrById(id);
-        if (!attrList.isEmpty() && attrList.size() > 0) {
-            for (Map attr : attrList) {
-                Map value = new HashMap();
-                value.put("attname", attr.get("attname"));
-                String attvalue = attr.get("attrvalue").toString();
-                if (StringUtils.isNotBlank(attvalue)) {
-                    List list = new ArrayList();
-                    if (attvalue.indexOf(",") > 0) {
-                        String[] array = attvalue.split(",");
-                        for (String param : array) {
+        if (!product.get("id").equals("")){
+            String[] urlArray = new String[]{};
+            if (product.get("url") != null) {
+                urlArray = product.get("url").toString().split(",");
+            }
+            String integral = "";
+            if (product.get("price") != null && product.get("transfer") != null) {
+                Double price = Double.valueOf(product.get("price").toString());
+                Double transfer = Double.valueOf(product.get("transfer").toString());
+                integral = String.valueOf(price * transfer * 10);
+            }
+            product.put("integral", integral);
+            product.put("url", urlArray);
+            result.put("productContent", product);
+            List attrbuteList = new ArrayList();
+            List<Map> attrList = productRepository.findProductAttrById(id);
+            if (!attrList.isEmpty() && attrList.size() > 0) {
+                for (Map attr : attrList) {
+                    Map value = new HashMap();
+                    value.put("attname", attr.get("attname"));
+                    String attvalue = attr.get("attrvalue").toString();
+                    if (StringUtils.isNotBlank(attvalue)) {
+                        List list = new ArrayList();
+                        if (attvalue.indexOf(",") > 0) {
+                            String[] array = attvalue.split(",");
+                            for (String param : array) {
+                                Map map = new HashMap();
+                                map.put("valueId", param.substring(0, param.indexOf(":")));
+                                map.put("value", param.substring(param.indexOf(":") + 1, param.length()));
+                                list.add(map);
+                            }
+                        } else {
                             Map map = new HashMap();
-                            map.put("valueId", param.substring(0, param.indexOf(":")));
-                            map.put("value", param.substring(param.indexOf(":") + 1, param.length()));
+                            map.put("valueId", attvalue.substring(0, attvalue.indexOf(":")));
+                            map.put("value", attvalue.substring(attvalue.indexOf(":") + 1, attvalue.length()));
                             list.add(map);
                         }
-                    } else {
-                        Map map = new HashMap();
-                        map.put("valueId", attvalue.substring(0, attvalue.indexOf(":")));
-                        map.put("value", attvalue.substring(attvalue.indexOf(":") + 1, attvalue.length()));
-                        list.add(map);
+                        value.put("attvalue", list);
                     }
-                    value.put("attvalue", list);
+                    attrbuteList.add(value);
                 }
-                attrbuteList.add(value);
             }
+            result.put("attrbute", attrbuteList);
         }
-        result.put("attrbute", attrbuteList);
         return result;
     }
 
@@ -288,7 +290,7 @@ public class ProductServiceImpl implements ProductService {
     public Map findProductByCatewgory(ProductSeachParam productSeachParam) {
         String sql = "";
         StringBuffer fromSku = new StringBuffer("LEFT JOIN product_sku sku ON p.id=sku.product_id ");
-        StringBuffer addWhere = new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 AND sku.count>0");
+        StringBuffer addWhere = new StringBuffer("WHERE ca.id = :categoryid AND p.deleted = 0 AND sku.status=0 AND sku.count>0");
         StringBuffer groupBy = new StringBuffer(" GROUP BY p.id");
         StringBuffer select = new StringBuffer("SELECT DISTINCT(p.id) AS id, p. NAME AS NAME, p.list_price AS listPrice, img.img_url AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id LEFT JOIN category ca ON ca.id = p.category_id ");
         StringBuffer limit = new StringBuffer(" LIMIT :start,:size");
@@ -497,7 +499,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    /*public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         List<Map<String, Object>> list = new ArrayList();
         Map<String, Object> map1 = new HashMap();
@@ -528,8 +530,8 @@ public class ProductServiceImpl implements ProductService {
         list.add(map3);
         System.out.println("**********************************************initSku**************************************************");
 
-
         Integer count = 0;
+        List<Map<String, String>> elementList = new ArrayList<>();
         List<Map<String, String>> resultList = new ArrayList<>();
         while (list.size() > 0) {
             count++;
@@ -537,19 +539,20 @@ public class ProductServiceImpl implements ProductService {
             String attr = element.get("attr").toString();
             List<String> valueList = (List<String>) element.get("attrValue");
             for (String value : valueList) {
-                Map<String, String> result = new IdentityHashMap<>();
-                result.put(attr, value);
-                //resultList.add(result);
-                if (count>1){
-                    for (Map<String, String> eloter:resultList){
-
+                if (count == 1) {
+                    Map<String, String> map = new IdentityHashMap<>();
+                    map.put(new String(attr), value);
+                    elementList.add(map);
+                } else {
+                    for (Map<String, String> result : elementList) {
+                        Map<String, String> map = new IdentityHashMap<>();
+                        map.put(new String(attr), value);
+                        map.putAll(result);
+                        resultList.add(map);
                     }
                 }
             }
         }
-
-
-
         System.out.println(resultList.size());
         for (Map<String, String> element1 : resultList) {
             System.out.println("========================================");
@@ -558,8 +561,7 @@ public class ProductServiceImpl implements ProductService {
                 Map.Entry<String, String> param = iterator.next();
                 System.out.println(param.getKey() + ":" + param.getValue());
             }
-
         }
-    }*/
+    }
 
 }
