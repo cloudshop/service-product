@@ -20,6 +20,6 @@ public interface ProductSkuRepository extends JpaRepository<ProductSku, Long>, J
      public ProductSku findByAttrString(String attrString);
 
      /*获取sku的productId*/
-     @Query(value = "SELECT sku.product_id AS productId from product_sku sku WHERE sku.product_id=(SELECT sku.product_id FROM product_sku sku WHERE sku.id=:skuId)",nativeQuery = true)
+     @Query(value = "SELECT sku.product_id AS productid FROM product_sku sku WHERE sku.product_id = ( SELECT sku.product_id FROM product_sku sku WHERE sku.id =:skuId ) AND sku. STATUS = 0",nativeQuery = true)
      public List<Map> findProductIdBySkuId(@Param("skuId")Long skuId);
 }
