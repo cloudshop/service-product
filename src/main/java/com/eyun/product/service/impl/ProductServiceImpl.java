@@ -499,7 +499,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
 
         List<Map<String, Object>> list = new ArrayList();
         Map<String, Object> map1 = new HashMap();
@@ -562,6 +562,6 @@ public class ProductServiceImpl implements ProductService {
                 System.out.println(param.getKey() + ":" + param.getValue());
             }
         }
-    }
+    }*/
 
 }
