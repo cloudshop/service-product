@@ -247,7 +247,8 @@ public class ProductServiceImpl implements ProductService {
             if (product.get("price") != null && product.get("transfer") != null) {
                 Double price = Double.valueOf(product.get("price").toString());
                 Double transfer = Double.valueOf(product.get("transfer").toString());
-                integral = String.valueOf(price * transfer * 10);
+                DecimalFormat df = new DecimalFormat("0.00");
+                integral = df.format(price * transfer * 10);
             }
             product.put("integral", integral);
             product.put("url", urlArray);
@@ -499,8 +500,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
-    public static void main(String[] args) throws Exception {
-
+    /*public static void main(String[] args) throws Exception {
         List<Map<String, Object>> list = new ArrayList();
         Map<String, Object> map1 = new HashMap();
         map1.put("attr", "颜色");
@@ -549,6 +549,7 @@ public class ProductServiceImpl implements ProductService {
                         map.put(new String(attr), value);
                         map.putAll(result);
                         resultList.add(map);
+
                     }
                 }
             }
@@ -562,6 +563,9 @@ public class ProductServiceImpl implements ProductService {
                 System.out.println(param.getKey() + ":" + param.getValue());
             }
         }
-    }
+        DecimalFormat df = new DecimalFormat("0.00");
 
+        System.out.println(df.format((20000.86 * 0.01 * 10)));
+    }
+*/
 }
