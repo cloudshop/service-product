@@ -209,6 +209,16 @@ public class ProductResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(list));
     }
 
+    @ApiOperation("店铺商品搜索")
+    @PostMapping("/product/shop/search")
+    @Timed
+    public ResponseEntity shopProductSearch(@RequestBody ProductSeachParam productSeachParam){
+        if (productSeachParam.getShopId()==null){
+            throw new BadRequestAlertException("店铺ID为空","shopid","shopidNotFound");
+        }
+        List<Map> resultList=productService.shopProductSearch(productSeachParam);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resultList));
+    }
     @ApiOperation("生成商品sku")
     @PostMapping("/product/initsku")
     @Timed

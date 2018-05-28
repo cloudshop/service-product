@@ -454,6 +454,15 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+    @Override
+    public List<Map> shopProductSearch(ProductSeachParam productSeachParam) {
+        List<Map> result =new ArrayList<>();
+        if (StringUtils.isNotBlank(productSeachParam.getProductName())){
+            result = productRepository.shopProductSearch(productSeachParam.getShopId(),productSeachParam.getProductName());
+        }
+        return result;
+    }
+
     /**
      * Get all the products.
      *
@@ -563,9 +572,6 @@ public class ProductServiceImpl implements ProductService {
                 System.out.println(param.getKey() + ":" + param.getValue());
             }
         }
-        DecimalFormat df = new DecimalFormat("0.00");
-
-        System.out.println(df.format((20000.86 * 0.01 * 10)));
     }
 */
 }

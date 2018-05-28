@@ -48,6 +48,8 @@ public interface ProductService {
 
     public List<Map> findProductByParam(ProductSeachParam productSeachParam);
 
+    public List<Map> shopProductSearch(ProductSeachParam productSeachParam);
+
     /**
      * Get all the products.
      *
