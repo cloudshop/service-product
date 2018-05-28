@@ -299,7 +299,7 @@ public class ProductServiceImpl implements ProductService {
             sql = select.append(fromSku).append(addWhere).toString();
         }
         if (StringUtils.isNotBlank(productSeachParam.getProductName())) {
-            sql = select.append(addWhere).append(" and p. NAME like \"%" + productSeachParam.getProductName() + "%\"").toString();
+            sql = select.append(fromSku).append(addWhere).append(" and p. NAME like \"%" + productSeachParam.getProductName() + "%\"").toString();
         }
         if (StringUtils.isNotBlank(productSeachParam.getSale())) {
             sql = select.append(fromSku).append(addWhere).append(groupBy).append(" ORDER BY sku.count").toString();
