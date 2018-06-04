@@ -17,7 +17,7 @@ import java.util.Map;
 public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor<Category> {
 
     /*获取分类左侧导航*/
-    @Query(value = "SELECT c.id AS firstid,c.name AS firstidName from category c WHERE c.parent_id=0 and c.deleted=0",nativeQuery = true)
+    @Query(value = "SELECT c.id AS firstid, c. NAME AS firstidName, COUNT(c.id) count FROM category c, category d WHERE c.id = d.parent_id AND c.parent_id = 0 AND c.deleted = 0 GROUP BY c.id ORDER BY count DESC",nativeQuery = true)
     public List<Map<String,String>> getRootCategory();
 
     /*获取二级和三级分类*/
