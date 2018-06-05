@@ -2,6 +2,7 @@ package com.eyun.product.service.impl;
 
 import com.eyun.product.domain.*;
 import com.eyun.product.repository.*;
+import com.eyun.product.service.FeignMercurieClient;
 import com.eyun.product.service.ProductService;
 import com.eyun.product.service.dto.ProductContentDTO;
 import com.eyun.product.service.dto.ProductDTO;
@@ -59,6 +60,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     SkuImgRepository skuImgRepository;
+
+    @Autowired
+    FeignMercurieClient feignMercurieClient;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -451,6 +455,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Map> findProductByParam(ProductSeachParam productSeachParam) {
         List<Map> result = productRepository.findProductByParam(productSeachParam.getProductName());
+        if (result.isEmpty()){
+            result =feignMercurieClient.findByNameLike(productSeachParam.getProductName());
+        }
         return result;
     }
 
