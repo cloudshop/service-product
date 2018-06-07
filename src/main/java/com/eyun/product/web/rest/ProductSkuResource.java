@@ -124,7 +124,7 @@ public class ProductSkuResource {
     }
 
     @ApiOperation("过滤商品sku")
-    @PostMapping("/product/filtersku")
+    @GetMapping("/product/filtersku")
     @Timed
     public ResponseEntity filterSku(@NotNull @RequestParam("attrString") String attrString) throws Exception {
         ProductSkuDTO productSkuDTO = productSkuService.filterSku(attrString);
