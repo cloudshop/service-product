@@ -35,7 +35,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     public Product findProductByNameAndShopId(String name,Long shopId);
 
     /*获取店铺商品*/
-    @Query(value = "SELECT p.id AS id, p. NAME AS NAME, p.list_price AS listPrice, ifnull(img.img_url, \"\") AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id LEFT JOIN product_sku sku ON p.id = sku.product_id WHERE p.shop_id = :shopId AND p.deleted = 0 AND sku.count > 0 AND sku. STATUS = 0 LIMIT :start,:size",nativeQuery = true)
+    @Query(value = "SELECT DISTINCT(p.id) AS id, p. NAME AS NAME, p.list_price AS listPrice, ifnull(img.img_url, \"\") AS url FROM product p LEFT JOIN product_img img ON p.id = img.product_id LEFT JOIN product_sku sku ON p.id = sku.product_id WHERE p.shop_id = :shopId AND p.deleted = 0 AND sku.count > 0 AND sku. STATUS = 0 LIMIT :start,:size",nativeQuery = true)
     public List<Map> findProductsByShopIdAndDeleted(@Param("shopId")Long shopId,@Param("start")Integer start,@Param("size")Integer size);
 
     /*首页，分类商品搜索*/
