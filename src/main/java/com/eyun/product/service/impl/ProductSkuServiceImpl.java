@@ -116,7 +116,7 @@ public class ProductSkuServiceImpl implements ProductSkuService {
                 }
                 List list=feignOrderCilent.findOrderItemByskuid(productSkuDTO.getId());
                 if (!list.isEmpty()){
-                    throw new BadRequestAlertException("该商品已结算，不能下架","order","allreadyInOrder");
+                    throw new BadRequestAlertException("该商品已生成订单","order","allreadyInOrder");
                 }
                 productSku.status(1);//0：上架 1：下架
                 List<Map>skuIds=productSkuRepository.findProductIdBySkuId(productSkuDTO.getId());
